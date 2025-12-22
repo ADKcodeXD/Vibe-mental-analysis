@@ -42,6 +42,7 @@ export default function QuestionEngine() {
   const [lang, setLang] = useState<Lang>('zh');
   const [history, setHistory] = useState<any[]>([]);
   const [hasSession, setHasSession] = useState(false);
+  const saveTimeoutRef = useRef<NodeJS.Timeout>(null);
 
   const saveToHistory = (data: any) => {
     const newEntry = {
@@ -139,11 +140,15 @@ export default function QuestionEngine() {
     setAnswers(newAnswers);
     
     // Persist session
-    localStorage.setItem('holo_session', JSON.stringify({
-       answers: newAnswers,
-       currentIndex,
-       mode
-    }));
+    // Debounce persistence
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    saveTimeoutRef.current = setTimeout(() => {
+        localStorage.setItem('holo_session', JSON.stringify({
+           answers: newAnswers,
+           currentIndex,
+           mode
+        }));
+    }, 1000);
 
     // Auto-advance for choice questions after a brief delay
     if (allQuestions[currentIndex].q.type === 'choice') {
@@ -484,7 +489,7 @@ export default function QuestionEngine() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
-              className="w-full max-w-2xl bg-white/60 backdrop-blur-md rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-white/50 flex flex-col overflow-hidden max-h-[85vh] md:max-h-[75vh]"
+              className="w-full max-w-2xl bg-white/80 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-white/50 flex flex-col overflow-hidden max-h-[85vh] md:max-h-[75vh]"
             >
               <div 
                 ref={cardRef}
@@ -538,11 +543,10 @@ export default function QuestionEngine() {
               )}
 
               {currentQ.q.type === 'text' && (
-                <textarea
-                  value={answers[currentQ.q.id] || ''}
-                  onChange={(e) => handleAnswer(e.target.value)}
+                <TextInput 
+                  initialValue={answers[currentQ.q.id] || ''}
+                  onChange={(val) => handleAnswer(val)}
                   placeholder={ui.engine.placeholder}
-                  className="w-full bg-white/50 border-0 rounded-xl p-5 text-gray-800 placeholder-gray-400 focus:ring-0 focus:bg-white focus:shadow-lg transition-all h-40 resize-none text-lg leading-relaxed"
                 />
               )}
               </div>
@@ -600,40 +604,67 @@ export default function QuestionEngine() {
 
 // --- Sub Components ---
 
-const Background = ({ children }: any) => (
+const TextInput = ({ initialValue, onChange, placeholder }: any) => {
+  const [value, setValue] = useState(initialValue);
+  
+  // Sync if initialValue changes externally
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
+
+  const handleChange = (e: any) => {
+    const newVal = e.target.value;
+    setValue(newVal);
+    onChange(newVal);
+  };
+
+  return (
+    <textarea
+      value={value}
+      onChange={handleChange}
+      placeholder={placeholder}
+      className="w-full bg-white/50 border-0 rounded-xl p-5 text-gray-800 placeholder-gray-400 focus:ring-0 focus:bg-white focus:shadow-lg transition-all h-40 resize-none text-lg leading-relaxed"
+    />
+  );
+};
+
+const Background = React.memo(({ children }: any) => (
   <div className="min-h-screen bg-white text-slate-900 font-sans relative overflow-hidden transition-colors duration-500">
     <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+       {/* Optimized Gradients using CSS radial-gradient instead of filter: blur */}
       <motion.div 
         animate={{ 
-          scale: [1, 1.4, 1],
-          opacity: [0.2, 0.5, 0.2],
-          x: [-50, 50, -50],
-          y: [-30, 30, -30]
+          opacity: [0.4, 0.7, 0.4],
+          scale: [1, 1.2, 1],
+          x: [-20, 20, -20],
         }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -top-[10%] -left-[10%] w-[80%] h-[80%] bg-indigo-200/50 rounded-full blur-[120px]" 
+        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute -top-[20%] -left-[20%] w-[80%] h-[80%] rounded-full will-change-transform"
+        style={{ background: 'radial-gradient(circle, rgba(199,210,254,0.4) 0%, rgba(255,255,255,0) 70%)' }}
       />
       <motion.div 
         animate={{ 
-          scale: [1.4, 1, 1.4],
-          opacity: [0.15, 0.4, 0.15],
-          x: [50, -50, 50],
-          y: [30, -30, 30]
+          opacity: [0.3, 0.6, 0.3],
+          scale: [1.2, 1, 1.2],
+          x: [20, -20, 20],
         }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute -bottom-[20%] -right-[10%] w-[90%] h-[90%] bg-purple-200/50 rounded-full blur-[140px]" 
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        className="absolute top-[20%] -right-[20%] w-[90%] h-[90%] rounded-full will-change-transform"
+        style={{ background: 'radial-gradient(circle, rgba(233,213,255,0.4) 0%, rgba(255,255,255,0) 70%)' }} 
       />
       <motion.div 
         animate={{ 
-          opacity: [0, 0.3, 0],
+          opacity: [0, 0.4, 0],
+          y: [0, -40, 0]
         }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 5 }}
-        className="absolute top-[20%] left-[20%] w-[40%] h-[40%] bg-blue-100/40 rounded-full blur-[100px]" 
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 5 }}
+        className="absolute bottom-[-10%] left-[20%] w-[60%] h-[60%] rounded-full" 
+        style={{ background: 'radial-gradient(circle, rgba(219,234,254,0.4) 0%, rgba(255,255,255,0) 70%)' }}
       />
     </div>
     <div className="relative z-10">{children}</div>
   </div>
-);
+));
 
 const LangSwitcher = ({ lang, setLang }: { lang: Lang, setLang: (l: Lang) => void }) => (
   <div className="fixed top-6 left-6 z-50 flex gap-2">
