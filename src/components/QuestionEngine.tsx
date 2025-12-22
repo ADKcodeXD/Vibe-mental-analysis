@@ -572,7 +572,7 @@ export default function QuestionEngine() {
 
         {/* Navigation Indicator & Jump Nav */}
         <div className="fixed bottom-0 left-0 w-full p-4 md:p-6 flex flex-col items-center gap-4 z-20 pointer-events-none">
-          {/* Mobile Current State */}
+          {/* Mobile Current State (Kept at bottom) */}
           <div className="md:hidden bg-white/90 backdrop-blur-xl px-4 py-2 rounded-full shadow-lg border border-white/50 pointer-events-auto text-xs font-medium text-gray-500 flex items-center gap-2">
             <span>{currentIndex + 1} / {allQuestions.length}</span>
             <div className="w-12 h-1 bg-gray-100 rounded-full overflow-hidden">
@@ -582,20 +582,21 @@ export default function QuestionEngine() {
               />
             </div>
           </div>
+        </div>
 
-          <div className="hidden md:flex bg-white/80 backdrop-blur-xl px-2 py-2 rounded-full shadow-2xl pointer-events-auto gap-1 max-w-[90vw] overflow-x-auto scrollbar-hide">
+        {/* Desktop Jump Nav (Moved to Top) */}
+        <div className="hidden md:flex fixed top-6 left-1/2 -translate-x-1/2 z-50 pointer-events-auto bg-white/50 backdrop-blur-md px-3 py-2 rounded-full shadow-sm border border-white/40 gap-1 max-w-[40vw] overflow-x-auto scrollbar-hide">
              {allQuestions.map((_, idx) => (
                 <div 
                   key={idx}
                   onClick={() => jumpTo(idx)}
                   className={clsx(
-                    "w-2 h-2 rounded-full cursor-pointer transition-all duration-300",
-                    idx === currentIndex ? "w-6 bg-gray-900" : 
-                    idx < currentIndex ? "bg-gray-400" : "bg-gray-200 hover:bg-gray-300"
+                    "w-1.5 h-1.5 rounded-full cursor-pointer transition-all duration-300",
+                    idx === currentIndex ? "w-4 bg-gray-900 scale-110" : 
+                    idx < currentIndex ? "bg-gray-400" : "bg-gray-300 hover:bg-gray-400"
                   )}
                 />
              ))}
-          </div>
         </div>
       </div>
     </Background>
