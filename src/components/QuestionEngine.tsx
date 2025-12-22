@@ -41,6 +41,7 @@ export default function QuestionEngine() {
   const [config, setConfig] = useState<Config>({ apiKey: '', baseUrl: '', model: '' });
   const [lang, setLang] = useState<Lang>('zh');
   const [history, setHistory] = useState<any[]>([]);
+  const [hasSession, setHasSession] = useState(false);
 
   const saveToHistory = (data: any) => {
     const newEntry = {
@@ -118,6 +119,7 @@ export default function QuestionEngine() {
         }
       } catch (e) {}
     }
+    setHasSession(!!session);
     const savedHistory = localStorage.getItem('holo_history');
     if (savedHistory) setHistory(JSON.parse(savedHistory));
   }, []);
@@ -303,7 +305,7 @@ export default function QuestionEngine() {
             </AnimatePresence>
 
             <div className="pt-6 space-y-4">
-                {localStorage.getItem('holo_session') && (
+                {hasSession && (
                   <div className="space-y-3 mb-6">
                      <p className="text-xs text-slate-400 uppercase tracking-widest">{ui.welcome.session_found}</p>
                      <button 
@@ -321,7 +323,7 @@ export default function QuestionEngine() {
                   </div>
                )}
 
-               {!localStorage.getItem('holo_session') && (
+               {!hasSession && (
                   <button 
                   onClick={() => setView('mode_select')}
                   className="w-full md:w-auto px-16 py-5 bg-slate-900 text-white rounded-full text-xl shadow-2xl hover:shadow-indigo-500/20 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 mx-auto font-light tracking-widest uppercase"
