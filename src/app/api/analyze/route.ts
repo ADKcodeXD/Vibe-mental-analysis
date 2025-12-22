@@ -31,7 +31,7 @@ const createModel = (config?: { apiKey?: string; baseUrl?: string; model?: strin
         configuration: {
             baseURL: baseUrl
         },
-        temperature: 0.7
+        temperature: 0.3
     });
 };
 

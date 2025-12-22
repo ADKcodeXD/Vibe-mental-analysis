@@ -37,7 +37,7 @@ type Config = {
 
 export default function QuestionEngine() {
   const [view, setView] = useState<'welcome' | 'settings' | 'mode_select' | 'questionnaire' | 'result' | 'history'>('welcome');
-  const [mode, setMode] = useState<'lite' | 'full' | null>(null);
+  const [mode, setMode] = useState<'lite' | 'standard' | 'full' | null>(null);
   const [config, setConfig] = useState<Config>({ apiKey: '', baseUrl: '', model: '' });
   const [lang, setLang] = useState<Lang>('zh');
   const [history, setHistory] = useState<any[]>([]);
@@ -72,15 +72,26 @@ export default function QuestionEngine() {
   const ui = (localesData as any)[lang];
 
   // Flattened Questions Logic
+  const currentData = questionsDataMap[lang];
+
   const allQuestions = useMemo(() => {
-    if (!mode) return [];
-    const activeData = (questionsDataMap[lang]).modes[mode];
+    if (!mode || !currentData?.schemes?.[mode]) return [];
+    
+    // Get the scheme config for the selected mode
+    const scheme = currentData.schemes[mode];
+    const sectionIds = scheme.sections;
+
+    // Filter and order sections based on the scheme
+    const activeSections = sectionIds.map((id: string) => 
+      currentData.sections.find((s: any) => s.id === id)
+    ).filter(Boolean);
+
     const flattened: { q: Question, section: LocalizedText }[] = [];
-    activeData.sections.forEach((sec: any) => {
+    activeSections.forEach((sec: any) => {
       sec.questions.forEach((q: any) => flattened.push({ q, section: sec.title }));
     });
     return flattened;
-  }, [mode, lang]);
+  }, [mode, lang, currentData]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -244,7 +255,7 @@ export default function QuestionEngine() {
     );
   }
 
-  if (result) return <ResultView data={result} lang={lang} onBack={() => {setResult(null); setView(history.length > 0 ? 'history' : 'welcome');}} />;
+  if (result) return <ResultView data={result} lang={lang} mode={mode} onBack={() => {setResult(null); setView(history.length > 0 ? 'history' : 'welcome');}} />;
 
 
 
@@ -430,18 +441,20 @@ export default function QuestionEngine() {
             <p className="text-gray-500">{ui.mode.subtitle}</p>
           </header>
 
-          <div className="grid md:grid-cols-2 gap-8 w-full max-w-4xl">
-            <ModeCard 
-              title={ui.mode.lite_title} 
-              desc={ui.mode.lite_desc} 
-              onClick={() => { setMode('lite'); setView('questionnaire'); }} 
-            />
-            <ModeCard 
-              title={ui.mode.full_title} 
-              desc={ui.mode.full_desc} 
-              onClick={() => { setMode('full'); setView('questionnaire'); }} 
-              highlight
-            />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl">
+            {(['lite', 'standard', 'full'] as const).map((m) => {
+              const scheme = questionsDataMap[lang]?.schemes?.[m];
+              if (!scheme) return null;
+              return (
+                <ModeCard 
+                  key={m}
+                  title={scheme.title} 
+                  desc={scheme.description} 
+                  onClick={() => { setMode(m); setView('questionnaire'); }} 
+                  highlight={m === 'standard'}
+                />
+              );
+            })}
           </div>
           
           <button onClick={() => setView('welcome')} className="text-gray-400 hover:text-gray-900 mt-8">{ui.mode.back}</button>

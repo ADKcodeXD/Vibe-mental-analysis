@@ -1,922 +1,775 @@
 {
-  "modes": {
+  "schemes": {
     "lite": {
       "title": "快速版 (Lite)",
       "description": "2分钟快速扫描，直击核心人格与潜在风险。",
       "sections": [
+        "demographics",
+        "core_scan",
+        "subjective_lite"
+      ]
+    },
+    "standard": {
+      "title": "标准版 (Standard)",
+      "description": "综合分析人格、临床风险及社会倾向。",
+      "sections": [
+        "demographics",
+        "clinical_phq9",
+        "clinical_gad7",
+        "personality_big5",
+        "scenario_social",
+        "subjective_standard"
+      ]
+    },
+    "full": {
+      "title": "深度临床版 (Full)",
+      "description": "全谱系分析，包含原生家庭、职业画像及心理防御机制。",
+      "sections": [
+        "demographics",
+        "clinical_phq9",
+        "clinical_gad7",
+        "clinical_mdq",
+        "personality_big5",
+        "scenario_social",
+        "attachment_roots",
+        "professional_persona",
+        "defense_mechanisms",
+        "social_trust",
+        "values_ideology",
+        "subjective_full"
+      ]
+    }
+  },
+  "sections": [
+    {
+      "id": "demographics",
+      "title": "0. 基础画像 (Baseline)",
+      "description": "了解你的社会属性。",
+      "questions": [
         {
-          "id": "lite_core",
-          "title": "核心扫描",
-          "description": "请凭借第一直觉回答。",
-          "questions": [
-            {
-              "id": "demo_age",
-              "type": "choice",
-              "text": "你的年龄段？",
-              "options": [
-                "18岁以下",
-                "18-25",
-                "26-35",
-                "36-50",
-                "50+"
-              ]
-            },
-            {
-              "id": "mbti_ei_1",
-              "type": "scale",
-              "text": "周末你是如何回血的？",
-              "leftLabel": "独处 (Introvert)",
-              "rightLabel": "社交 (Extravert)"
-            },
-            {
-              "id": "mbti_sn_1",
-              "type": "choice",
-              "text": "你更关注？",
-              "options": [
-                "当下的现实与细节",
-                "未来的可能性与概念"
-              ]
-            },
-            {
-              "id": "mbti_tf_1",
-              "type": "choice",
-              "text": "做决定时你优先考虑？",
-              "options": [
-                "逻辑与效率",
-                "情感与他人感受"
-              ]
-            },
-            {
-              "id": "mbti_jp_1",
-              "type": "scale",
-              "text": "你的生活方式？",
-              "leftLabel": "计划性强 (Judging)",
-              "rightLabel": "随性而至 (Perceiving)"
-            },
-            {
-              "id": "big5_n_lite",
-              "type": "scale",
-              "text": "你是否容易因为小事感到焦虑或压力？",
-              "leftLabel": "非常稳定",
-              "rightLabel": "非常敏感"
-            },
-            {
-              "id": "big5_o_lite",
-              "type": "scale",
-              "text": "你对抽象艺术、哲学或新奇体验的兴趣程度？",
-              "leftLabel": "实用主义",
-              "rightLabel": "充满好奇"
-            },
-            {
-              "id": "dark_npd_lite",
-              "type": "scale",
-              "text": "你是否觉得自己比大多数人聪明且独特？",
-              "leftLabel": "从不",
-              "rightLabel": "绝对是"
-            },
-            {
-              "id": "dark_mach_lite",
-              "type": "scale",
-              "text": "“为了达到目的，偶尔操纵他人是必要的。”你有多认可这句话？",
-              "leftLabel": "坚决反对",
-              "rightLabel": "非常认同"
-            },
-            {
-              "id": "clinical_stress_lite",
-              "type": "scale",
-              "text": "最近两周，你感到“生活失控”的频率？",
-              "leftLabel": "从未",
-              "rightLabel": "几乎每天"
-            },
-            {
-              "id": "val_econ_lite",
-              "type": "scale",
-              "text": "你认为市场竞争应该优胜劣汰，还是政府应深度干预保障平等？",
-              "leftLabel": "自由竞争",
-              "rightLabel": "干预保障"
-            },
-            {
-              "id": "scenario_lite_conflict",
-              "type": "text",
-              "text": "【情境测试】同事失误导致项目失败，老板在会上指责你，同事却保持沉默。你会当场指出、私下解决还是默默承担？请简述你的真实反应。"
-            },
-            {
-              "id": "scenario_lite_lost",
-              "type": "choice",
-              "text": "在陌生城市导航失灵，此时天色已晚且下着雨，你的第一情绪是？",
-              "options": [
-                "兴奋：有趣的小冒险",
-                "冷静：寻找地标或求助",
-                "烦躁：讨厌计划被打乱",
-                "恐惧：感到极度不安"
-              ]
-            },
-            {
-              "id": "scenario_lite_luck",
-              "type": "scale",
-              "text": "你认为人的一生主要是由努力决定的，还是由运气/命运决定的？",
-              "leftLabel": "100% 努力",
-              "rightLabel": "100% 运气"
-            },
-            {
-              "id": "lite_finish_note",
-              "type": "text",
-              "text": "最后，用一个词来定义你现在的精神状态。"
-            }
+          "id": "demo_gender",
+          "type": "choice",
+          "text": "性别",
+          "options": [
+            "男",
+            "女",
+            "非二元/其他"
+          ]
+        },
+        {
+          "id": "demo_age",
+          "type": "choice",
+          "text": "年龄",
+          "options": [
+            "18岁以下",
+            "18-25",
+            "26-35",
+            "36-45",
+            "46+"
+          ]
+        },
+        {
+          "id": "demo_job",
+          "type": "text",
+          "text": "职业/行业 (例如：互联网产品经理、学生、自由职业)"
+        }
+      ]
+    },
+    {
+      "id": "core_scan",
+      "title": "核心扫描",
+      "description": "请凭借第一直觉回答。",
+      "questions": [
+        {
+          "id": "mbti_ei_1",
+          "type": "scale",
+          "text": "周末你是如何回血的？",
+          "leftLabel": "独处",
+          "rightLabel": "社交"
+        },
+        {
+          "id": "mbti_sn_1",
+          "type": "choice",
+          "text": "你更关注？",
+          "options": [
+            "当下的现实与细节",
+            "未来的可能性与概念"
+          ]
+        },
+        {
+          "id": "mbti_tf_1",
+          "type": "choice",
+          "text": "做决定时你优先考虑？",
+          "options": [
+            "逻辑与效率",
+            "情感与他人感受"
+          ]
+        },
+        {
+          "id": "mbti_jp_1",
+          "type": "scale",
+          "text": "你的生活方式？",
+          "leftLabel": "计划性强",
+          "rightLabel": "随性而至"
+        },
+        {
+          "id": "big5_n_lite",
+          "type": "scale",
+          "text": "你是否容易因为小事感到焦虑或压力？",
+          "leftLabel": "非常稳定",
+          "rightLabel": "非常敏感"
+        },
+        {
+          "id": "big5_o_lite",
+          "type": "scale",
+          "text": "你对抽象艺术、哲学或新奇体验的兴趣程度？",
+          "leftLabel": "实用主义",
+          "rightLabel": "充满好奇"
+        },
+        {
+          "id": "dark_npd_lite",
+          "type": "scale",
+          "text": "你是否觉得自己比大多数人聪明且独特？",
+          "leftLabel": "从不",
+          "rightLabel": "绝对是"
+        },
+        {
+          "id": "dark_mach_lite",
+          "type": "scale",
+          "text": "“为了达到目的，偶尔操纵他人是必要的。”你有多认可这句话？",
+          "leftLabel": "坚决反对",
+          "rightLabel": "非常认同"
+        },
+        {
+          "id": "clinical_stress_lite",
+          "type": "scale",
+          "text": "最近两周，你感到“生活失控”的频率？",
+          "leftLabel": "从未",
+          "rightLabel": "几乎每天"
+        }
+      ]
+    },
+    {
+      "id": "clinical_phq9",
+      "title": "I. 情绪低落筛查 (PHQ-9)",
+      "description": "过去两周，你有多少时间被以下问题困扰？",
+      "questions": [
+        {
+          "id": "phq9_1",
+          "type": "scale",
+          "text": "做事提不起兴趣或没有乐趣",
+          "leftLabel": "完全不会",
+          "rightLabel": "几乎每天"
+        },
+        {
+          "id": "phq9_2",
+          "type": "scale",
+          "text": "感到心情低落、沮丧或绝望",
+          "leftLabel": "完全不会",
+          "rightLabel": "几乎每天"
+        },
+        {
+          "id": "phq9_3",
+          "type": "scale",
+          "text": "入睡困难、睡不着或睡得太多",
+          "leftLabel": "完全不会",
+          "rightLabel": "几乎每天"
+        },
+        {
+          "id": "phq9_4",
+          "type": "scale",
+          "text": "感到疲倦或没有活力",
+          "leftLabel": "完全不会",
+          "rightLabel": "几乎每天"
+        },
+        {
+          "id": "phq9_5",
+          "type": "scale",
+          "text": "食欲不振或吃得太多",
+          "leftLabel": "完全不会",
+          "rightLabel": "几乎每天"
+        },
+        {
+          "id": "phq9_6",
+          "type": "scale",
+          "text": "对自己感到不满——觉得自己是失败者或让自己/家人失望",
+          "leftLabel": "完全不会",
+          "rightLabel": "几乎每天"
+        },
+        {
+          "id": "phq9_7",
+          "type": "scale",
+          "text": "难以集中注意力（如看报纸或看电视）",
+          "leftLabel": "完全不会",
+          "rightLabel": "几乎每天"
+        },
+        {
+          "id": "phq9_8",
+          "type": "scale",
+          "text": "行动或说话速度缓慢，或者相反，烦躁不安到处走动",
+          "leftLabel": "完全不会",
+          "rightLabel": "几乎每天"
+        },
+        {
+          "id": "phq9_9_risk",
+          "type": "scale",
+          "text": "【重要】有不如死掉或用某种方式伤害自己的念头",
+          "leftLabel": "完全不会",
+          "rightLabel": "几乎每天"
+        }
+      ]
+    },
+    {
+      "id": "clinical_gad7",
+      "title": "II. 焦虑筛查 (GAD-7)",
+      "description": "过去两周，你有多少时间被以下问题困扰？",
+      "questions": [
+        {
+          "id": "gad7_1",
+          "type": "scale",
+          "text": "感觉紧张、焦虑或急切",
+          "leftLabel": "完全不会",
+          "rightLabel": "几乎每天"
+        },
+        {
+          "id": "gad7_2",
+          "type": "scale",
+          "text": "不能停止或控制担忧",
+          "leftLabel": "完全不会",
+          "rightLabel": "几乎每天"
+        },
+        {
+          "id": "gad7_3",
+          "type": "scale",
+          "text": "对各种各样的事情担忧过多",
+          "leftLabel": "完全不会",
+          "rightLabel": "几乎每天"
+        },
+        {
+          "id": "gad7_4",
+          "type": "scale",
+          "text": "很难放松下来",
+          "leftLabel": "完全不会",
+          "rightLabel": "几乎每天"
+        },
+        {
+          "id": "gad7_5",
+          "type": "scale",
+          "text": "由于不安而无法静坐",
+          "leftLabel": "完全不会",
+          "rightLabel": "几乎每天"
+        },
+        {
+          "id": "gad7_6",
+          "type": "scale",
+          "text": "容易烦躁或急躁",
+          "leftLabel": "完全不会",
+          "rightLabel": "几乎每天"
+        },
+        {
+          "id": "gad7_7",
+          "type": "scale",
+          "text": "感到害怕，好像有什么可怕的事情要发生",
+          "leftLabel": "完全不会",
+          "rightLabel": "几乎每天"
+        }
+      ]
+    },
+    {
+      "id": "clinical_mdq",
+      "title": "III. 能量波动筛查 (MDQ)",
+      "description": "你是否曾出现过一段时间，表现出以下状态？",
+      "questions": [
+        {
+          "id": "mdq_1",
+          "type": "choice",
+          "text": "觉得自己心情特别好，或者非常烦躁，持续好几天？",
+          "options": [
+            "是",
+            "否"
+          ]
+        },
+        {
+          "id": "mdq_2",
+          "type": "choice",
+          "text": "觉得自己虽然睡得很少（比如少于3小时）但精力依然充沛？",
+          "options": [
+            "是",
+            "否"
+          ]
+        },
+        {
+          "id": "mdq_3",
+          "type": "choice",
+          "text": "说话明显的比平时多，或者语速特别快，停不下来？",
+          "options": [
+            "是",
+            "否"
+          ]
+        },
+        {
+          "id": "mdq_4",
+          "type": "choice",
+          "text": "脑子里的念头转得飞快，或者觉得思维像赛跑一样？",
+          "options": [
+            "是",
+            "否"
+          ]
+        },
+        {
+          "id": "mdq_5",
+          "type": "choice",
+          "text": "曾做出过冲动、鲁莽或冒险的事（如疯狂购物、鲁莽驾驶、不安全的性行为）？",
+          "options": [
+            "是",
+            "否"
           ]
         }
       ]
     },
-    "full": {
-      "title": "深度临床版",
-      "description": "包含PHQ-9抑郁、GAD-7焦虑、MDQ躁狂、大五人格及原生家庭深度解析。",
-      "sections": [
+    {
+      "id": "personality_big5",
+      "title": "IV. 大五人格 (Big Five)",
+      "description": "请评估以下描述在多大程度上符合你。",
+      "questions": [
         {
-          "id": "demographics",
-          "title": "0. 基础画像 (Baseline)",
-          "description": "了解你的社会属性。",
-          "questions": [
-            {
-              "id": "demo_gender",
-              "type": "choice",
-              "text": "性别",
-              "options": [
-                "男",
-                "女",
-                "非二元/其他"
-              ]
-            },
-            {
-              "id": "demo_age",
-              "type": "choice",
-              "text": "年龄",
-              "options": [
-                "18岁以下",
-                "18-25",
-                "26-35",
-                "36-45",
-                "46+"
-              ]
-            },
-            {
-              "id": "demo_job",
-              "type": "text",
-              "text": "职业/行业 (例如：互联网产品经理、学生、自由职业)"
-            }
+          "id": "big5_e",
+          "type": "scale",
+          "text": "外向，热情",
+          "leftLabel": "不符合",
+          "rightLabel": "非常符合"
+        },
+        {
+          "id": "big5_a_r",
+          "type": "scale",
+          "text": "挑剔，爱争论",
+          "leftLabel": "不符合",
+          "rightLabel": "非常符合"
+        },
+        {
+          "id": "big5_c",
+          "type": "scale",
+          "text": "可靠，自律",
+          "leftLabel": "不符合",
+          "rightLabel": "非常符合"
+        },
+        {
+          "id": "big5_n",
+          "type": "scale",
+          "text": "焦虑，容易心烦",
+          "leftLabel": "不符合",
+          "rightLabel": "非常符合"
+        },
+        {
+          "id": "big5_o",
+          "type": "scale",
+          "text": "开放，体验丰富",
+          "leftLabel": "不符合",
+          "rightLabel": "非常符合"
+        },
+        {
+          "id": "big5_e_r",
+          "type": "scale",
+          "text": "内向，安静",
+          "leftLabel": "不符合",
+          "rightLabel": "非常符合"
+        },
+        {
+          "id": "big5_a",
+          "type": "scale",
+          "text": "同情心强，温暖",
+          "leftLabel": "不符合",
+          "rightLabel": "非常符合"
+        },
+        {
+          "id": "big5_c_r",
+          "type": "scale",
+          "text": "无条理，粗心",
+          "leftLabel": "不符合",
+          "rightLabel": "非常符合"
+        },
+        {
+          "id": "big5_n_r",
+          "type": "scale",
+          "text": "冷静，情绪稳定",
+          "leftLabel": "不符合",
+          "rightLabel": "非常符合"
+        },
+        {
+          "id": "big5_o_r",
+          "type": "scale",
+          "text": "传统，缺乏创造力",
+          "leftLabel": "不符合",
+          "rightLabel": "非常符合"
+        }
+      ]
+    },
+    {
+      "id": "scenario_social",
+      "title": "V. 潜意识与行为 (Behavior)",
+      "description": "通过日常抉择折射内在倾向。",
+      "questions": [
+        {
+          "id": "beh_weekend",
+          "type": "choice",
+          "text": "终于到了周末，朋友突然发消息说“今晚出来喝酒/聚会吗？”如果在完全没有任何安排的情况下，你的第一反应是？",
+          "options": [
+            "如释重负：如果不去的话，我会更开心，只想一个人待着。",
+            "兴奋期待：马上答应，喜欢热闹和社交。",
+            "犹豫不决：看心情，或者看是谁约。"
           ]
         },
         {
-          "id": "clinical_phq9",
-          "title": "I. 情绪低落筛查 (PHQ-9)",
-          "description": "过去两周，你有多少时间被以下问题困扰？",
-          "questions": [
-            {
-              "id": "phq9_1",
-              "type": "scale",
-              "text": "做事提不起兴趣或没有乐趣",
-              "leftLabel": "完全不会",
-              "rightLabel": "几乎每天"
-            },
-            {
-              "id": "phq9_2",
-              "type": "scale",
-              "text": "感到心情低落、沮丧或绝望",
-              "leftLabel": "完全不会",
-              "rightLabel": "几乎每天"
-            },
-            {
-              "id": "phq9_3",
-              "type": "scale",
-              "text": "入睡困难、睡不着或睡得太多",
-              "leftLabel": "完全不会",
-              "rightLabel": "几乎每天"
-            },
-            {
-              "id": "phq9_4",
-              "type": "scale",
-              "text": "感到疲倦或没有活力",
-              "leftLabel": "完全不会",
-              "rightLabel": "几乎每天"
-            },
-            {
-              "id": "phq9_5",
-              "type": "scale",
-              "text": "食欲不振或吃得太多",
-              "leftLabel": "完全不会",
-              "rightLabel": "几乎每天"
-            },
-            {
-              "id": "phq9_6",
-              "type": "scale",
-              "text": "对自己感到不满——觉得自己是失败者或让自己/家人失望",
-              "leftLabel": "完全不会",
-              "rightLabel": "几乎每天"
-            },
-            {
-              "id": "phq9_7",
-              "type": "scale",
-              "text": "难以集中注意力（如看报纸或看电视）",
-              "leftLabel": "完全不会",
-              "rightLabel": "几乎每天"
-            },
-            {
-              "id": "phq9_8",
-              "type": "scale",
-              "text": "行动或说话速度缓慢，或者相反，烦躁不安到处走动",
-              "leftLabel": "完全不会",
-              "rightLabel": "几乎每天"
-            },
-            {
-              "id": "phq9_9_risk",
-              "type": "scale",
-              "text": "【重要】有不如死掉或用某种方式伤害自己的念头",
-              "leftLabel": "完全不会",
-              "rightLabel": "几乎每天"
-            }
+          "id": "beh_idea_2am",
+          "type": "choice",
+          "text": "深夜2点，你已经躺在床上准备睡觉，突然脑子里冒出一个绝妙的想法。你会？",
+          "options": [
+            "立刻起床查资料、做计划。",
+            "简单记一下，困了就睡。",
+            "翻身继续睡，睡觉重要。"
           ]
         },
         {
-          "id": "clinical_gad7",
-          "title": "II. 焦虑筛查 (GAD-7)",
-          "description": "过去两周，你有多少时间被以下问题困扰？",
-          "questions": [
-            {
-              "id": "gad7_1",
-              "type": "scale",
-              "text": "感觉紧张、焦虑或急切",
-              "leftLabel": "完全不会",
-              "rightLabel": "几乎每天"
-            },
-            {
-              "id": "gad7_2",
-              "type": "scale",
-              "text": "不能停止或控制担忧",
-              "leftLabel": "完全不会",
-              "rightLabel": "几乎每天"
-            },
-            {
-              "id": "gad7_3",
-              "type": "scale",
-              "text": "对各种各样的事情担忧过多",
-              "leftLabel": "完全不会",
-              "rightLabel": "几乎每天"
-            },
-            {
-              "id": "gad7_4",
-              "type": "scale",
-              "text": "很难放松下来",
-              "leftLabel": "完全不会",
-              "rightLabel": "几乎每天"
-            },
-            {
-              "id": "gad7_5",
-              "type": "scale",
-              "text": "由于不安而无法静坐",
-              "leftLabel": "完全不会",
-              "rightLabel": "几乎每天"
-            },
-            {
-              "id": "gad7_6",
-              "type": "scale",
-              "text": "容易烦躁或急躁",
-              "leftLabel": "完全不会",
-              "rightLabel": "几乎每天"
-            },
-            {
-              "id": "gad7_7",
-              "type": "scale",
-              "text": "感到害怕，好像有什么可怕的事情要发生",
-              "leftLabel": "完全不会",
-              "rightLabel": "几乎每天"
-            }
+          "id": "beh_queue",
+          "type": "choice",
+          "text": "在排队买咖啡，前面的人点单非常慢，还在闲聊。你会？",
+          "options": [
+            "直接制止：拍拍对方让他快点。",
+            "内心焦躁：叹气跺脚希望对方察觉。",
+            "直接走人：受不了等待。",
+            "无所谓：继续刷手机。"
           ]
         },
         {
-          "id": "clinical_mdq",
-          "title": "III. 能量波动筛查 (MDQ/HCL)",
-          "description": "你是否曾出现过一段时间，表现出以下状态？",
-          "questions": [
-            {
-              "id": "mdq_1",
-              "type": "choice",
-              "text": "觉得自己心情特别好，或者非常烦躁，持续好几天？",
-              "options": [
-                "是",
-                "否"
-              ]
-            },
-            {
-              "id": "mdq_2",
-              "type": "choice",
-              "text": "觉得自己虽然睡得很少（比如少于3小时）但精力依然充沛？",
-              "options": [
-                "是",
-                "否"
-              ]
-            },
-            {
-              "id": "mdq_3",
-              "type": "choice",
-              "text": "说话明显的比平时多，或者语速特别快，停不下来？",
-              "options": [
-                "是",
-                "否"
-              ]
-            },
-            {
-              "id": "mdq_4",
-              "type": "choice",
-              "text": "脑子里的念头转得飞快，或者觉得思维像赛跑一样？",
-              "options": [
-                "是",
-                "否"
-              ]
-            },
-            {
-              "id": "mdq_5",
-              "type": "choice",
-              "text": "曾做出过冲动、鲁莽或冒险的事（如疯狂购物、鲁莽驾驶、不安全的性行为）？",
-              "options": [
-                "是",
-                "否"
-              ]
-            }
+          "id": "beh_spending",
+          "type": "choice",
+          "text": "关于购物，你最近的状态？",
+          "options": [
+            "极简/无欲：没欲望。",
+            "报复性消费：情绪化购物。",
+            "理性规划：按需购买。"
           ]
         },
         {
-          "id": "personality_big5",
-          "title": "IV. 大五人格 (Big Five)",
-          "description": "请评估以下描述在多大程度上符合你。",
-          "questions": [
-            {
-              "id": "big5_e",
-              "type": "scale",
-              "text": "外向，热情",
-              "leftLabel": "不符合",
-              "rightLabel": "非常符合"
-            },
-            {
-              "id": "big5_a_r",
-              "type": "scale",
-              "text": "挑剔，爱争论",
-              "leftLabel": "不符合",
-              "rightLabel": "非常符合"
-            },
-            {
-              "id": "big5_c",
-              "type": "scale",
-              "text": "可靠，自律",
-              "leftLabel": "不符合",
-              "rightLabel": "非常符合"
-            },
-            {
-              "id": "big5_n",
-              "type": "scale",
-              "text": "焦虑，容易心烦",
-              "leftLabel": "不符合",
-              "rightLabel": "非常符合"
-            },
-            {
-              "id": "big5_o",
-              "type": "scale",
-              "text": "开放，体验丰富",
-              "leftLabel": "不符合",
-              "rightLabel": "非常符合"
-            },
-            {
-              "id": "big5_e_r",
-              "type": "scale",
-              "text": "内向，安静",
-              "leftLabel": "不符合",
-              "rightLabel": "非常符合"
-            },
-            {
-              "id": "big5_a",
-              "type": "scale",
-              "text": "同情心强，温暖",
-              "leftLabel": "不符合",
-              "rightLabel": "非常符合"
-            },
-            {
-              "id": "big5_c_r",
-              "type": "scale",
-              "text": "无条理，粗心",
-              "leftLabel": "不符合",
-              "rightLabel": "非常符合"
-            },
-            {
-              "id": "big5_n_r",
-              "type": "scale",
-              "text": "冷静，情绪稳定",
-              "leftLabel": "不符合",
-              "rightLabel": "非常符合"
-            },
-            {
-              "id": "big5_o_r",
-              "type": "scale",
-              "text": "传统，缺乏创造力",
-              "leftLabel": "不符合",
-              "rightLabel": "非常符合"
-            }
+          "id": "beh_rejection",
+          "type": "choice",
+          "text": "你给好朋友发了消息，对方已读但24小时没回。你会觉得？",
+          "options": [
+            "非常焦虑：是不是我做错了什么惹他生气了？",
+            "有点生气：太不尊重人了。",
+            "无所谓：可能在忙，忘了。"
           ]
         },
         {
-          "id": "scenario_social",
-          "title": "V. 潜意识与行为 (Behavior)",
-          "description": "通过日常抉择折射内在倾向。",
-          "questions": [
-            {
-              "id": "beh_weekend",
-              "type": "choice",
-              "text": "终于到了周末，朋友突然发消息说“今晚出来喝酒/聚会吗？”如果在完全没有任何安排的情况下，你的第一反应是？",
-              "options": [
-                "如释重负：如果不去的话，我会更开心，只想一个人待着。",
-                "兴奋期待：马上答应，喜欢热闹和社交。",
-                "犹豫不决：看心情，或者看是谁约。"
-              ]
-            },
-            {
-              "id": "beh_idea_2am",
-              "type": "choice",
-              "text": "深夜2点，你已经躺在床上准备睡觉，突然脑子里冒出一个绝妙的想法。你会？",
-              "options": [
-                "立刻起床查资料、做计划。",
-                "简单记一下，困了就睡。",
-                "翻身继续睡，睡觉重要。"
-              ]
-            },
-            {
-              "id": "beh_queue",
-              "type": "choice",
-              "text": "在排队买咖啡，前面的人点单非常慢，还在闲聊。你会？",
-              "options": [
-                "直接制止：拍拍对方让他快点。",
-                "内心焦躁：叹气跺脚希望对方察觉。",
-                "直接走人：受不了等待。",
-                "无所谓：继续刷手机。"
-              ]
-            },
-            {
-              "id": "beh_spending",
-              "type": "choice",
-              "text": "关于购物，你最近的状态？",
-              "options": [
-                "极简/无欲：没欲望。",
-                "报复性消费：情绪化购物。",
-                "理性规划：按需购买。"
-              ]
-            },
-            {
-              "id": "beh_rejection",
-              "type": "choice",
-              "text": "你给好朋友发了消息，对方已读但24小时没回。你会觉得？",
-              "options": [
-                "非常焦虑：是不是我做错了什么惹他生气了？",
-                "有点生气：太不尊重人了。",
-                "无所谓：可能在忙，忘了。"
-              ]
-            },
-            {
-              "id": "beh_ambiguity",
-              "type": "choice",
-              "text": "领导交给你一个任务，但完全没说清楚要求就失联了。你会？",
-              "options": [
-                "极其抓狂：不知道怎么做，甚至无法开始。",
-                "按自己理解做：反正他没说，我就按我的来。",
-                "停滞等待：必须等到明确指令再动。"
-              ]
-            }
-          ]
-        },
-        {
-          "id": "cognitive_shadow",
-          "title": "VI. 人格与阴影 (Shadow)",
-          "description": "结合性格底色分析症状表现形态。",
-          "questions": [
-            {
-              "id": "mbti_ei_1",
-              "type": "scale",
-              "text": "在经历了漫长且疲惫的一周后，你更倾向于通过哪种方式充电？",
-              "leftLabel": "独自宅家",
-              "rightLabel": "出门聚会"
-            },
-            {
-              "id": "mbti_tf_1",
-              "type": "scale",
-              "text": "遇到痛苦时，你更习惯？",
-              "leftLabel": "理性分析原因",
-              "rightLabel": "沉浸在情绪中"
-            },
-            {
-              "id": "dark_npd_1",
-              "type": "scale",
-              "text": "我觉得我的痛苦是独特的，普通人无法理解。",
-              "leftLabel": "完全不同意",
-              "rightLabel": "极其同意"
-            },
-            {
-              "id": "dark_impulse",
-              "type": "choice",
-              "text": "当情绪崩溃时，你更倾向于？",
-              "options": [
-                "伤害自己 (内伐)",
-                "攻击他人/破坏物品 (外攻)",
-                "彻底冻结/解离 (逃避)"
-              ]
-            },
-            {
-              "id": "scenario_stress_paralysis",
-              "type": "text",
-              "text": "【情境测试】面对一个极具挑战性的任务截止日期，你感到压力巨大，大脑一片空白，已经坐在电脑前发呆了两个小时。此刻你脑子里在想什么？"
-            }
-          ]
-        },
-        {
-          "id": "values_8d",
-          "title": "VII. 价值观光谱 (Ideology)",
-          "description": "政治、经济与社会观念 (8Values 简化版)。",
-          "questions": [
-            {
-              "id": "val_econ_1",
-              "type": "scale",
-              "text": "“大公司的压迫通常比政府的压迫更令人担忧。”",
-              "leftLabel": "反对",
-              "rightLabel": "同意"
-            },
-            {
-              "id": "val_civil_1",
-              "type": "scale",
-              "text": "“为了国家安全，牺牲一部分个人隐私是必要的。”",
-              "leftLabel": "坚决反对",
-              "rightLabel": "同意"
-            },
-            {
-              "id": "val_dipl_1",
-              "type": "scale",
-              "text": "“我为我的国家感到自豪，通过军事力量维护国家利益是正当的。”",
-              "leftLabel": "反对",
-              "rightLabel": "同意"
-            },
-            {
-              "id": "val_soc_1",
-              "type": "scale",
-              "text": "“传统和宗教虽然古老，但对维持社会道德至关重要。”",
-              "leftLabel": "反对",
-              "rightLabel": "同意"
-            },
-            {
-              "id": "val_econ_2",
-              "type": "choice",
-              "text": "关于财富分配：",
-              "options": [
-                "优胜劣汰，能者多得",
-                "通过高税收保障每个人的基本生活"
-              ]
-            },
-            {
-              "id": "val_civil_2",
-              "type": "choice",
-              "text": "对于犯罪的处理：",
-              "options": [
-                "重在惩罚和威慑",
-                "重在教育和改造"
-              ]
-            },
-            {
-              "id": "scenario_broken_item",
-              "type": "text",
-              "text": "【情境测试】一个关系不错的朋友不小心弄坏了你最心爱且具有特殊纪念意义的物品。你当时的第一反应是什么？你会对他怎么说？如果几天后他为了表达歉意请你吃了一顿昂贵的大餐，你内心会真正原谅他吗，还是会一直心存芥蒂？"
-            },
-            {
-              "id": "scenario_unpaid_loan",
-              "type": "text",
-              "text": "【情境测试】一个朋友向你借了一笔不小的钱，早就过了约定的还款日期却迟迟不还。但今天你看到他在朋友圈发了去高级餐厅吃饭和旅游的照片。你会选择怎么处理？会直接催账还是默默忍受？这会如何影响你们未来的关系？"
-            },
-            {
-              "id": "scenario_misunderstood",
-              "type": "text",
-              "text": "【情境测试】你出于好意帮一个同事分担工作，结果因为沟通不畅出了点小错，他却在办公室当着大家的面大声责怪你多管闲事。你会立刻反击、委屈地解释，还是从此对他关上心门？请描述你那一刻的真实反应。"
-            },
-            {
-              "id": "scenario_credit_theft",
-              "type": "choice",
-              "text": "在小组项目中你付出了绝大部分努力，但在汇报时，另一名组员抢在前面把你的创意说成是他个人的想法，并得到了领导的高度赞赏。你会？",
-              "options": [
-                "当场指出：不能容忍不劳而获，必须拿回真相。",
-                "会后私下沟通：要求对方在之后的场合给予说明。",
-                "默默忍受：不想把关系闹僵，但以后绝不会再和他合作。",
-                "陷入自我怀疑：觉得自己是不是太在意虚名，反而感到愧疚。"
-              ]
-            }
-          ]
-        },
-        {
-          "id": "attachment_roots",
-          "title": "VIII. 原生家庭与依恋 (Attachment)",
-          "description": "溯源早期关系对人格底色的塑造。",
-          "questions": [
-            {
-              "id": "att_childhood",
-              "type": "text",
-              "text": "请描述一段童年时期让你印象最深刻的场景（无论好坏）。那一刻你感受到了什么？"
-            },
-            {
-              "id": "att_parents",
-              "type": "scale",
-              "text": "你觉得你在父母面前可以完全展现真实的自我吗？",
-              "leftLabel": "完全不能",
-              "rightLabel": "毫无保留"
-            },
-            {
-              "id": "att_conflict_style",
-              "type": "choice",
-              "text": "在亲密关系中遇到激烈争吵时，你通常表现为？",
-              "options": [
-                "追逐者：必须立刻说清楚，反复确认对方还爱你。",
-                "疏离者：切断联系，躲进自己的舒适壳，拒绝沟通。",
-                "恐惧者：渴望靠近但又害怕受伤，反反复复。",
-                "安宁者：冷静面对，解决问题，不带攻击性。"
-              ]
-            },
-            {
-              "id": "att_safety",
-              "type": "scale",
-              "text": "“这个世界本质上是安全的且值得信任的。”你对这句话的认可度？",
-              "leftLabel": "充满敌意",
-              "rightLabel": "完全信任"
-            }
-          ]
-        },
-        {
-          "id": "professional_persona",
-          "title": "X. 职业画像与成就动机 (Professional)",
-          "description": "探讨在权力和职场环境下的真实镜像。",
-          "questions": [
-            {
-              "id": "car_ambition",
-              "type": "scale",
-              "text": "你认为“权力”是实现社会理想的工具，还是生存竞争的必然终点？",
-              "leftLabel": "理想工具",
-              "rightLabel": "生存必然"
-            },
-            {
-              "id": "car_leadership",
-              "type": "choice",
-              "text": "在团队中，你的角色通常倾向于？",
-              "options": [
-                "掌舵人：承担决策压力，追求效率",
-                "协调者：平衡情绪，维护组织稳定性",
-                "执行尖兵：用专业结果说话，不愿卷入政治",
-                "旁观者：只完成本分，保持精神独立"
-              ]
-            },
-            {
-              "id": "car_burnout",
-              "type": "scale",
-              "text": "如果事业成功需要牺牲几乎所有的私人生活和健康，你的接受程度？",
-              "leftLabel": "坚决不干",
-              "rightLabel": "值得交换"
-            },
-            {
-              "id": "car_failure",
-              "type": "text",
-              "text": "请描述一次职场或学业上的严重挫败。当时你认为是谁的责任？你后来采取了什么行动？"
-            },
-            {
-              "id": "car_money",
-              "type": "scale",
-              "text": "你认为财富的主要功能是？",
-              "leftLabel": "安全感储备",
-              "rightLabel": "扩张自我意志"
-            },
-            {
-              "id": "car_ethics",
-              "type": "choice",
-              "text": "一个能带来巨大收益但处于法律灰色的项目摆在你面前，你的第一反应是？",
-              "options": [
-                "风险评估：只要回报盖过风险就干",
-                "道德审视：即使不违法，良心不安也不干",
-                "观望跟随：看大佬们怎么做",
-                "断然拒绝：绝不踏入雷区"
-              ]
-            }
-          ]
-        },
-        {
-          "id": "defense_mechanisms",
-          "title": "XI. 心理防御与应激模式 (Defense)",
-          "description": "当自我受到威胁时，大脑如何通过滤镜保护你。",
-          "questions": [
-            {
-              "id": "def_criticism",
-              "type": "choice",
-              "text": "面对来自权威人士的公开批评，你最常见的反应是？",
-              "options": [
-                "理智化：冷静分析对方的逻辑漏洞或合理性",
-                "投射：认为对方是在故意整我或嫉妒我",
-                "压抑：表面顺从，内心将其完全屏蔽",
-                "反向形成：表现得异常热诚，以此掩盖愤怒"
-              ]
-            },
-            {
-              "id": "def_stress_eat",
-              "type": "scale",
-              "text": "在极端压力下，你是否会产生暴食、囤积或强迫性整理行为？",
-              "leftLabel": "从不",
-              "rightLabel": "非常频繁"
-            },
-            {
-              "id": "def_humor",
-              "type": "scale",
-              "text": "你是否常用自嘲、讽刺或冷幽默来逃避沉重的情绪？",
-              "leftLabel": "很少用",
-              "rightLabel": "核心防御手段"
-            },
-            {
-              "id": "def_procrastination",
-              "type": "scale",
-              "text": "你是否存在“完美主义导致的拖延”？（因为怕做不好而不敢开始）",
-              "leftLabel": "极其果敢",
-              "rightLabel": "极其严重"
-            },
-            {
-              "id": "def_blame",
-              "type": "choice",
-              "text": "如果你和朋友吵架了，你通常在脑海里？",
-              "options": [
-                "反复复盘自己哪句话说错了（内耗型）",
-                "列举对方历史上的种种劣迹（反攻型）",
-                "自我安慰“反正这段关系也不重要”（撤离型）",
-                "思考对方可能存在的苦衷（升华型）"
-              ]
-            },
-            {
-              "id": "def_physical",
-              "type": "scale",
-              "text": "心理压力大时，是否会出现明显的生理症状（如偏头痛、胃痛、胸闷）？",
-              "leftLabel": "身心高度分离",
-              "rightLabel": "身体即情绪报警器"
-            },
-            {
-              "id": "def_regression",
-              "type": "choice",
-              "text": "遇到无法解决的绝望境地时，你是否会有撤回到“幼态”的行为（如缩在角落、渴望母亲般的照顾、拒绝处理任何信息）？",
-              "options": [
-                "经常会有这种冲动",
-                "偶尔感到虚弱，但会强撑",
-                "不会，只会感到愤怒并寻求解决",
-                "会变得极度麻木，像石头一样"
-              ]
-            },
-            {
-              "id": "def_idealization",
-              "type": "scale",
-              "text": "你是否容易在一段关系初期将对方“神化”，然后在发现缺点后迅速幻灭？",
-              "leftLabel": "极其理智",
-              "rightLabel": "常有黑白两极化"
-            }
-          ]
-        },
-        {
-          "id": "social_trust",
-          "title": "XII. 社会认知的深度张力 (Social Cognition)",
-          "description": "探讨你与他人边界的真实博弈。",
-          "questions": [
-            {
-              "id": "soc_human_nature",
-              "type": "scale",
-              "text": "在不涉及利益冲突时，你认为人性本善吗？",
-              "leftLabel": "恶的本能",
-              "rightLabel": "善的萌芽"
-            },
-            {
-              "id": "soc_manipulation_detect",
-              "type": "scale",
-              "text": "你能快速识别出他人在对话中通过隐秘的羞辱或愧疚感操纵你吗？",
-              "leftLabel": "反应迟钝",
-              "rightLabel": "极度敏锐"
-            },
-            {
-              "id": "soc_loner",
-              "type": "choice",
-              "text": "在大型社交聚会（如婚礼、论坛）中，你的底层感受通常是？",
-              "options": [
-                "能量节点：渴望链接，如鱼得水",
-                "社交表演者：熟练交际但感到空虚",
-                "观测者：站在边缘审视人群的荒诞",
-                "隐形人：极度焦虑，只想尽快消失"
-              ]
-            },
-            {
-              "id": "soc_conflict_res",
-              "type": "scale",
-              "text": "面对直接冲突，你倾向于“硬碰硬”还是“通过第三者迂回解决”？",
-              "leftLabel": "铁血解决",
-              "rightLabel": "温厚迂回"
-            },
-            {
-              "id": "soc_praise",
-              "type": "scale",
-              "text": "面对赞美，你内心真实的反应是？",
-              "leftLabel": "理所应当",
-              "rightLabel": "极度不适/防御"
-            },
-            {
-              "id": "soc_herd",
-              "type": "scale",
-              "text": "当大众舆论一致指向某个方向，而你持相反意见时，你的发声意愿？",
-              "leftLabel": "沉默/伪装",
-              "rightLabel": "坚持孤声"
-            },
-            {
-              "id": "soc_secrets",
-              "type": "choice",
-              "text": "你对待朋友秘密的态度是？",
-              "options": [
-                "守口如瓶：把它带进坟墓",
-                "战略分析：在不伤害对方的前提下作为信息筹码",
-                "偶尔流露：当作社交谈资",
-                "不慎泄密：并非故意，但守不住重压"
-              ]
-            },
-            {
-              "id": "soc_envy",
-              "type": "scale",
-              "text": "当一个条件和你差不多的人突然获得了你极度渴望的成功，你内心的嫉妒程度？",
-              "leftLabel": "真心祝愿",
-              "rightLabel": "极度痛苦"
-            }
-          ]
-        },
-        {
-          "id": "aesthetic_intuitive",
-          "title": "XIII. 审美、直觉与精神内核 (Aesthetic & Intuitive)",
-          "description": "触摸那些无法通过文字定义的感性边界。",
-          "questions": [
-            {
-              "id": "aes_poetry",
-              "type": "scale",
-              "text": "你认为世界是完全可以被数理逻辑解释的，还是本质上是诗性且不可言说的？",
-              "leftLabel": "绝对科学",
-              "rightLabel": "绝对神秘"
-            },
-            {
-              "id": "aes_beauty",
-              "type": "choice",
-              "text": "以下哪种景象最能触动你的灵魂？",
-              "options": [
-                "整齐、规律且庞大的人造机械或建筑",
-                "无序、狂野且孤独的荒原或深海",
-                "嘈杂、烟火气十足的市井街道",
-                "极简、留白且充满隐喻的现代艺术"
-              ]
-            },
-            {
-              "id": "aes_music",
-              "type": "scale",
-              "text": "你听音乐时，是更关注歌词的叙事，还是旋律引发的虚空感？",
-              "leftLabel": "理性叙事",
-              "rightLabel": "感性抽象"
-            },
-            {
-              "id": "aes_nostalgia",
-              "type": "scale",
-              "text": "你是否经常沉溺于对过去某段时光（即使那时候并不快乐）的病态怀恋？",
-              "leftLabel": "前瞻现实",
-              "rightLabel": "复古忧郁"
-            },
-            {
-              "id": "aes_nature_risk",
-              "type": "scale",
-              "text": "一个人置身于森林深处时，你更多感到的是恐惧还是归属感？",
-              "leftLabel": "生存危机",
-              "rightLabel": "灵魂回归"
-            },
-            {
-              "id": "aes_dreams",
-              "type": "text",
-              "text": "你经常梦见什么（或者那个梦的主题）？这些梦是否反过来影响你现实中的情绪？"
-            },
-            {
-              "id": "aes_transcendence",
-              "type": "scale",
-              "text": "你是否曾有过那种“忘我”的时刻（如看到星空、听交响乐、深度思考）？",
-              "leftLabel": "从未有过",
-              "rightLabel": "常驻状态"
-            },
-            {
-              "id": "aes_fin",
-              "type": "text",
-              "text": "最后，如果可以去掉一个人类的情感（如嫉妒、恐惧、爱），你会选择哪一个？为什么？"
-            },
-            {
-              "id": "full_finish_note",
-              "type": "text",
-              "text": "辛苦了。最后一次确认：在这个漫长的测试过程中，你是否有过想要“逃避真实”或“讨好测试结果”的冲动？请说出那个让你感到不安的真实锚点。"
-            }
+          "id": "beh_ambiguity",
+          "type": "choice",
+          "text": "领导交给你一个任务，但完全没说清楚要求就失联了。你会？",
+          "options": [
+            "极其抓狂：不知道怎么做，甚至无法开始。",
+            "按自己理解做：反正他没说，我就按我的来。",
+            "停滞等待：必须等到明确指令再动。"
           ]
         }
       ]
+    },
+    {
+      "id": "attachment_roots",
+      "title": "VI. 原生家庭与依恋 (Attachment)",
+      "description": "溯源早期关系对人格底色的塑造。",
+      "questions": [
+        {
+          "id": "att_parents",
+          "type": "scale",
+          "text": "你觉得你在父母面前可以完全展现真实的自我吗？",
+          "leftLabel": "完全不能",
+          "rightLabel": "毫无保留"
+        },
+        {
+          "id": "att_conflict_style",
+          "type": "choice",
+          "text": "在亲密关系中遇到激烈争吵时，你通常表现为？",
+          "options": [
+            "追逐者：必须立刻说清楚，反复确认对方还爱你。",
+            "疏离者：切断联系，躲进自己的舒适壳，拒绝沟通。",
+            "恐惧者：渴望靠近但又害怕受伤，反反复复。",
+            "安宁者：冷静面对，解决问题，不带攻击性。"
+          ]
+        },
+        {
+          "id": "att_safety",
+          "type": "scale",
+          "text": "“这个世界本质上是安全的且值得信任的。”你对这句话的认可度？",
+          "leftLabel": "充满敌意",
+          "rightLabel": "完全信任"
+        }
+      ]
+    },
+    {
+      "id": "professional_persona",
+      "title": "VII. 职业画像与成就动机 (Professional)",
+      "description": "探讨在权力和职场环境下的真实镜像。",
+      "questions": [
+        {
+          "id": "car_ambition",
+          "type": "scale",
+          "text": "你认为“权力”是实现社会理想的工具，还是生存竞争的必然终点？",
+          "leftLabel": "理想工具",
+          "rightLabel": "生存必然"
+        },
+        {
+          "id": "car_leadership",
+          "type": "choice",
+          "text": "在团队中，你的角色通常倾向于？",
+          "options": [
+            "掌舵人：承担决策压力，追求效率",
+            "协调者：平衡情绪，维护组织稳定性",
+            "执行尖兵：用专业结果说话，不愿卷入政治",
+            "旁观者：只完成本分，保持精神独立"
+          ]
+        },
+        {
+          "id": "car_burnout",
+          "type": "scale",
+          "text": "如果事业成功需要牺牲几乎所有的私人生活和健康，你的接受程度？",
+          "leftLabel": "坚决不干",
+          "rightLabel": "值得交换"
+        },
+        {
+          "id": "car_money",
+          "type": "scale",
+          "text": "你认为财富的主要功能是？",
+          "leftLabel": "安全感储备",
+          "rightLabel": "扩张自我意志"
+        },
+        {
+          "id": "car_ethics",
+          "type": "choice",
+          "text": "一个能带来巨大收益但处于法律灰色的项目摆在你面前，你的第一反应是？",
+          "options": [
+            "风险评估：只要回报盖过风险就干",
+            "道德审视：即使不违法，良心不安也不干",
+            "观望跟随：看大佬们怎么做",
+            "断然拒绝：绝不踏入雷区"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "defense_mechanisms",
+      "title": "VIII. 心理防御与应激模式 (Defense)",
+      "description": "当自我受到威胁时，大脑如何通过滤镜保护你。",
+      "questions": [
+        {
+          "id": "def_criticism",
+          "type": "choice",
+          "text": "面对来自权威人士的公开批评，你最常见的反应是？",
+          "options": [
+            "理智化：冷静分析对方的逻辑漏洞或合理性",
+            "投射：认为对方是在故意整我或嫉妒我",
+            "压抑：表面顺从，内心将其完全屏蔽",
+            "反向形成：表现得异常热诚，以此掩盖愤怒"
+          ]
+        },
+        {
+          "id": "def_stress_eat",
+          "type": "scale",
+          "text": "在极端压力下，你是否会产生暴食、囤积或强迫性整理行为？",
+          "leftLabel": "从不",
+          "rightLabel": "非常频繁"
+        },
+        {
+          "id": "def_humor",
+          "type": "scale",
+          "text": "你是否常用自嘲、讽刺或冷幽默来逃避沉重的情绪？",
+          "leftLabel": "很少用",
+          "rightLabel": "核心防御手段"
+        },
+        {
+          "id": "def_procrastination",
+          "type": "scale",
+          "text": "你是否存在“完美主义导致的拖延”？",
+          "leftLabel": "极其果敢",
+          "rightLabel": "极其严重"
+        },
+        {
+          "id": "def_blame",
+          "type": "choice",
+          "text": "如果你和朋友吵架了，你通常在脑海里：",
+          "options": [
+            "反复复盘自己哪句话说错了",
+            "列举对方历史上的种种劣迹",
+            "自我安慰“反正这段关系也不重要”",
+            "思考对方可能存在的苦衷"
+          ]
+        },
+        {
+          "id": "def_physical",
+          "type": "scale",
+          "text": "心理压力大时，是否会出现明显的生理症状（如偏头痛、胃痛、胸闷）？",
+          "leftLabel": "身心高度分离",
+          "rightLabel": "身体即情绪报警器"
+        },
+        {
+          "id": "def_regression",
+          "type": "choice",
+          "text": "遇到无法解决的绝望境地时，你是否会有撤回到“幼态”的行为（如渴望被照顾、拒绝处理信息）？",
+          "options": [
+            "经常会有这种冲动",
+            "偶尔感到虚弱，但会强撑",
+            "不会，只会感到愤怒并寻求解决",
+            "会变得极度麻木"
+          ]
+        },
+        {
+          "id": "def_idealization",
+          "type": "scale",
+          "text": "你是否容易在一段关系初期将对方“神化”，然后在发现缺点后迅速幻灭？",
+          "leftLabel": "极其理智",
+          "rightLabel": "常有黑白两极化"
+        }
+      ]
+    },
+    {
+      "id": "social_trust",
+      "title": "IX. 社会认知 (Social)",
+      "description": "探讨你与他人边界的真实博弈。",
+      "questions": [
+        {
+          "id": "soc_human_nature",
+          "type": "scale",
+          "text": "在不涉及利益冲突时，你认为人性本善吗？",
+          "leftLabel": "恶的本能",
+          "rightLabel": "善的萌芽"
+        },
+        {
+          "id": "soc_manipulation_detect",
+          "type": "scale",
+          "text": "你能快速识别出他人在对话中通过隐秘的羞辱或愧疚感操纵你吗？",
+          "leftLabel": "反应迟钝",
+          "rightLabel": "极度敏锐"
+        }
+      ]
+    },
+    {
+      "id": "values_ideology",
+      "title": "X. 价值观 (Values)",
+      "description": "政治、经济与社会观念。",
+      "questions": [
+        {
+          "id": "val_econ_1",
+          "type": "scale",
+          "text": "“大公司的压迫通常比政府的压迫更令人担忧。”",
+          "leftLabel": "反对",
+          "rightLabel": "同意"
+        },
+        {
+          "id": "val_civil_1",
+          "type": "scale",
+          "text": "“为了国家安全，牺牲一部分个人隐私是必要的。”",
+          "leftLabel": "坚决反对",
+          "rightLabel": "同意"
+        },
+        {
+          "id": "val_dipl_1",
+          "type": "scale",
+          "text": "“我为我的国家感到自豪，通过军事力量维护国家利益是正当的。”",
+          "leftLabel": "反对",
+          "rightLabel": "同意"
+        },
+        {
+          "id": "val_soc_1",
+          "type": "scale",
+          "text": "“传统和宗教虽然古老，但对维持社会道德至关重要。”",
+          "leftLabel": "反对",
+          "rightLabel": "同意"
+        },
+        {
+          "id": "val_econ_2",
+          "type": "choice",
+          "text": "关于财富分配：",
+          "options": [
+            "优胜劣汰，能者多得",
+            "通过高税收保障每个人的基本生活"
+          ]
+        },
+        {
+          "id": "val_civil_2",
+          "type": "choice",
+          "text": "对于犯罪的处理：",
+          "options": [
+            "重在惩罚和威慑",
+            "重在教育和改造"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "subjective_lite",
+      "title": "情境模拟 (Lite)",
+      "questions": [
+        {
+          "id": "dilemma_1",
+          "type": "text",
+          "text": "【情境】你正在管理一个关键项目。一名支持你多年的忠诚团队成员犯了一个重大错误，如果掩盖这个错误可以保住项目，但会给公司未来埋下隐患。如果承认错误，他很可能会被解雇。你会怎么做，为什么？"
+        }
+      ]
+    },
+    {
+      "id": "subjective_standard",
+      "title": "情境模拟",
+      "questions": [
+        {
+          "id": "dilemma_1",
+          "type": "text",
+          "text": "【情境】你正在管理一个关键项目。一名支持你多年的忠诚团队成员犯了一个重大错误，如果掩盖这个错误可以保住项目，但会给公司未来埋下隐患。如果承认错误，他很可能会被解雇。你会怎么做，为什么？"
+        },
+        {
+          "id": "dilemma_2",
+          "type": "text",
+          "text": "【情境】你在没有摄像头的公共场所捡到一个装有大量现金的钱包。你目前正面临严重的经济困难。归还是“正确”的事，但留下它可以解决你的燃眉之急。请描述你的内心挣扎。"
+        },
+        {
+          "id": "dilemma_3",
+          "type": "text",
+          "text": "【情境】你有能力通过改变失控列车的轨道来以此救下5个陌生人，但这样做会牺牲掉另一个人，而这个人是即将治愈某种绝症的天才科学家。你会干预吗？为什么？"
+        }
+      ]
+    },
+    {
+      "id": "subjective_full",
+      "title": "深度情境模拟",
+      "questions": [
+        {
+          "id": "dilemma_1",
+          "type": "text",
+          "text": "【情境】你正在管理一个关键项目。一名支持你多年的忠诚团队成员犯了一个重大错误，如果掩盖这个错误可以保住项目，但会给公司未来埋下隐患。如果承认错误，他很可能会被解雇。你会怎么做，为什么？"
+        },
+        {
+          "id": "dilemma_2",
+          "type": "text",
+          "text": "【情境】你在没有摄像头的公共场所捡到一个装有大量现金的钱包。你目前正面临严重的经济困难。归还是“正确”的事，但留下它可以解决你的燃眉之急。请描述你的内心挣扎。"
+        },
+        {
+          "id": "dilemma_3",
+          "type": "text",
+          "text": "【情境】你有能力通过改变失控列车的轨道来以此救下5个陌生人，但这样做会牺牲掉另一个人，而这个人是即将治愈某种绝症的天才科学家。你会干预吗？为什么？"
+        },
+        {
+          "id": "dilemma_4",
+          "type": "text",
+          "text": "【情境】你身处一段舒适但停滞不前的关系中。你深爱你的伴侣，但感到你的个人成长受到了阻碍。离开会让他们崩溃；留下意味着牺牲你的潜力。你会如何选择？"
+        },
+        {
+          "id": "dilemma_5",
+          "type": "text",
+          "text": "【情境】过去有人深深伤害了你，毁了你的名声。多年后，他们陷入绝境求助于你。你是唯一能帮他们的人。你会帮吗？解释你的感受。"
+        },
+        {
+          "id": "dilemma_6",
+          "type": "text",
+          "text": "【情境】你有机会服用一种药丸，保证你获得永恒的幸福和舒适，但你将生活在模拟现实中，对真实世界一无所知。或者你可以留在充满痛苦和不确定性的真实世界。你会选哪个？"
+        }
+      ]
     }
-  }
+  ]
 }

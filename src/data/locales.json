@@ -28,9 +28,11 @@
       "title": "选择深度",
       "subtitle": "选择分析的颗粒度。",
       "lite_title": "快速扫描",
-      "lite_desc": "核心人格筛查 (2分钟)",
+      "lite_desc": "核心人格筛查 (2分钟, ~20题)",
+      "std_title": "综合评估",
+      "std_desc": "人格与心理健康综合分析 (10分钟, ~45题)",
       "full_title": "深度侧写",
-      "full_desc": "临床 + 价值观 + 潜意识 (10分钟)",
+      "full_desc": "临床 + 价值观 + 潜意识 (25-30分钟, 全量题目)",
       "back": "返回"
     },
     "engine": {
@@ -149,9 +151,11 @@
       "title": "Select Depth",
       "subtitle": "Choose analysis granularity.",
       "lite_title": "Lite Scan",
-      "lite_desc": "Core Personality Screening (2 min)",
+      "lite_desc": "Core Screening (2 min, ~20 Qs)",
+      "std_title": "Standard",
+      "std_desc": "Comprehensive Analysis (10 min, ~45 Qs)",
       "full_title": "Deep Profile",
-      "full_desc": "Clinical + Values + Subconscious (10-15 min)",
+      "full_desc": "Full Clinical + Subconscious (25-30 min, All Qs)",
       "back": "Back"
     },
     "engine": {
@@ -271,9 +275,11 @@
       "title": "深度選択",
       "subtitle": "分析の粒度を選択してください。",
       "lite_title": "簡易スキャン",
-      "lite_desc": "コア性格スクリーニング (2分)",
+      "lite_desc": "コア性格スクリーニング (2分, ~20問)",
+      "std_title": "標準分析",
+      "std_desc": "総合メンタルヘルス分析 (10分, ~45問)",
       "full_title": "深層プロファイル",
-      "full_desc": "臨床 + 価値観 + 潜在意識 (10〜15分)",
+      "full_desc": "臨床 + 価値観 + 潜在意識 (25-30分, 全問)",
       "back": "戻る"
     },
     "engine": {

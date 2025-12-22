@@ -35,7 +35,7 @@ const BackgroundDecor = React.memo(() => (
   </div>
 ));
 
-export const ResultView = ({ data, lang, onBack }: { data: any, lang: Lang, onBack?: () => void }) => {
+export const ResultView = ({ data, lang, mode, onBack }: { data: any, lang: Lang, mode?: 'lite' | 'standard' | 'full' | null, onBack?: () => void }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { exportImage, isExporting } = useImageExport();
 
@@ -74,16 +74,14 @@ export const ResultView = ({ data, lang, onBack }: { data: any, lang: Lang, onBa
           className="mb-8 md:mb-12 text-center"
         >
           <div className="flex flex-col items-center gap-4 mb-6">
-            <div className="flex flex-wrap justify-center gap-2">
-              <div className="px-4 py-1 rounded-full bg-purple-100/80 text-[10px] md:text-xs font-bold tracking-[0.2em] text-purple-500 uppercase border border-purple-200/50">
-                {ui.title}
-              </div>
-              {identity.ideology && (
-                <div className="px-5 py-1 rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-[10px] md:text-xs font-bold tracking-[0.1em] uppercase border border-indigo-400 shadow-lg shadow-indigo-500/20">
-                  {identity.ideology}
+            {(mode !== 'lite') && (
+              <div className="flex flex-wrap justify-center gap-2">
+                <div className="px-4 py-1 rounded-full bg-purple-100/80 text-[10px] md:text-xs font-bold tracking-[0.2em] text-purple-500 uppercase border border-purple-200/50">
+                  {ui.title}
                 </div>
-              )}
-            </div>
+                {/* Global Removal: Ideology (Values Spectrum) Pill */}
+              </div>
+            )}
             
             <h1 className="text-4xl md:text-6xl lg:text-8xl font-thin tracking-tighter text-slate-900 font-serif leading-tight px-2">
               {safeStr(identity.archetype)}
@@ -128,12 +126,7 @@ export const ResultView = ({ data, lang, onBack }: { data: any, lang: Lang, onBa
                 <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">{common.alignment}</span>
                 <span className="text-sm md:text-base font-medium text-slate-600">{safeStr(identity.alignment)}</span>
               </div>
-              {identity.ideology && (
-                <div className="flex justify-between items-center pt-2">
-                  <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">{common.ideology}</span>
-                  <span className="text-sm md:text-base font-medium text-slate-600">{safeStr(identity.ideology)}</span>
-                </div>
-              )}
+              {/* Global Removal: Ideology in Identity Card */}
             </Card>
 
             {/* CLINICAL LABEL (New) */}
@@ -241,25 +234,29 @@ export const ResultView = ({ data, lang, onBack }: { data: any, lang: Lang, onBa
                   <p className="text-xs leading-relaxed opacity-80">{data.clinical_findings?.depression?.description}</p>
                 </div>
 
-                {/* ADHD Card */}
-                <div className="p-5 rounded-[1.25rem] border bg-indigo-50 border-indigo-100 text-indigo-900">
-                  <div className="flex justify-between items-start mb-3">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.15em] opacity-60">{ui.adhd_card}</span>
-                    <Zap size={14} className="text-indigo-400" />
+                {/* ADHD Card - Hidden in Simplified (Lite) Mode */}
+                {data.clinical_findings?.adhd && mode !== 'lite' && (
+                  <div className="p-5 rounded-[1.25rem] border bg-indigo-50 border-indigo-100 text-indigo-900">
+                    <div className="flex justify-between items-start mb-3">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.15em] opacity-60">{ui.adhd_card}</span>
+                      <Zap size={14} className="text-indigo-400" />
+                    </div>
+                    <div className="text-2xl font-serif font-bold mb-2">{data.clinical_findings?.adhd?.status || 'None'}</div>
+                    <p className="text-xs leading-relaxed opacity-80">{data.clinical_findings?.adhd?.description}</p>
                   </div>
-                  <div className="text-2xl font-serif font-bold mb-2">{data.clinical_findings?.adhd?.status || 'None'}</div>
-                  <p className="text-xs leading-relaxed opacity-80">{data.clinical_findings?.adhd?.description}</p>
-                </div>
+                )}
 
-                {/* Attachment Card */}
-                <div className="p-5 rounded-[1.25rem] border bg-purple-50 border-purple-100 text-purple-900">
-                  <div className="flex justify-between items-start mb-3">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.15em] opacity-60">{ui.attachment_card}</span>
-                    <Heart size={14} className="text-purple-400" />
+                {/* Attachment Card - Hidden in Simplified (Lite) Mode */}
+                {data.clinical_findings?.attachment && mode !== 'lite' && (
+                  <div className="p-5 rounded-[1.25rem] border bg-purple-50 border-purple-100 text-purple-900">
+                    <div className="flex justify-between items-start mb-3">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.15em] opacity-60">{ui.attachment_card}</span>
+                      <Heart size={14} className="text-purple-400" />
+                    </div>
+                    <div className="text-xl md:text-2xl font-serif font-bold mb-2 leading-tight">{data.clinical_findings?.attachment?.type || 'None'}</div>
+                    <p className="text-xs leading-relaxed opacity-80">{data.clinical_findings?.attachment?.description}</p>
                   </div>
-                  <div className="text-xl md:text-2xl font-serif font-bold mb-2 leading-tight">{data.clinical_findings?.attachment?.type || 'None'}</div>
-                  <p className="text-xs leading-relaxed opacity-80">{data.clinical_findings?.attachment?.description}</p>
-                </div>
+                )}
               </div>
               
               {data.analysis?.clinical_note && (
@@ -276,6 +273,8 @@ export const ResultView = ({ data, lang, onBack }: { data: any, lang: Lang, onBa
               </p>
             </Card>
 
+            {/* Global Removal: Values Deep Analysis (Ideology Note) */}
+            {/*
             {data.analysis?.ideology_note && (
               <Card title={ui.ideology_analysis} icon={<Star className="text-indigo-500" size={18} />}>
                 <p className="text-slate-700 leading-relaxed font-light text-sm md:text-base font-serif italic">
@@ -283,26 +282,31 @@ export const ResultView = ({ data, lang, onBack }: { data: any, lang: Lang, onBa
                 </p>
               </Card>
             )}
+            */}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                {/* Global Removal: Values Spectrum (Ideology Card with Dimensions) */}
+                {/*
                 <Card title={ui.ideology} icon={<Activity className="text-violet-500" size={18} />}>
-                  {identity.ideology && (
-                    <div className="mb-4 p-3 bg-violet-50 rounded-xl border border-violet-100 flex items-center justify-between">
-                      <span className="text-[10px] font-bold text-violet-600 uppercase tracking-widest">{common.ideology}</span>
-                      <span className="text-xs font-bold text-violet-900">{identity.ideology}</span>
-                    </div>
-                  )}
-                  <ul className="space-y-3 text-xs">
-                    {data.dimensions && Object.entries(data.dimensions).map(([k, v]) => (
-                      <li key={k} className="flex justify-between border-b border-purple-50 pb-1.5 relative">
-                        <span className="capitalize text-slate-400 font-medium tracking-wide text-[10px]">
-                          {ui[`dimension_${k.toLowerCase()}`] || k}
-                        </span>
-                        <span className="font-bold text-slate-800 text-[11px]">{v as string}</span>
-                      </li>
-                    ))}
-                  </ul>
-               </Card>
+                   {identity.ideology && (
+                     <div className="mb-4 p-3 bg-violet-50 rounded-xl border border-violet-100 flex items-center justify-between">
+                       <span className="text-[10px] font-bold text-violet-600 uppercase tracking-widest">{common.ideology}</span>
+                       <span className="text-xs font-bold text-violet-900">{identity.ideology}</span>
+                     </div>
+                   )}
+                   <ul className="space-y-3 text-xs">
+                     {data.dimensions && Object.entries(data.dimensions).map(([k, v]) => (
+                       <li key={k} className="flex justify-between border-b border-purple-50 pb-1.5 relative">
+                         <span className="capitalize text-slate-400 font-medium tracking-wide text-[10px]">
+                           {ui[`dimension_${k.toLowerCase()}`] || k}
+                         </span>
+                         <span className="font-bold text-slate-800 text-[11px]">{v as string}</span>
+                       </li>
+                     ))}
+                   </ul>
+                </Card>
+                */}
 
                <div className="bg-slate-900 p-6 md:p-8 rounded-[1.5rem] text-white shadow-xl relative overflow-hidden flex flex-col justify-between min-h-[160px]">
                   <div className="absolute top-[-50%] right-[-50%] w-[100%] h-[100%] bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -349,8 +353,8 @@ export const ResultView = ({ data, lang, onBack }: { data: any, lang: Lang, onBa
                   </Card>
                 )}
 
-                {/* SOCIAL */}
-                {data.social_analysis && (
+                 {/* SOCIAL - Hidden in Simplified (Lite) Mode */}
+                {data.social_analysis && mode !== 'lite' && (
                   <Card title={ui.social || "SOCIAL CIRCLE"} icon={<Heart className="text-rose-400" size={18} />}>
                      <p className="text-sm font-serif text-slate-700 leading-relaxed mb-4">
                        {data.social_analysis.overview}
