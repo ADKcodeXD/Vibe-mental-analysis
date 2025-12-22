@@ -138,7 +138,7 @@ export const ResultView = ({ data, lang, onBack }: { data: any, lang: Lang, onBa
 
             {/* CLINICAL LABEL (New) */}
             {identity.clinical_label && (
-               <Card title="Clinical Vibe" icon={<Activity className="text-pink-500" size={18} />}>
+               <Card title={ui.clinical_label || "Clinical Vibe"} icon={<Activity className="text-pink-500" size={18} />}>
                   <div className="text-center">
                     <div className="text-lg md:text-xl font-bold text-pink-600 mb-1">{identity.clinical_label}</div>
                     <p className="text-xs text-slate-500 italic">"{identity.clinical_explanation}"</p>
@@ -148,10 +148,10 @@ export const ResultView = ({ data, lang, onBack }: { data: any, lang: Lang, onBa
 
             {/* HIGHLIGHTS (New) */}
             {data.highlights && (
-               <Card title="Talent & Risk" icon={<Zap className="text-yellow-500" size={18} />}>
+               <Card title={ui.highlights || "Talent & Risk"} icon={<Zap className="text-yellow-500" size={18} />}>
                   <div className="space-y-3">
                      <div>
-                        <div className="text-[10px] font-bold text-emerald-600 uppercase mb-1">Superpowers</div>
+                        <div className="text-[10px] font-bold text-emerald-600 uppercase mb-1">{ui.superpowers || "Superpowers"}</div>
                         <div className="flex flex-wrap gap-1">
                            {data.highlights.talents?.map((t: string) => (
                               <span key={t} className="text-[10px] px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100">{t}</span>
@@ -159,7 +159,7 @@ export const ResultView = ({ data, lang, onBack }: { data: any, lang: Lang, onBa
                         </div>
                      </div>
                      <div>
-                        <div className="text-[10px] font-bold text-rose-600 uppercase mb-1">Kryptonite</div>
+                        <div className="text-[10px] font-bold text-rose-600 uppercase mb-1">{ui.kryptonite || "Kryptonite"}</div>
                         <div className="flex flex-wrap gap-1">
                            {data.highlights.liabilities?.map((t: string) => (
                               <span key={t} className="text-[10px] px-2 py-0.5 bg-rose-50 text-rose-700 rounded-full border border-rose-100">{t}</span>
@@ -327,7 +327,7 @@ export const ResultView = ({ data, lang, onBack }: { data: any, lang: Lang, onBa
                   <Card title={ui.career || "CAREER PATH"} icon={<Zap className="text-amber-500" size={18} />}>
                     <div className="space-y-4">
                       <div>
-                        <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Sweet Spot</h4>
+                        <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">{ui.sweet_spot || "Sweet Spot"}</h4>
                         <div className="flex flex-wrap gap-2">
                           {data.career_analysis.suitable_careers?.map((c: string) => (
                             <span key={c} className="bg-emerald-50 text-emerald-700 px-2 py-1 rounded-md text-xs font-medium border border-emerald-100">{c}</span>
@@ -335,7 +335,7 @@ export const ResultView = ({ data, lang, onBack }: { data: any, lang: Lang, onBa
                         </div>
                       </div>
                        <div>
-                        <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Avoid</h4>
+                        <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">{ui.avoid || "Avoid"}</h4>
                         <div className="flex flex-wrap gap-2">
                           {data.career_analysis.unsuitable_careers?.map((c: string) => (
                             <span key={c} className="bg-rose-50 text-rose-700 px-2 py-1 rounded-md text-xs font-medium border border-rose-100">{c}</span>
@@ -358,17 +358,17 @@ export const ResultView = ({ data, lang, onBack }: { data: any, lang: Lang, onBa
                      
                      <div className="space-y-3">
                        <div className="flex justify-between items-center text-xs">
-                          <span className="text-indigo-900 font-bold">Deep Connections</span>
+                          <span className="text-indigo-900 font-bold">{ui.deep_connections || "Deep Connections"}</span>
                           <span className="text-slate-500 max-w-[60%] text-right">{data.social_analysis.circle_breakdown?.deep_connections}</span>
                        </div>
                        <div className="h-px bg-slate-100 w-full" />
                        <div className="flex justify-between items-center text-xs">
-                          <span className="text-slate-600 font-bold">Casual Friends</span>
+                          <span className="text-slate-600 font-bold">{ui.casual_friends || "Casual Friends"}</span>
                           <span className="text-slate-500 max-w-[60%] text-right">{data.social_analysis.circle_breakdown?.casual_friends}</span>
                        </div>
                        <div className="h-px bg-slate-100 w-full" />
                        <div className="flex justify-between items-center text-xs">
-                          <span className="text-rose-600 font-bold">Toxicity</span>
+                          <span className="text-rose-600 font-bold">{ui.toxicity || "Toxicity"}</span>
                           <span className="text-slate-500 max-w-[60%] text-right">{data.social_analysis.circle_breakdown?.useless_connections}</span>
                        </div>
                      </div>

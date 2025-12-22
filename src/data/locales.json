@@ -80,7 +80,18 @@
       "no_history": "暂无历史记录",
       "view_report": "查看报告",
       "delete_history": "删除记录",
-      "test_date": "测试日期"
+      "test_date": "测试日期",
+      "career": "职业生涯路径",
+      "social": "社交圈层分析",
+      "clinical_label": "临床人格侧写",
+      "highlights": "天赋与风险",
+      "sweet_spot": "舒适区 (适合)",
+      "avoid": "雷区 (避免)",
+      "deep_connections": "深度链接",
+      "casual_friends": "表面之交",
+      "toxicity": "无效/消耗型关系",
+      "superpowers": "核心超能力",
+      "kryptonite": "致命弱点"
     },
     "common": {
       "app_title": "真我镜像 - AI 心理人格评测",
@@ -190,7 +201,18 @@
       "no_history": "No history found",
       "view_report": "View Report",
       "delete_history": "Delete",
-      "test_date": "Date"
+      "test_date": "Date",
+      "career": "Career Path",
+      "social": "Social Circle",
+      "clinical_label": "Clinical Vibe",
+      "highlights": "Talent & Risk",
+      "sweet_spot": "Sweet Spot",
+      "avoid": "Avoid",
+      "deep_connections": "Deep Connections",
+      "casual_friends": "Casual Friends",
+      "toxicity": "Toxicity",
+      "superpowers": "Superpowers",
+      "kryptonite": "Kryptonite"
     },
     "common": {
       "app_title": "Self Mirror - AI Psychological Assessment",
@@ -301,7 +323,18 @@
       "no_history": "履歴がありません",
       "view_report": "レポートを表示",
       "delete_history": "削除",
-      "test_date": "診断日"
+      "test_date": "診断日",
+      "career": "キャリアパス",
+      "social": "社交サークル分析",
+      "clinical_label": "臨床的印象",
+      "highlights": "才能とリスク",
+      "sweet_spot": "適職 (スイートスポット)",
+      "avoid": "回避すべき環境",
+      "deep_connections": "深い絆",
+      "casual_friends": "カジュアルな友人",
+      "toxicity": "有害な関係",
+      "superpowers": "スーパーパワー",
+      "kryptonite": "弱点 (クリプトナイト)"
     },
     "common": {
       "app_title": "真我ミラー - AI心理人格診断",
