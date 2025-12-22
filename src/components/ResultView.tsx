@@ -1,50 +1,19 @@
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Brain, Zap, Heart, User, Activity, AlertTriangle, Eye, Star, Download, Share2, ArrowLeft } from 'lucide-react';
+import { Shield, Brain, Zap, Heart, User, Activity, AlertTriangle, Star, Share2, ArrowLeft } from 'lucide-react';
 import clsx from 'clsx';
 import localesData from '../data/locales.json';
-import { useImageExport } from '../hooks/useImageExport';
+
+// Import extracted components
+import { BackgroundDecor, Card, ScoreBar, DimensionBar } from './ui';
 
 type Lang = 'zh' | 'en' | 'ja';
 
-const BackgroundDecor = React.memo(() => (
-  <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#fdfaff]">
-     {/* Optimized Gradients using CSS radial-gradient instead of filter: blur */}
-    <motion.div 
-      animate={{ 
-        opacity: [0.4, 0.7, 0.4],
-        scale: [1, 1.2, 1],
-        x: [-50, 50, -50],
-        y: [-30, 30, -30]
-      }}
-      transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-      className="absolute -top-[10%] -left-[10%] w-[80%] h-[80%] rounded-full will-change-transform" 
-      style={{ background: 'radial-gradient(circle, rgba(199,210,254,0.3) 0%, rgba(255,255,255,0) 70%)' }}
-    />
-    <motion.div 
-      animate={{ 
-        opacity: [0.3, 0.6, 0.3],
-        scale: [1.2, 1, 1.2],
-        x: [50, -50, 50],
-        y: [30, -30, 30]
-      }}
-      transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-      className="absolute -bottom-[20%] -right-[10%] w-[90%] h-[90%] rounded-full will-change-transform" 
-      style={{ background: 'radial-gradient(circle, rgba(233,213,255,0.3) 0%, rgba(255,255,255,0) 70%)' }}
-    />
-  </div>
-));
-
 export const ResultView = ({ data, lang, mode, onBack }: { data: any, lang: Lang, mode?: 'lite' | 'standard' | 'full' | null, onBack?: () => void }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { exportImage, isExporting } = useImageExport();
-
-  // Localization Helper
   const t = (section: string, key: string) => {
       return (localesData as any)[lang]?.[section]?.[key] || key;
   }
-  
-  // Safe Accessor
   const safeStr = (v: any) => v || "Analyzing...";
   const stats = data.stats || {};
   const identity = data.identity_card || {};
@@ -79,7 +48,6 @@ export const ResultView = ({ data, lang, mode, onBack }: { data: any, lang: Lang
                 <div className="px-4 py-1 rounded-full bg-purple-100/80 text-[10px] md:text-xs font-bold tracking-[0.2em] text-purple-500 uppercase border border-purple-200/50">
                   {ui.title}
                 </div>
-                {/* Global Removal: Ideology (Values Spectrum) Pill */}
               </div>
             )}
             
@@ -126,7 +94,6 @@ export const ResultView = ({ data, lang, mode, onBack }: { data: any, lang: Lang
                 <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">{common.alignment}</span>
                 <span className="text-sm md:text-base font-medium text-slate-600">{safeStr(identity.alignment)}</span>
               </div>
-              {/* Global Removal: Ideology in Identity Card */}
             </Card>
 
             {/* CLINICAL LABEL (New) */}
@@ -203,6 +170,33 @@ export const ResultView = ({ data, lang, mode, onBack }: { data: any, lang: Lang
                  </p>
                </div>
             </Card>
+
+            {/* SCORING & STATS (New) */}
+            {data.scores && (
+              <Card title={ui.scores || "Vital Stats"} icon={<Activity className="text-blue-500" size={18} />}>
+                 <ScoreBar label={ui.repression_index || "Repression Index"} value={data.scores.repression_index} color="bg-indigo-500" />
+                 <ScoreBar label={ui.happiness_index || "Happiness Index"} value={data.scores.happiness_index} color="bg-emerald-500" />
+                 <ScoreBar label={ui.social_adaptation || "Social Mask"} value={data.scores.social_adaptation} color="bg-amber-500" />
+                 <ScoreBar label={ui.independent_thinking || "Free Thought"} value={data.scores.independent_thinking} color="bg-cyan-500" />
+              </Card>
+            )}
+
+            {/* DIMENSIONS (Political Compass) */}
+            {data.dimensions && (
+              <Card title={ui.dimensions || "Ideology Spectrum"} icon={<Share2 className="text-violet-500" size={18} />}>
+                 {data.dimensions.economic && <DimensionBar value={data.dimensions.economic.value} axisLabel={data.dimensions.economic.axis_label} leftLabel="Equality" rightLabel="Markets" />}
+                 {data.dimensions.diplomatic && <DimensionBar value={data.dimensions.diplomatic.value} axisLabel={data.dimensions.diplomatic.axis_label} leftLabel="Nation" rightLabel="Globe" />}
+                 {data.dimensions.civil && <DimensionBar value={data.dimensions.civil.value} axisLabel={data.dimensions.civil.axis_label} leftLabel="Authority" rightLabel="Liberty" />}
+                 {data.dimensions.societal && <DimensionBar value={data.dimensions.societal.value} axisLabel={data.dimensions.societal.axis_label} leftLabel="Tradition" rightLabel="Progress" />}
+                 
+                 {identity.ideology && (
+                    <div className="mt-4 p-3 bg-violet-50 rounded-xl border border-violet-100 text-center">
+                       <span className="text-[10px] font-bold text-violet-400 uppercase tracking-widest block mb-1">{common.ideology}</span>
+                       <span className="text-sm font-bold text-violet-900">{identity.ideology}</span>
+                    </div>
+                 )}
+              </Card>
+            )}
           </div>
 
           {/* MAIN COL: ANALYSIS (8 cols on desktop) */}
@@ -215,47 +209,53 @@ export const ResultView = ({ data, lang, mode, onBack }: { data: any, lang: Lang
                </p>
             </Card>
 
-            {/* SHADOW & CLINICAL */}
             {/* CLINICAL SUMMARY CARD */}
             <Card title={ui.clinical_summary} icon={<Activity className="text-rose-500" size={18} />}>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className={clsx(
+                "grid grid-cols-1 gap-4",
+                mode === 'lite' ? "md:grid-cols-1" : "md:grid-cols-3"
+              )}>
                 {/* Depression Card */}
-                <div className={clsx(
-                  "p-5 rounded-[1.25rem] border transition-all",
-                  (data.clinical_findings?.depression?.status === 'High' || data.clinical_findings?.depression?.status === common.status_high)
-                    ? "bg-rose-50 border-rose-100 text-rose-900" 
-                    : "bg-slate-50 border-slate-100 text-slate-900"
-                )}>
-                  <div className="flex justify-between items-start mb-3">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.15em] opacity-60">{ui.depression_card}</span>
-                    <AlertTriangle size={14} className={data.clinical_findings?.depression?.status === 'High' ? "text-rose-500" : "text-slate-300"} />
-                  </div>
-                  <div className="text-2xl font-serif font-bold mb-2">{data.clinical_findings?.depression?.status || 'None'}</div>
-                  <p className="text-xs leading-relaxed opacity-80">{data.clinical_findings?.depression?.description}</p>
-                </div>
+                <ClinicalCard
+                  label={ui.depression_card}
+                  status={data.clinical_findings?.depression?.status}
+                  description={data.clinical_findings?.depression?.description}
+                  isHigh={data.clinical_findings?.depression?.status === 'High' || data.clinical_findings?.depression?.status === common.status_high}
+                  colorScheme="rose"
+                  icon={<AlertTriangle size={14} className={data.clinical_findings?.depression?.status === 'High' ? "text-rose-500" : "text-slate-300"} />}
+                />
 
                 {/* ADHD Card - Hidden in Simplified (Lite) Mode */}
                 {data.clinical_findings?.adhd && mode !== 'lite' && (
-                  <div className="p-5 rounded-[1.25rem] border bg-indigo-50 border-indigo-100 text-indigo-900">
-                    <div className="flex justify-between items-start mb-3">
-                      <span className="text-[10px] font-bold uppercase tracking-[0.15em] opacity-60">{ui.adhd_card}</span>
-                      <Zap size={14} className="text-indigo-400" />
-                    </div>
-                    <div className="text-2xl font-serif font-bold mb-2">{data.clinical_findings?.adhd?.status || 'None'}</div>
-                    <p className="text-xs leading-relaxed opacity-80">{data.clinical_findings?.adhd?.description}</p>
-                  </div>
+                  <ClinicalCard
+                    label={ui.adhd_card}
+                    status={data.clinical_findings?.adhd?.status}
+                    description={data.clinical_findings?.adhd?.description}
+                    colorScheme="indigo"
+                    icon={<Zap size={14} className="text-indigo-400" />}
+                  />
                 )}
 
                 {/* Attachment Card - Hidden in Simplified (Lite) Mode */}
                 {data.clinical_findings?.attachment && mode !== 'lite' && (
-                  <div className="p-5 rounded-[1.25rem] border bg-purple-50 border-purple-100 text-purple-900">
-                    <div className="flex justify-between items-start mb-3">
-                      <span className="text-[10px] font-bold uppercase tracking-[0.15em] opacity-60">{ui.attachment_card}</span>
-                      <Heart size={14} className="text-purple-400" />
-                    </div>
-                    <div className="text-xl md:text-2xl font-serif font-bold mb-2 leading-tight">{data.clinical_findings?.attachment?.type || 'None'}</div>
-                    <p className="text-xs leading-relaxed opacity-80">{data.clinical_findings?.attachment?.description}</p>
-                  </div>
+                  <ClinicalCard
+                    label={ui.attachment_card}
+                    status={data.clinical_findings?.attachment?.type}
+                    description={data.clinical_findings?.attachment?.description}
+                    colorScheme="purple"
+                    icon={<Heart size={14} className="text-purple-400" />}
+                  />
+                )}
+
+                {/* Sexual Repression Card - Standard/Full Mode Only */}
+                {data.clinical_findings?.sexual_repression && mode !== 'lite' && (
+                  <ClinicalCard
+                    label={ui.sexual_card || "Repression"}
+                    status={data.clinical_findings?.sexual_repression?.level}
+                    description={data.clinical_findings?.sexual_repression?.explanation}
+                    colorScheme="pink"
+                    icon={<Heart size={14} className="text-pink-400" />}
+                  />
                 )}
               </div>
               
@@ -273,40 +273,7 @@ export const ResultView = ({ data, lang, mode, onBack }: { data: any, lang: Lang
               </p>
             </Card>
 
-            {/* Global Removal: Values Deep Analysis (Ideology Note) */}
-            {/*
-            {data.analysis?.ideology_note && (
-              <Card title={ui.ideology_analysis} icon={<Star className="text-indigo-500" size={18} />}>
-                <p className="text-slate-700 leading-relaxed font-light text-sm md:text-base font-serif italic">
-                  {data.analysis.ideology_note}
-                </p>
-              </Card>
-            )}
-            */}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                {/* Global Removal: Values Spectrum (Ideology Card with Dimensions) */}
-                {/*
-                <Card title={ui.ideology} icon={<Activity className="text-violet-500" size={18} />}>
-                   {identity.ideology && (
-                     <div className="mb-4 p-3 bg-violet-50 rounded-xl border border-violet-100 flex items-center justify-between">
-                       <span className="text-[10px] font-bold text-violet-600 uppercase tracking-widest">{common.ideology}</span>
-                       <span className="text-xs font-bold text-violet-900">{identity.ideology}</span>
-                     </div>
-                   )}
-                   <ul className="space-y-3 text-xs">
-                     {data.dimensions && Object.entries(data.dimensions).map(([k, v]) => (
-                       <li key={k} className="flex justify-between border-b border-purple-50 pb-1.5 relative">
-                         <span className="capitalize text-slate-400 font-medium tracking-wide text-[10px]">
-                           {ui[`dimension_${k.toLowerCase()}`] || k}
-                         </span>
-                         <span className="font-bold text-slate-800 text-[11px]">{v as string}</span>
-                       </li>
-                     ))}
-                   </ul>
-                </Card>
-                */}
+            <div className="grid grid-cols-1 gap-6">
 
                <div className="bg-slate-900 p-6 md:p-8 rounded-[1.5rem] text-white shadow-xl relative overflow-hidden flex flex-col justify-between min-h-[160px]">
                   <div className="absolute top-[-50%] right-[-50%] w-[100%] h-[100%] bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -325,7 +292,10 @@ export const ResultView = ({ data, lang, mode, onBack }: { data: any, lang: Lang
              </div>
 
               {/* NEW SECTIONS: Career & Social */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className={clsx(
+                "grid grid-cols-1 gap-6",
+                (data.social_analysis && mode !== 'lite') ? "md:grid-cols-2" : "md:grid-cols-1"
+              )}>
                 {/* CAREER */}
                 {data.career_analysis && (
                   <Card title={ui.career || "CAREER PATH"} icon={<Zap className="text-amber-500" size={18} />}>
@@ -403,18 +373,32 @@ export const ResultView = ({ data, lang, mode, onBack }: { data: any, lang: Lang
   );
 };
 
-// Utils
-const Card = ({ title, icon, children }: any) => (
-  <motion.div 
-    initial={{ opacity: 0, y: 15 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    className="bg-white p-5 md:p-6 rounded-[1.5rem] shadow-sm border border-purple-50/50 hover:shadow-md transition-all duration-300"
-  >
-    <div className="flex items-center gap-3 mb-4 md:mb-5 border-b border-purple-50 pb-3">
-      <div className="p-1.5 bg-purple-50 rounded-lg">{icon}</div>
-      <span className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">{title}</span>
+// Clinical Card Component - extracted for reuse
+interface ClinicalCardProps {
+  label: string;
+  status?: string;
+  description?: string;
+  isHigh?: boolean;
+  colorScheme: 'rose' | 'indigo' | 'purple' | 'pink';
+  icon: React.ReactNode;
+}
+
+const ClinicalCard = ({ label, status, description, isHigh, colorScheme, icon }: ClinicalCardProps) => {
+  const colorMap = {
+    rose: isHigh ? "bg-rose-50 border-rose-100 text-rose-900" : "bg-slate-50 border-slate-100 text-slate-900",
+    indigo: "bg-indigo-50 border-indigo-100 text-indigo-900",
+    purple: "bg-purple-50 border-purple-100 text-purple-900",
+    pink: "bg-pink-50 border-pink-100 text-pink-900"
+  };
+
+  return (
+    <div className={`p-5 rounded-[1.25rem] border transition-all ${colorMap[colorScheme]}`}>
+      <div className="flex justify-between items-start mb-3">
+        <span className="text-[10px] font-bold uppercase tracking-[0.15em] opacity-60">{label}</span>
+        {icon}
+      </div>
+      <div className="text-xl md:text-2xl font-serif font-bold mb-2 leading-tight">{status || 'None'}</div>
+      <p className="text-xs leading-relaxed opacity-80">{description}</p>
     </div>
-    {children}
-  </motion.div>
-);
+  );
+};

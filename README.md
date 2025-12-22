@@ -1,7 +1,5 @@
 # Self Mirror | 真我镜像 | 真我ミラー
 
-![Build Status](https://github.com/Start-to-Next/mental-help/actions/workflows/deploy.yml/badge.svg)
-
 **[English](#english) | [中文](#chinese) | [日本語](#japanese)**
 
 ---

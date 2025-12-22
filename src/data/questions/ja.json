@@ -6,6 +6,7 @@
       "sections": [
         "demographics",
         "core_scan",
+        "clinical_phq9",
         "subjective_lite"
       ]
     },
@@ -18,6 +19,7 @@
         "clinical_gad7",
         "personality_big5",
         "scenario_social",
+        "social_trust",
         "subjective_standard"
       ]
     },
@@ -35,6 +37,8 @@
         "professional_persona",
         "defense_mechanisms",
         "social_trust",
+        "sexual_repression",
+        "independent_thinking",
         "values_ideology",
         "subjective_full"
       ]
@@ -501,6 +505,17 @@
           "text": "「この世界は本質的に安全で信頼できる場所だ」という考えにどの程度同意しますか？",
           "leftLabel": "敵意に満ちている",
           "rightLabel": "完全に信頼できる"
+        },
+        {
+          "id": "family_scenario",
+          "type": "choice",
+          "text": "人生の重要な決定（職業、パートナーなど）が親の強い期待と対立する場合、通常どうしますか？",
+          "options": [
+            "妥協と服従：家庭の調和のために自分の選択を諦める。",
+            "面従腹背：表面上は同意し、裏では自分のやり方を通す。",
+            "激しい抵抗：対立を辞さずに自分の選択を守る。",
+            "穏健な主張：対話を試みるが、最終的には自分で決める。"
+          ]
         }
       ]
     },
@@ -630,10 +645,95 @@
       ]
     },
     {
+      "id": "sexual_repression",
+      "title": "IX. 性と抑圧 (Sexual Repression)",
+      "description": "性的欲望、社会的規範、および自己の間の葛藤を探ります。",
+      "questions": [
+        {
+          "id": "sex_desire_expression",
+          "type": "scale",
+          "text": "自分の性的欲求が抑圧され、自由に表現できないと感じることがありますか？",
+          "leftLabel": "完全に自由",
+          "rightLabel": "強く抑圧"
+        },
+        {
+          "id": "sex_guilt_shame",
+          "type": "scale",
+          "text": "性的な考えや行動について、罪悪感や恥ずかしさを感じたことがありますか？",
+          "leftLabel": "全くない",
+          "rightLabel": "よくある"
+        },
+        {
+          "id": "sex_social_norms",
+          "type": "scale",
+          "text": "性行動に関する社会的な規範や期待に、束縛されていると感じますか？",
+          "leftLabel": "全く感じない",
+          "rightLabel": "束縛を感じる"
+        },
+        {
+          "id": "sex_scenario",
+          "type": "choice",
+          "text": "もしあなたの性的な嗜好や欲望が主流の考え（または保守的なパートナー）と合わない場合、どうしますか？",
+          "options": [
+            "深く抑圧する：恥ずかしく思い、その考えを押し殺す。",
+            "秘密裏に探索する：誰にも知られない場所（ネット/独り）で満たす。",
+            "境界を探る：慎重に明かして反応を見る。",
+            "自己受容：正常だと捉え、隠しもしないが宣伝もしない。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "independent_thinking",
+      "title": "X. 独立思考 (Independent Thinking)",
+      "description": "情報、権威、集団意見に対する批判的思考能力を評価します。",
+      "questions": [
+        {
+          "id": "think_authority_challenge",
+          "type": "scale",
+          "text": "権威ある意見に直面したとき、まずは疑いますか、それとも受け入れますか？",
+          "leftLabel": "まず疑う",
+          "rightLabel": "まず受け入れる"
+        },
+        {
+          "id": "think_group_conformity",
+          "type": "scale",
+          "text": "自分の意見が多数派と異なるとき、プレッシャーを感じて妥協しがちですか？",
+          "leftLabel": "自説を貫く",
+          "rightLabel": "妥協しやすい"
+        },
+        {
+          "id": "think_information_source",
+          "type": "scale",
+          "text": "重要な情報を得るとき、複数のソースを積極的に探して検証しますか？",
+          "leftLabel": "主流のみ",
+          "rightLabel": "複数検証"
+        },
+        {
+          "id": "think_scenario",
+          "type": "choice",
+          "text": "権威ある専門家が称賛される理論を提唱しましたが、あなたは明らかな論理的欠陥を見つけました。どうしますか？",
+          "options": [
+            "自己疑念：自分の理解不足だと思い、専門家が正しいとする。",
+            "陰で話す：親しい友人にだけ愚痴を言う。",
+            "公然と質問：適切な場で反論を提起する。",
+            "さらなる検証：判断する前にもっと証拠を探す。"
+          ]
+        }
+      ]
+    },
+    {
       "id": "social_trust",
-      "title": "IX. 社会的認知 (Social)",
+      "title": "XI. 社会的認知 (Social)",
       "description": "信頼とゲーム理論。",
       "questions": [
+        {
+          "id": "social_introvert",
+          "type": "scale",
+          "text": "大規模な社交の場（パーティー、チームビルディングなど）の後、通常は疲れ果ててしまい、充電のために一人の時間が長く必要ですか？",
+          "leftLabel": "元気が出る",
+          "rightLabel": "完全に消耗する"
+        },
         {
           "id": "soc_human_nature",
           "type": "scale",
@@ -652,7 +752,7 @@
     },
     {
       "id": "values_ideology",
-      "title": "X. 価値観 (Values)",
+      "title": "XII. 価値観 (Values)",
       "description": "世界観と価値観。",
       "questions": [
         {

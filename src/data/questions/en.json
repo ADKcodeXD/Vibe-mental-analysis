@@ -6,6 +6,7 @@
       "sections": [
         "demographics",
         "core_scan",
+        "clinical_phq9",
         "subjective_lite"
       ]
     },
@@ -18,6 +19,7 @@
         "clinical_gad7",
         "personality_big5",
         "scenario_social",
+        "social_trust",
         "subjective_standard"
       ]
     },
@@ -35,6 +37,8 @@
         "professional_persona",
         "defense_mechanisms",
         "social_trust",
+        "sexual_repression",
+        "independent_thinking",
         "values_ideology",
         "subjective_full"
       ]
@@ -501,6 +505,17 @@
           "text": "'The world is essentially safe and trustworthy.'",
           "leftLabel": "Hostile world",
           "rightLabel": "Complete trust"
+        },
+        {
+          "id": "family_scenario",
+          "type": "choice",
+          "text": "When a major life decision (career, partner) conflicts with parents' strong expectations, you usually:",
+          "options": [
+            "Compromise: Give up my choice for harmony.",
+            "Outwardly comply, inwardly rebel: Agree on surface, do my own thing.",
+            "Fierce resistance: Defend my choice even if it means conflict.",
+            "Gentle firmness: Try to communicate, but ultimately decide for myself."
+          ]
         }
       ]
     },
@@ -630,10 +645,95 @@
       ]
     },
     {
+      "id": "sexual_repression",
+      "title": "IX. Sexuality & Repression",
+      "description": "Exploring conflicts between desire, norms, and the self.",
+      "questions": [
+        {
+          "id": "sex_desire_expression",
+          "type": "scale",
+          "text": "Do you feel your sexual desires are often repressed and difficult to express freely?",
+          "leftLabel": "Fully Free",
+          "rightLabel": "Highly Repressed"
+        },
+        {
+          "id": "sex_guilt_shame",
+          "type": "scale",
+          "text": "Have you ever felt guilty or ashamed of sex-related thoughts or behaviors?",
+          "leftLabel": "Never",
+          "rightLabel": "Often"
+        },
+        {
+          "id": "sex_social_norms",
+          "type": "scale",
+          "text": "Do you feel constrained by social norms and expectations regarding sexual behavior?",
+          "leftLabel": "Fully Agree",
+          "rightLabel": "Feel Constrained"
+        },
+        {
+          "id": "sex_scenario",
+          "type": "choice",
+          "text": "If your sexual preferences or desires conflict with mainstream views (or a conservative partner), you would:",
+          "options": [
+            "Deeply repress: Feel ashamed, try to suppress thoughts.",
+            "Secret exploration: Satisfy them in hidden corners (online/alone).",
+            "Testing boundaries: Carefully reveal to test reaction.",
+            "Self-acceptance: Consider it normal, don't hide but don't flaunt."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "independent_thinking",
+      "title": "X. Independent Thinking",
+      "description": "Assessing critical thinking towards information, authority, and consensus.",
+      "questions": [
+        {
+          "id": "think_authority_challenge",
+          "type": "scale",
+          "text": "When facing an authoritative viewpoint, do you tend to question first or accept first?",
+          "leftLabel": "Question First",
+          "rightLabel": "Accept First"
+        },
+        {
+          "id": "think_group_conformity",
+          "type": "scale",
+          "text": "When your view differs from the majority, do you feel pressure and tend to compromise?",
+          "leftLabel": "Stand Firm",
+          "rightLabel": "Suspectible to Compromise"
+        },
+        {
+          "id": "think_information_source",
+          "type": "scale",
+          "text": "When acquiring important info, do you actively seek multiple sources for cross-verification?",
+          "leftLabel": "Mainstream Only",
+          "rightLabel": "Cross-Verify"
+        },
+        {
+          "id": "think_scenario",
+          "type": "choice",
+          "text": "An authoritative expert proposes a praised theory, but you find a logical flaw. You would:",
+          "options": [
+            "Self-doubt: Assume I misunderstood, the expert must be right.",
+            "Private gossip: Only complain to close friends.",
+            "Public questioning: Raise objections in appropriate setting.",
+            "Verify further: Seek more evidence before deciding."
+          ]
+        }
+      ]
+    },
+    {
       "id": "social_trust",
-      "title": "IX. Social Cognition",
+      "title": "XI. Social Cognition",
       "description": "Trust and game theory.",
       "questions": [
+        {
+          "id": "social_introvert",
+          "type": "scale",
+          "text": "After large social events (parties, team building), I usually feel exhausted and need a long time alone to recharge.",
+          "leftLabel": "Energized",
+          "rightLabel": "Completely Drained"
+        },
         {
           "id": "soc_human_nature",
           "type": "scale",
@@ -652,7 +752,7 @@
     },
     {
       "id": "values_ideology",
-      "title": "X. Ideology",
+      "title": "XII. Ideology",
       "description": "Worldview and values.",
       "questions": [
         {

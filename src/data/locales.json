@@ -52,7 +52,13 @@
         "正在构建全息侧写",
         "正在完成最终分析"
       ],
-      "processing_label": "AI 深度处理中"
+      "processing_label": "AI 深度处理中",
+      "jump_to": "快速跳转..."
+    },
+    "expansion": {
+      "independent_thinking": "独立思考",
+      "sexual_repression": "性压抑",
+      "values_ideology": "价值观光谱"
     },
     "result": {
       "title": "全息侧写",
@@ -175,7 +181,13 @@
         "Constructing Holographic Profile",
         "Finalizing Analysis"
       ],
-      "processing_label": "AI Deep Processing"
+      "processing_label": "AI Deep Processing",
+      "jump_to": "Quick Jump..."
+    },
+    "expansion": {
+      "independent_thinking": "Independent Thinking",
+      "sexual_repression": "Sexual Repression",
+      "values_ideology": "Values & Ideology"
     },
     "result": {
       "title": "Holographic Profile",
@@ -299,7 +311,13 @@
         "ホログラフィックプロファイルを構築中",
         "最終分析を完了中"
       ],
-      "processing_label": "AI ディーププロセッシング"
+      "processing_label": "AI ディーププロセッシング",
+      "jump_to": "クイックジャンプ..."
+    },
+    "expansion": {
+      "independent_thinking": "独立思考",
+      "sexual_repression": "性の抑圧",
+      "values_ideology": "価値観スペクトル"
     },
     "result": {
       "title": "ホログラフィック・プロファイル",
