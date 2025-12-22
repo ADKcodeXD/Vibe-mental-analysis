@@ -139,10 +139,16 @@ const synthesizeProfile = async (state: AgentState) => {
     2. Ideology: Based on the Values analysis, summarize the user's 8Values into a single, well-known ideology label (e.g., "Social Democracy", "Libertarianism", "Neo-Conservatism"). Provide a brief but deep explanation of why this ideology fits them in the 'ideology_note'.
     3. Truth Engine: Evaluate the internal consistency of answers. If the user contradicts themselves (e.g. Q1 vs Q5), call it out. Calculate a "credibility_score" from 0-100 based on consistency and effort.
     4. Clinical Findings: CRITICAL. You must map your analysis to the status/type fields.
-       - Depression: If you detect low energy, persistent sadness, or PHQ-9 indicators, set status to Low/Med/High.
-       - ADHD: If you detect impulsivity, executive dysfunction, or focus issues, set status to Low/Med/High.
+       - Depression: If you detected low energy, persistent sadness, or PHQ-9 indicators, set status to Low/Med/High.
+       - ADHD: If you detected impulsivity, executive dysfunction, or focus issues, set status to Low/Med/High.
        - Attachment: Categorize accurately (Secure/Avoidant/Anxious/Disorganized).
-    
+    5. HALO EFFECT: Add a "clinical_label" that sounds professional and validating (e.g., "High-Functioning ADHD", "Creative-Depressive Type", "Anxious-Achiever"). Provide a "clinical_explanation" that validates their struggle.
+    6. CAREER & SOCIAL: Provide specific, actionable advice. Use the Barnum effect—make it feel incredibly specific.
+    7. CELEBRITY MATCH (Cultural Context) - PREFERENCE (Not Absolute):
+       - If Lang is ZH: Prefer famous Japanese or Chinese Anime characters, ancient Chinese figures (Three Kingdoms, etc), modern Chinese figures.
+       - If Lang is JA: Prefer Japanese Anime characters or J-Drama characters.
+       - If Lang is EN: Prefer Hollywood characters, US/UK TV shows (Succession, Breaking Bad, etc).
+
     JSON SCHEMA:
     {
        "identity_card": {
@@ -151,7 +157,9 @@ const synthesizeProfile = async (state: AgentState) => {
            "mbti": "ENTJ",
            "alignment": "Chaotic Good",
            "ideology": "Social Democracy",
-           "personality_tags": ["Ultra-Ambitious", "Hyper-Rational"]
+           "personality_tags": ["Ultra-Ambitious", "Hyper-Rational"],
+           "clinical_label": "High-Functioning Anxiety Type",
+           "clinical_explanation": "You channel your anxiety into perfectionism. It drains you, but it's also your engine."
        },
        "clinical_findings": {
            "depression": {
@@ -166,6 +174,26 @@ const synthesizeProfile = async (state: AgentState) => {
                "type": "Secure/Avoidant/Anxious/Disorganized",
                "description": "Brief diagnostic insight..."
            }
+       },
+       "career_analysis": {
+           "strengths": ["Strategic planning", "Crisis management"],
+           "weaknesses": ["Routine administrative work", "Emotional labor"],
+           "suitable_careers": ["Founder", "Investment Banker", "Creative Director"],
+           "unsuitable_careers": ["Data Entry Clerk", "Customer Service Rep"],
+           "workplace_advice": "You dominate meetings but alienate peers. Learn to listen."
+       },
+       "social_analysis": {
+           "overview": "You have many acquaintances but few friends. You push people away to protect your autonomy.",
+           "circle_breakdown": {
+               "deep_connections": "Intellectual equals who challenge you.",
+               "casual_friends": "Networking contacts and party friends.",
+               "useless_connections": "Energy vampires who demand emotional support you can't give."
+           },
+           "advice": "Vulnerability is not weakness. Let someone in."
+       },
+       "highlights": {
+           "talents": ["Pattern Recognition", "Public Speaking"],
+           "liabilities": ["Arrogance", "Impatience"]
        },
        "stats": {
            "credibility_score": 0-100,

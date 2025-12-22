@@ -7,30 +7,33 @@ import { useImageExport } from '../hooks/useImageExport';
 
 type Lang = 'zh' | 'en' | 'ja';
 
-const BackgroundDecor = () => (
-  <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+const BackgroundDecor = React.memo(() => (
+  <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#fdfaff]">
+     {/* Optimized Gradients using CSS radial-gradient instead of filter: blur */}
     <motion.div 
       animate={{ 
-        scale: [1, 1.4, 1],
-        opacity: [0.2, 0.4, 0.2],
+        opacity: [0.4, 0.7, 0.4],
+        scale: [1, 1.2, 1],
         x: [-50, 50, -50],
         y: [-30, 30, -30]
       }}
-      transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-      className="absolute -top-[10%] -left-[10%] w-[80%] h-[80%] bg-indigo-200/40 rounded-full blur-[120px]" 
+      transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+      className="absolute -top-[10%] -left-[10%] w-[80%] h-[80%] rounded-full will-change-transform" 
+      style={{ background: 'radial-gradient(circle, rgba(199,210,254,0.3) 0%, rgba(255,255,255,0) 70%)' }}
     />
     <motion.div 
       animate={{ 
-        scale: [1.4, 1, 1.4],
-        opacity: [0.15, 0.35, 0.15],
+        opacity: [0.3, 0.6, 0.3],
+        scale: [1.2, 1, 1.2],
         x: [50, -50, 50],
         y: [30, -30, 30]
       }}
-      transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-      className="absolute -bottom-[20%] -right-[10%] w-[90%] h-[90%] bg-purple-200/40 rounded-full blur-[140px]" 
+      transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+      className="absolute -bottom-[20%] -right-[10%] w-[90%] h-[90%] rounded-full will-change-transform" 
+      style={{ background: 'radial-gradient(circle, rgba(233,213,255,0.3) 0%, rgba(255,255,255,0) 70%)' }}
     />
   </div>
-);
+));
 
 export const ResultView = ({ data, lang, onBack }: { data: any, lang: Lang, onBack?: () => void }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -72,7 +75,7 @@ export const ResultView = ({ data, lang, onBack }: { data: any, lang: Lang, onBa
         >
           <div className="flex flex-col items-center gap-4 mb-6">
             <div className="flex flex-wrap justify-center gap-2">
-              <div className="px-4 py-1 rounded-full bg-purple-100/50 backdrop-blur-sm text-[10px] md:text-xs font-bold tracking-[0.2em] text-purple-500 uppercase border border-purple-200/50">
+              <div className="px-4 py-1 rounded-full bg-purple-100/80 text-[10px] md:text-xs font-bold tracking-[0.2em] text-purple-500 uppercase border border-purple-200/50">
                 {ui.title}
               </div>
               {identity.ideology && (
@@ -132,6 +135,40 @@ export const ResultView = ({ data, lang, onBack }: { data: any, lang: Lang, onBa
                 </div>
               )}
             </Card>
+
+            {/* CLINICAL LABEL (New) */}
+            {identity.clinical_label && (
+               <Card title="Clinical Vibe" icon={<Activity className="text-pink-500" size={18} />}>
+                  <div className="text-center">
+                    <div className="text-lg md:text-xl font-bold text-pink-600 mb-1">{identity.clinical_label}</div>
+                    <p className="text-xs text-slate-500 italic">"{identity.clinical_explanation}"</p>
+                  </div>
+               </Card>
+            )}
+
+            {/* HIGHLIGHTS (New) */}
+            {data.highlights && (
+               <Card title="Talent & Risk" icon={<Zap className="text-yellow-500" size={18} />}>
+                  <div className="space-y-3">
+                     <div>
+                        <div className="text-[10px] font-bold text-emerald-600 uppercase mb-1">Superpowers</div>
+                        <div className="flex flex-wrap gap-1">
+                           {data.highlights.talents?.map((t: string) => (
+                              <span key={t} className="text-[10px] px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100">{t}</span>
+                           ))}
+                        </div>
+                     </div>
+                     <div>
+                        <div className="text-[10px] font-bold text-rose-600 uppercase mb-1">Kryptonite</div>
+                        <div className="flex flex-wrap gap-1">
+                           {data.highlights.liabilities?.map((t: string) => (
+                              <span key={t} className="text-[10px] px-2 py-0.5 bg-rose-50 text-rose-700 rounded-full border border-rose-100">{t}</span>
+                           ))}
+                        </div>
+                     </div>
+                  </div>
+               </Card>
+            )}
 
             <Card title={ui.truth} icon={<Shield className={stats.credibility_score < 60 ? "text-rose-500" : "text-emerald-500"} size={18} />}>
               <div className="text-center py-2 md:py-4">
@@ -282,6 +319,62 @@ export const ResultView = ({ data, lang, onBack }: { data: any, lang: Lang, onBa
                    </div>
                 </div>
              </div>
+
+              {/* NEW SECTIONS: Career & Social */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* CAREER */}
+                {data.career_analysis && (
+                  <Card title={ui.career || "CAREER PATH"} icon={<Zap className="text-amber-500" size={18} />}>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Sweet Spot</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {data.career_analysis.suitable_careers?.map((c: string) => (
+                            <span key={c} className="bg-emerald-50 text-emerald-700 px-2 py-1 rounded-md text-xs font-medium border border-emerald-100">{c}</span>
+                          ))}
+                        </div>
+                      </div>
+                       <div>
+                        <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Avoid</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {data.career_analysis.unsuitable_careers?.map((c: string) => (
+                            <span key={c} className="bg-rose-50 text-rose-700 px-2 py-1 rounded-md text-xs font-medium border border-rose-100">{c}</span>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 text-xs italic text-slate-600">
+                        "{data.career_analysis.workplace_advice}"
+                      </div>
+                    </div>
+                  </Card>
+                )}
+
+                {/* SOCIAL */}
+                {data.social_analysis && (
+                  <Card title={ui.social || "SOCIAL CIRCLE"} icon={<Heart className="text-rose-400" size={18} />}>
+                     <p className="text-sm font-serif text-slate-700 leading-relaxed mb-4">
+                       {data.social_analysis.overview}
+                     </p>
+                     
+                     <div className="space-y-3">
+                       <div className="flex justify-between items-center text-xs">
+                          <span className="text-indigo-900 font-bold">Deep Connections</span>
+                          <span className="text-slate-500 max-w-[60%] text-right">{data.social_analysis.circle_breakdown?.deep_connections}</span>
+                       </div>
+                       <div className="h-px bg-slate-100 w-full" />
+                       <div className="flex justify-between items-center text-xs">
+                          <span className="text-slate-600 font-bold">Casual Friends</span>
+                          <span className="text-slate-500 max-w-[60%] text-right">{data.social_analysis.circle_breakdown?.casual_friends}</span>
+                       </div>
+                       <div className="h-px bg-slate-100 w-full" />
+                       <div className="flex justify-between items-center text-xs">
+                          <span className="text-rose-600 font-bold">Toxicity</span>
+                          <span className="text-slate-500 max-w-[60%] text-right">{data.social_analysis.circle_breakdown?.useless_connections}</span>
+                       </div>
+                     </div>
+                  </Card>
+                )}
+              </div>
 
           </div>
         </div>
