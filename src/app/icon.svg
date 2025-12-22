@@ -1,0 +1,10 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="brain-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#818cf8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <path d="M16 4C10.4772 4 6 8.47715 6 14C6 16.1413 6.67323 18.1256 7.82022 19.7541C8.84715 21.212 9.4754 22.9234 9.4754 24.7143C9.4754 25.4244 10.051 26 10.7611 26H21.2389C21.949 26 22.5246 25.4244 22.5246 24.7143C22.5246 22.9234 23.1528 21.212 24.1798 19.7541C25.3268 18.1256 26 16.1413 26 14C26 8.47715 21.5228 4 16 4Z" fill="url(#brain-grad)" />
+  <circle cx="16" cy="14" r="3" fill="white" fill-opacity="0.3" />
+</svg>

@@ -1,0 +1,922 @@
+{
+  "modes": {
+    "lite": {
+      "title": "Lite Scan",
+      "description": "2-minute rapid scan focusing on core personality and potential risks.",
+      "sections": [
+        {
+          "id": "lite_core",
+          "title": "Core Scan",
+          "description": "Please answer based on your first instinct.",
+          "questions": [
+            {
+              "id": "demo_age",
+              "type": "choice",
+              "text": "Your age group?",
+              "options": [
+                "Under 18",
+                "18-25",
+                "26-35",
+                "36-50",
+                "50+"
+              ]
+            },
+            {
+              "id": "mbti_ei_1",
+              "type": "scale",
+              "text": "How do you recharge on weekends?",
+              "leftLabel": "Alone (Introvert)",
+              "rightLabel": "Socializing (Extravert)"
+            },
+            {
+              "id": "mbti_sn_1",
+              "type": "choice",
+              "text": "What do you focus on more?",
+              "options": [
+                "Present reality and details",
+                "Future possibilities and concepts"
+              ]
+            },
+            {
+              "id": "mbti_tf_1",
+              "type": "choice",
+              "text": "When making decisions, you prioritize:",
+              "options": [
+                "Logic and efficiency",
+                "Emotions and feelings"
+              ]
+            },
+            {
+              "id": "mbti_jp_1",
+              "type": "scale",
+              "text": "Your lifestyle approach?",
+              "leftLabel": "Structured (Judging)",
+              "rightLabel": "Spontaneous (Perceiving)"
+            },
+            {
+              "id": "big5_n_lite",
+              "type": "scale",
+              "text": "Do you tend to feel anxious or stressed over small things?",
+              "leftLabel": "Stable",
+              "rightLabel": "Sensitive"
+            },
+            {
+              "id": "big5_o_lite",
+              "type": "scale",
+              "text": "How interested are you in abstract art, philosophy, or novel experiences?",
+              "leftLabel": "Practical",
+              "rightLabel": "Curious"
+            },
+            {
+              "id": "dark_npd_lite",
+              "type": "scale",
+              "text": "Do you feel you are smarter and more unique than most people?",
+              "leftLabel": "Never",
+              "rightLabel": "Absolutely"
+            },
+            {
+              "id": "dark_mach_lite",
+              "type": "scale",
+              "text": "How much do you agree that 'it is occasionally necessary to manipulate others to achieve your goals'?",
+              "leftLabel": "Strongly Disagree",
+              "rightLabel": "Agree Strongly"
+            },
+            {
+              "id": "clinical_stress_lite",
+              "type": "scale",
+              "text": "Over the last 2 weeks, how often have you felt that 'life is out of control'?",
+              "leftLabel": "Never",
+              "rightLabel": "Almost Every Day"
+            },
+            {
+              "id": "val_econ_lite",
+              "type": "scale",
+              "text": "Do you believe market competition should follow 'survival of the fittest', or should the government intervene deeply to ensure equality?",
+              "leftLabel": "Free Competition",
+              "rightLabel": "Intervention"
+            },
+            {
+              "id": "scenario_lite_conflict",
+              "type": "text",
+              "text": "[Scenario] A colleague's mistake caused a project failure. The boss blames you, but the colleague stays silent. Do you point it out immediately, settle it privately, or suffer in silence? Describe your reaction."
+            },
+            {
+              "id": "scenario_lite_lost",
+              "type": "choice",
+              "text": "Your navigation fails in an unfamiliar city at night in the rain. Your first emotion is:",
+              "options": [
+                "Excitement: A fun little adventure",
+                "Calm: Look for landmarks or help",
+                "Irritation: Hate when plans are disrupted",
+                "Fear: Feel extremely uneasy"
+              ]
+            },
+            {
+              "id": "scenario_lite_luck",
+              "type": "scale",
+              "text": "Do you believe life is mostly determined by effort or by luck/fate?",
+              "leftLabel": "100% Effort",
+              "rightLabel": "100% Luck"
+            },
+            {
+              "id": "lite_finish_note",
+              "type": "text",
+              "text": "Finally, use one word to define your current mental state."
+            }
+          ]
+        }
+      ]
+    },
+    "full": {
+      "title": "Deep Analysis",
+      "description": "Includes PHQ-9 (Depression), GAD-7 (Anxiety), MDQ (Bipolar), Big Five Personality, and family origin analysis.",
+      "sections": [
+        {
+          "id": "demographics",
+          "title": "0. Baseline Demographics",
+          "description": "Understanding your social context.",
+          "questions": [
+            {
+              "id": "demo_gender",
+              "type": "choice",
+              "text": "Gender",
+              "options": [
+                "Male",
+                "Female",
+                "Non-binary / Other"
+              ]
+            },
+            {
+              "id": "demo_age",
+              "type": "choice",
+              "text": "Age",
+              "options": [
+                "Under 18",
+                "18-25",
+                "26-35",
+                "36-45",
+                "46+"
+              ]
+            },
+            {
+              "id": "demo_job",
+              "type": "text",
+              "text": "Occupation / Industry (e.g., Engineer, Student, Freelancer)"
+            }
+          ]
+        },
+        {
+          "id": "clinical_phq9",
+          "title": "I. Depression Screening (PHQ-9)",
+          "description": "Over the last 2 weeks, how often have you been bothered by any of the following problems?",
+          "questions": [
+            {
+              "id": "phq9_1",
+              "type": "scale",
+              "text": "Little interest or pleasure in doing things",
+              "leftLabel": "Not at all",
+              "rightLabel": "Nearly every day"
+            },
+            {
+              "id": "phq9_2",
+              "type": "scale",
+              "text": "Feeling down, depressed, or hopeless",
+              "leftLabel": "Not at all",
+              "rightLabel": "Nearly every day"
+            },
+            {
+              "id": "phq9_3",
+              "type": "scale",
+              "text": "Trouble falling or staying asleep, or sleeping too much",
+              "leftLabel": "Not at all",
+              "rightLabel": "Nearly every day"
+            },
+            {
+              "id": "phq9_4",
+              "type": "scale",
+              "text": "Feeling tired or having little energy",
+              "leftLabel": "Not at all",
+              "rightLabel": "Nearly every day"
+            },
+            {
+              "id": "phq9_5",
+              "type": "scale",
+              "text": "Poor appetite or overeating",
+              "leftLabel": "Not at all",
+              "rightLabel": "Nearly every day"
+            },
+            {
+              "id": "phq9_6",
+              "type": "scale",
+              "text": "Feeling bad about yourself - or that you are a failure or have let yourself or your family down",
+              "leftLabel": "Not at all",
+              "rightLabel": "Nearly every day"
+            },
+            {
+              "id": "phq9_7",
+              "type": "scale",
+              "text": "Trouble concentrating on things, such as reading the newspaper or watching television",
+              "leftLabel": "Not at all",
+              "rightLabel": "Nearly every day"
+            },
+            {
+              "id": "phq9_8",
+              "type": "scale",
+              "text": "Moving or speaking so slowly that other people could have noticed? Or the opposite - being so fidgety or restless that you have been moving around a lot more than usual",
+              "leftLabel": "Not at all",
+              "rightLabel": "Nearly every day"
+            },
+            {
+              "id": "phq9_9_risk",
+              "type": "scale",
+              "text": "[Important] Thoughts that you would be better off dead or of hurting yourself in some way",
+              "leftLabel": "Not at all",
+              "rightLabel": "Nearly every day"
+            }
+          ]
+        },
+        {
+          "id": "clinical_gad7",
+          "title": "II. Anxiety Screening (GAD-7)",
+          "description": "Over the last 2 weeks, how often have you been bothered by the following problems?",
+          "questions": [
+            {
+              "id": "gad7_1",
+              "type": "scale",
+              "text": "Feeling nervous, anxious, or on edge",
+              "leftLabel": "Not at all",
+              "rightLabel": "Nearly every day"
+            },
+            {
+              "id": "gad7_2",
+              "type": "scale",
+              "text": "Not being able to stop or control worrying",
+              "leftLabel": "Not at all",
+              "rightLabel": "Nearly every day"
+            },
+            {
+              "id": "gad7_3",
+              "type": "scale",
+              "text": "Worrying too much about different things",
+              "leftLabel": "Not at all",
+              "rightLabel": "Nearly every day"
+            },
+            {
+              "id": "gad7_4",
+              "type": "scale",
+              "text": "Trouble relaxing",
+              "leftLabel": "Not at all",
+              "rightLabel": "Nearly every day"
+            },
+            {
+              "id": "gad7_5",
+              "type": "scale",
+              "text": "Being so restless that it is hard to sit still",
+              "leftLabel": "Not at all",
+              "rightLabel": "Nearly every day"
+            },
+            {
+              "id": "gad7_6",
+              "type": "scale",
+              "text": "Becoming easily annoyed or irritable",
+              "leftLabel": "Not at all",
+              "rightLabel": "Nearly every day"
+            },
+            {
+              "id": "gad7_7",
+              "type": "scale",
+              "text": "Feeling afraid, as if something awful might happen",
+              "leftLabel": "Not at all",
+              "rightLabel": "Nearly every day"
+            }
+          ]
+        },
+        {
+          "id": "clinical_mdq",
+          "title": "III. Mood/Energy Screening (MDQ)",
+          "description": "Has there ever been a period of time when you were not your usual self and...",
+          "questions": [
+            {
+              "id": "mdq_1",
+              "type": "choice",
+              "text": "...you felt so good or so hyper that other people thought you were not your normal self or you were so hyper that you got into trouble?",
+              "options": [
+                "Yes",
+                "No"
+              ]
+            },
+            {
+              "id": "mdq_2",
+              "type": "choice",
+              "text": "...you needed much less sleep than usual (e.g., felt rested after only 3 hours of sleep)?",
+              "options": [
+                "Yes",
+                "No"
+              ]
+            },
+            {
+              "id": "mdq_3",
+              "type": "choice",
+              "text": "...you were much more talkative or spoke much faster than usual?",
+              "options": [
+                "Yes",
+                "No"
+              ]
+            },
+            {
+              "id": "mdq_4",
+              "type": "choice",
+              "text": "...thoughts raced through your head or you couldn't slow your mind down?",
+              "options": [
+                "Yes",
+                "No"
+              ]
+            },
+            {
+              "id": "mdq_5",
+              "type": "choice",
+              "text": "...you did things that were unusual for you or that other people might have thought were excessive, foolish, or risky?",
+              "options": [
+                "Yes",
+                "No"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "personality_big5",
+          "title": "IV. Big Five Personality Traits",
+          "description": "I see myself as someone who...",
+          "questions": [
+            {
+              "id": "big5_e",
+              "type": "scale",
+              "text": "Is extraverted, enthusiastic.",
+              "leftLabel": "Disagree strongly",
+              "rightLabel": "Agree strongly"
+            },
+            {
+              "id": "big5_a_r",
+              "type": "scale",
+              "text": "Is critical, quarrelsome.",
+              "leftLabel": "Disagree strongly",
+              "rightLabel": "Agree strongly"
+            },
+            {
+              "id": "big5_c",
+              "type": "scale",
+              "text": "Is dependable, self-disciplined.",
+              "leftLabel": "Disagree strongly",
+              "rightLabel": "Agree strongly"
+            },
+            {
+              "id": "big5_n",
+              "type": "scale",
+              "text": "Is anxious, easily upset.",
+              "leftLabel": "Disagree strongly",
+              "rightLabel": "Agree strongly"
+            },
+            {
+              "id": "big5_o",
+              "type": "scale",
+              "text": "Is open to new experiences, complex.",
+              "leftLabel": "Disagree strongly",
+              "rightLabel": "Agree strongly"
+            },
+            {
+              "id": "big5_e_r",
+              "type": "scale",
+              "text": "Is reserved, quiet.",
+              "leftLabel": "Disagree strongly",
+              "rightLabel": "Agree strongly"
+            },
+            {
+              "id": "big5_a",
+              "type": "scale",
+              "text": "Is sympathetic, warm.",
+              "leftLabel": "Disagree strongly",
+              "rightLabel": "Agree strongly"
+            },
+            {
+              "id": "big5_c_r",
+              "type": "scale",
+              "text": "Is disorganized, careless.",
+              "leftLabel": "Disagree strongly",
+              "rightLabel": "Agree strongly"
+            },
+            {
+              "id": "big5_n_r",
+              "type": "scale",
+              "text": "Is calm, emotionally stable.",
+              "leftLabel": "Disagree strongly",
+              "rightLabel": "Agree strongly"
+            },
+            {
+              "id": "big5_o_r",
+              "type": "scale",
+              "text": "Is conventional, uncreative.",
+              "leftLabel": "Disagree strongly",
+              "rightLabel": "Agree strongly"
+            }
+          ]
+        },
+        {
+          "id": "scenario_social",
+          "title": "V. Subconscious & Behavior",
+          "description": "Reflecting internal tendencies through daily choices.",
+          "questions": [
+            {
+              "id": "beh_weekend",
+              "type": "choice",
+              "text": "It's finally the weekend. A friend texts: 'Drinks/party tonight?' If you have absolutely no plans, what is your immediate reaction?",
+              "options": [
+                "Relieved: I'd be happier not going; I just want to be alone.",
+                "Excited: Accept immediately; I love crowds and socializing.",
+                "Hesitant: Depends on my mood or who is asking."
+              ]
+            },
+            {
+              "id": "beh_idea_2am",
+              "type": "choice",
+              "text": "It's 2 AM, you are in bed. Suddenly a brilliant idea pops into your head. You:",
+              "options": [
+                "Get up immediately to research and plan.",
+                "Jot it down quickly, then sleep.",
+                "Roll over and sleep; sleep is priority."
+              ]
+            },
+            {
+              "id": "beh_queue",
+              "type": "choice",
+              "text": "Queuing for coffee. The person ahead is incredibly slow and chatting on the phone. You:",
+              "options": [
+                "Confront: Tap them and tell them to hurry up.",
+                "Internal Fume: Sigh and tap foot, hoping they notice.",
+                "Leave: Can't stand the wait.",
+                "Indifferent: Continue scrolling on phone."
+              ]
+            },
+            {
+              "id": "beh_spending",
+              "type": "choice",
+              "text": "Regarding shopping, your recent state is:",
+              "options": [
+                "Minimalist: No desire to buy.",
+                "Retail Therapy: Emotional spending.",
+                "Rational: Buy only what is needed."
+              ]
+            },
+            {
+              "id": "beh_rejection",
+              "type": "choice",
+              "text": "You messaged a close friend. They read it but haven't replied for 24 hours. You feel:",
+              "options": [
+                "Very Anxious: Did I do something wrong/offend them?",
+                "Annoyed: That's disrespectful.",
+                "Indifferent: Probably busy or forgot."
+              ]
+            },
+            {
+              "id": "beh_ambiguity",
+              "type": "choice",
+              "text": "Your boss assigns a task with vague instructions and then disappears. You:",
+              "options": [
+                "Panic: Don't know how to start, feel paralyzed.",
+                "Improvise: Do it my way since they didn't specify.",
+                "Wait: Cannot proceed without clear instructions."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cognitive_shadow",
+          "title": "VI. Personality & Shadow",
+          "description": "Analyzing symptomatic manifestations through personality traits.",
+          "questions": [
+            {
+              "id": "mbti_ei_1",
+              "type": "scale",
+              "text": "After a long exhausting week, how do you recharge?",
+              "leftLabel": "Alone at home",
+              "rightLabel": "Going out"
+            },
+            {
+              "id": "mbti_tf_1",
+              "type": "scale",
+              "text": "When in pain, you tend to:",
+              "leftLabel": "Analyze logically",
+              "rightLabel": "Immerse in emotion"
+            },
+            {
+              "id": "dark_npd_1",
+              "type": "scale",
+              "text": "I feel my pain is unique and ordinary people cannot understand it.",
+              "leftLabel": "Disagree",
+              "rightLabel": "Agree strongly"
+            },
+            {
+              "id": "dark_impulse",
+              "type": "choice",
+              "text": "When you have an emotional breakdown, you tend to:",
+              "options": [
+                "Self-harm / Internalize",
+                "Attack others / Break things",
+                "Freeze / Dissociate"
+              ]
+            },
+            {
+              "id": "scenario_stress_paralysis",
+              "type": "text",
+              "text": "[Scenario] Facing a huge deadline, you feel paralyzed and have been staring at the screen for 2 hours. What are your exact thoughts right now?"
+            }
+          ]
+        },
+        {
+          "id": "values_8d",
+          "title": "VII. Ideology Spectrum",
+          "description": "Political, economic, and social views.",
+          "questions": [
+            {
+              "id": "val_econ_1",
+              "type": "scale",
+              "text": "'Oppression by corporations is more concerning than oppression by governments.'",
+              "leftLabel": "Disagree",
+              "rightLabel": "Agree"
+            },
+            {
+              "id": "val_civil_1",
+              "type": "scale",
+              "text": "'It is necessary to sacrifice some privacy for national security.'",
+              "leftLabel": "Strongly Disagree",
+              "rightLabel": "Agree"
+            },
+            {
+              "id": "val_dipl_1",
+              "type": "scale",
+              "text": "'I am proud of my country; using military force to protect interests is justified.'",
+              "leftLabel": "Disagree",
+              "rightLabel": "Agree"
+            },
+            {
+              "id": "val_soc_1",
+              "type": "scale",
+              "text": "'Tradition and religion are crucial for maintaining social morality.'",
+              "leftLabel": "Disagree",
+              "rightLabel": "Agree"
+            },
+            {
+              "id": "val_econ_2",
+              "type": "choice",
+              "text": "On wealth distribution:",
+              "options": [
+                "Survival of the fittest; meritocracy.",
+                "High taxes to ensure basic living standards for all."
+              ]
+            },
+            {
+              "id": "val_civil_2",
+              "type": "choice",
+              "text": "Handling crime:",
+              "options": [
+                "Punishment and deterrence.",
+                "Education and rehabilitation."
+              ]
+            },
+            {
+              "id": "scenario_broken_item",
+              "type": "text",
+              "text": "[Scenario] A good friend accidentally breaks an item that you cherish and has special sentimental value. What is your immediate reaction? What do you say to them? If they treat you to an expensive dinner a few days later to apologize, will you truly forgive them in your heart, or will you continue to feel resentful?"
+            },
+            {
+              "id": "scenario_unpaid_loan",
+              "type": "text",
+              "text": "[Scenario] A friend borrowed a significant amount of money from you and has long passed the agreed repayment date. Today, you see them posting photos of themselves dining at high-end restaurants and traveling on social media. How do you choose to handle this? Will you ask for the money directly or suffer in silence? How will this affect your future relationship?"
+            },
+            {
+              "id": "scenario_misunderstood",
+              "type": "text",
+              "text": "[Scenario] You kindly shared some of a colleague's workload, but a small mistake occurred due to poor communication. The colleague then loudly blamed you in front of everyone in the office for meddling. Would you immediately fight back, explain yourself with a sense of grievance, or simply close your heart to them from then on? Please describe your real reaction at that moment."
+            },
+            {
+              "id": "scenario_credit_theft",
+              "type": "choice",
+              "text": "In a group project, you put in the vast majority of the effort. However, during the presentation, another group member speaks up first and presents your creative ideas as their own, receiving high praise from the leader. You would:",
+              "options": [
+                "Point it out on the spot: Cannot tolerate taking credit for others' work; truth and justice must be restored.",
+                "Communicate privately after the meeting: Request the other person to clarify in future occasions.",
+                "Suffer in silence: Don't want to ruin the relationship, but will never cooperate with them again.",
+                "Fall into self-doubt: Wonder if you are too concerned with fame/credit, and feel guilty instead."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "attachment_roots",
+          "title": "VIII. Attachment & Roots",
+          "description": "Tracing early relationships and their impact on personality.",
+          "questions": [
+            {
+              "id": "att_childhood",
+              "type": "text",
+              "text": "Describe a childhood memory that made a deep impression on you (good or bad). What did you feel at that moment?"
+            },
+            {
+              "id": "att_parents",
+              "type": "scale",
+              "text": "Do you feel you can fully show your true self in front of your parents?",
+              "leftLabel": "Not at all",
+              "rightLabel": "Completely"
+            },
+            {
+              "id": "att_conflict_style",
+              "type": "choice",
+              "text": "When encountering a fierce argument in an intimate relationship, do you usually act as:",
+              "options": [
+                "Pursuer: Must talk it out immediately, repeatedly confirming they still love you.",
+                "Distancer: Cut off contact, retreat into your shell, refuse to communicate.",
+                "Fearful: Long to be close but afraid of being hurt, back and forth.",
+                "Secure: Face it calmly, solve the problem without aggression."
+              ]
+            },
+            {
+              "id": "att_safety",
+              "type": "scale",
+              "text": "'The world is essentially safe and trustworthy.' How much do you agree?",
+              "leftLabel": "Hostile world",
+              "rightLabel": "Complete trust"
+            }
+          ]
+        },
+        {
+          "id": "professional_persona",
+          "title": "X. Professional Persona & Drive (Professional)",
+          "description": "Inner mapping of power, ambition, and workplace ethics.",
+          "questions": [
+            {
+              "id": "car_ambition",
+              "type": "scale",
+              "text": "Do you view 'power' as a tool for social ideals or as an inevitable end in survival of the fittest?",
+              "leftLabel": "Idealistic Tool",
+              "rightLabel": "Competitive End"
+            },
+            {
+              "id": "car_leadership",
+              "type": "choice",
+              "text": "What is your typical role within a team?",
+              "options": [
+                "The Captain: Absorbing decision pressure, driving efficiency",
+                "The Mediator: Balancing emotions, maintaining stability",
+                "The Specialist: Focus on results, avoiding politics",
+                "The Bystander: Doing the job while remaining detached"
+              ]
+            },
+            {
+              "id": "car_burnout",
+              "type": "scale",
+              "text": "How acceptable is it to sacrifice nearly all private life and health for career success?",
+              "leftLabel": "Not at all",
+              "rightLabel": "Worth the price"
+            },
+            {
+              "id": "car_failure",
+              "type": "text",
+              "text": "Describe a major professional or academic failure. Who did you blame? What action did you take afterward?"
+            },
+            {
+              "id": "car_money",
+              "type": "scale",
+              "text": "What is the primary function of wealth for you?",
+              "leftLabel": "Safety Reservoir",
+              "rightLabel": "Expansion of Will"
+            },
+            {
+              "id": "car_ethics",
+              "type": "choice",
+              "text": "A project with huge returns but questionable ethics is presented. Your first reaction is?",
+              "options": [
+                "Risk Analysis: If returns outweigh the risk, do it",
+                "Moral Scrutiny: Refuse if it violates conscience",
+                "Observation: Wait to see what leaders do",
+                "Flat Refusal: Never enter the grey zone"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "defense_mechanisms",
+          "title": "XI. Defense Mechanisms & Stress (Defense)",
+          "description": "How your brain filters reality to protect the ego.",
+          "questions": [
+            {
+              "id": "def_criticism",
+              "type": "choice",
+              "text": "Your most common reaction to public criticism from an authority figure is?",
+              "options": [
+                "Intellectualization: Coldly analyzing logic or flaws",
+                "Projection: Thinking they are targeting or envying me",
+                "Repression: Outwardly compliant while mentally blocking it",
+                "Reaction Formation: Acting overly enthusiastic to hide anger"
+              ]
+            },
+            {
+              "id": "def_stress_eat",
+              "type": "scale",
+              "text": "Under extreme stress, do you engage in binge eating, hoarding, or compulsive tidying?",
+              "leftLabel": "Never",
+              "rightLabel": "Frequently"
+            },
+            {
+              "id": "def_humor",
+              "type": "scale",
+              "text": "Do you often use self-deprecation, irony, or dark humor to escape heavy emotions?",
+              "leftLabel": "Rarely",
+              "rightLabel": "Core Defense"
+            },
+            {
+              "id": "def_procrastination",
+              "type": "scale",
+              "text": "Do you suffer from perfectionist procrastination (fear of failure prevents starting)?",
+              "leftLabel": "Decisive",
+              "rightLabel": "Severe Procrastination"
+            },
+            {
+              "id": "def_blame",
+              "type": "choice",
+              "text": "If you argue with a friend, your inner thought is usually?",
+              "options": [
+                "Rewinding what I said wrong (Self-blame)",
+                "Listing their past faults (Counter-attack)",
+                "Thinking this relationship isn't important anyway (Retreat)",
+                "Wondering about their hidden struggle (Sublimation)"
+              ]
+            },
+            {
+              "id": "def_physical",
+              "type": "scale",
+              "text": "When stressed, do you experience physical symptoms (migraine, stomach ache, chest tightness)?",
+              "leftLabel": "Mind/Body Detached",
+              "rightLabel": "Body is an alarm"
+            },
+            {
+              "id": "def_regression",
+              "type": "choice",
+              "text": "In desperate situations, do you feel an urge to regress (hide, crave parental care, refuse to process)?",
+              "options": [
+                "Frequent impulse",
+                "Feel weak but push through",
+                "No, I feel angry and seek solutions",
+                "I become completely numb, like a stone"
+              ]
+            },
+            {
+              "id": "def_idealization",
+              "type": "scale",
+              "text": "Do you easily 'idealize' someone early on, then feel disillusioned later?",
+              "leftLabel": "Rational",
+              "rightLabel": "Polarized (Black/White)"
+            }
+          ]
+        },
+        {
+          "id": "social_trust",
+          "title": "XII. Social Cognition & Tension (Social)",
+          "description": "Investigating the game theory between you and others.",
+          "questions": [
+            {
+              "id": "soc_human_nature",
+              "type": "scale",
+              "text": "Without conflict of interest, is human nature fundamentally good?",
+              "leftLabel": "Instinctual Evil",
+              "rightLabel": "Seeds of Good"
+            },
+            {
+              "id": "soc_manipulation_detect",
+              "type": "scale",
+              "text": "Can you quickly detect when others use hidden shame or guilt to manipulate you?",
+              "leftLabel": "Slow to react",
+              "rightLabel": "Highly Sensitive"
+            },
+            {
+              "id": "soc_loner",
+              "type": "choice",
+              "text": "In a large gathering (wedding, forum), your underlying feeling is?",
+              "options": [
+                "Energy Node: Eager to link, in my element",
+                "The Actor: Skillful socializing but feeling empty",
+                "The Observer: Watching the absurdity from the edge",
+                "The Ghost: High anxiety, wanting to vanish"
+              ]
+            },
+            {
+              "id": "soc_conflict_res",
+              "type": "scale",
+              "text": "Facing direct conflict, do you go 'head-on' or 'roundabout'?",
+              "leftLabel": "Iron Fist",
+              "rightLabel": "Soft Roundabout"
+            },
+            {
+              "id": "soc_praise",
+              "type": "scale",
+              "text": "Your true inner reaction to praise is?",
+              "leftLabel": "Well Deserved",
+              "rightLabel": "Extreme Discomfort"
+            },
+            {
+              "id": "soc_herd",
+              "type": "scale",
+              "text": "When public opinion is unanimous against your view, your willingness to speak up?",
+              "leftLabel": "Silence/Mask",
+              "rightLabel": "Lone Voice"
+            },
+            {
+              "id": "soc_secrets",
+              "type": "choice",
+              "text": "What is your attitude toward a friend's secret?",
+              "options": [
+                "Tombstone: Take it to the grave",
+                "Strategic: Use it as leverage without hurting them",
+                "Casual: Use it as social currency",
+                "Leak: Accidental, but fails under pressure"
+              ]
+            },
+            {
+              "id": "soc_envy",
+              "type": "scale",
+              "text": "When a peer with similar background gains the success you desire, your level of envy?",
+              "leftLabel": "Sincere Joy",
+              "rightLabel": "Extreme Pain"
+            }
+          ]
+        },
+        {
+          "id": "aesthetic_intuitive",
+          "title": "XIII. Aesthetic & Spirit (Aesthetic)",
+          "description": "Touching the boundaries of the indefinable.",
+          "questions": [
+            {
+              "id": "aes_poetry",
+              "type": "scale",
+              "text": "Is the world explained by mathematical logic or is it fundamentally poetic and ineffable?",
+              "leftLabel": "Pure Science",
+              "rightLabel": "Pure Mystery"
+            },
+            {
+              "id": "aes_beauty",
+              "type": "choice",
+              "text": "Which scene touches your soul the most?",
+              "options": [
+                "Vast, orderly industrial machinery or architecture",
+                "Disorderly, wild, lonely wilderness or deep sea",
+                "Noisy, bustling, crowded streets full of life",
+                "Minimalist modern art full of empty space/metaphor"
+              ]
+            },
+            {
+              "id": "aes_music",
+              "type": "scale",
+              "text": "When listening to music, do you focus on lyrics or the void/vibration of melody?",
+              "leftLabel": "Rational Narrative",
+              "rightLabel": "Emotional Abstract"
+            },
+            {
+              "id": "aes_nostalgia",
+              "type": "scale",
+              "text": "Do you often indulge in 'pathological' nostalgia for the past (even if you weren't happy then)?",
+              "leftLabel": "Forward Realistic",
+              "rightLabel": "Vintage Melancholy"
+            },
+            {
+              "id": "aes_nature_risk",
+              "type": "scale",
+              "text": "Deep in a forest alone, do you feel fear or a sense of resonance/belonging?",
+              "leftLabel": "Survival Crisis",
+              "rightLabel": "Soul Return"
+            },
+            {
+              "id": "aes_dreams",
+              "type": "text",
+              "text": "What do you often dream of? Do these dreams affect your real-world emotions?"
+            },
+            {
+              "id": "aes_transcendence",
+              "type": "scale",
+              "text": "Have you ever felt a moment of 'Transcendent Awe' (starry sky, symphony, deep thought)?",
+              "leftLabel": "Never",
+              "rightLabel": "Resident State"
+            },
+            {
+              "id": "aes_fin",
+              "type": "text",
+              "text": "If you could remove one human emotion (jealousy, fear, love), which one? Why?"
+            },
+            {
+              "id": "full_finish_note",
+              "type": "text",
+              "text": "Thank you. Final confirmation: During this long test, did you ever feel an urge to 'escape reality' or 'please the result'? What was the point of discomfort for you?"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
