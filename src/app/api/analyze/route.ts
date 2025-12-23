@@ -130,8 +130,6 @@ const createModel = (config?: { apiKey?: string; baseUrl?: string; model?: strin
     const baseUrl = (config?.baseUrl && config.baseUrl.trim() !== '') ? clean(config.baseUrl) : clean(process.env.OPENAI_BASE_URL);
     const modelName = (config?.model && config.model.trim() !== '') ? clean(config.model) : (clean(process.env.LLM_MODEL) || 'google/gemini-2.0-flash-001');
 
-    console.log(`[API Analyze V3] Model: ${modelName}, Base: ${baseUrl}, KeyPrefix: ${apiKey?.substring(0, 10)}... (Len: ${apiKey?.length})`);
-
     return new ChatOpenAI({
         apiKey: apiKey,
         openAIApiKey: apiKey,
@@ -181,10 +179,19 @@ const analyzeCognitive = async (state: AgentState) => {
 };
 
 const analyzeValues = async (state: AgentState) => {
+    // Check for relevant questions
+    const hasValues = state.answers.some(a => a.questionId.startsWith('val_') || a.questionId.startsWith('soc_'));
+    if (!hasValues) {
+        // Return empty if no values/society questions found
+        return { valuesAnalysis: "" };
+    }
+
     const model = createModel(state.config);
-    const context = state.answers.map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n');
+    const context = state.answers.filter(a => a.questionId.startsWith('val_') || a.questionId.startsWith('soc_'))
+        .map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n');
+    
     const response = await model.invoke([
-        new SystemMessage(`You are a Political Compass Analyst. Determine the user's 8Values leanings (Economic, Diplomatic, Civil, Societal). Use all questionnaire data. Response in ${state.lang}.`),
+        new SystemMessage(`You are a Political Compass Analyst. Determine the user's 8Values leanings (Economic, Diplomatic, Civil, Societal). Use the provided questionnaire data. Response in ${state.lang}.`),
         new HumanMessage(context)
     ]);
     return { valuesAnalysis: response.content as string };
@@ -201,13 +208,30 @@ const analyzeLie = async (state: AgentState) => {
 };
 
 const analyzeClinical = async (state: AgentState) => {
+    // Check for relevant questions (PHQ9, GAD7, MDQ, Attachment)
+    const hasClinical_PHQ = state.answers.some(a => a.questionId.startsWith('phq9'));
+    const hasClinical_GAD = state.answers.some(a => a.questionId.startsWith('gad7'));
+    const hasClinical_MDQ = state.answers.some(a => a.questionId.startsWith('mdq'));
+    const hasAtt = state.answers.some(a => a.questionId.startsWith('att_'));
+    const hasRisk = state.answers.some(a => a.questionId === 'phq9_9_risk');
+    
+    // If absolutely no clinical data, skip
+    if (!hasClinical_PHQ && !hasClinical_GAD && !hasClinical_MDQ && !hasAtt) {
+         return { clinicalAnalysis: "" };
+    }
+
     const model = createModel(state.config); 
-    const context = state.answers.map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n');
+    // Filter context to relevant sections + behavior for validation
+    const relevantIds = ['phq9', 'gad7', 'mdq', 'att_', 'beh_'];
+    const context = state.answers.filter(a => relevantIds.some(p => a.questionId.startsWith(p)))
+        .map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n');
     
     let riskFlag = "";
-    const risk_q = state.answers.find(a => a.questionId === 'phq9_9_risk');
-    if (risk_q && (risk_q.value === "4" || risk_q.value === "5" || risk_q.value === "几乎每天" || risk_q.value.includes("一半以上") || risk_q.value.includes("Almost every day"))) {
-        riskFlag = "CRITICAL: SUICIDE IDEATION DETECTED in Q9.";
+    if (hasRisk) {
+        const risk_q = state.answers.find(a => a.questionId === 'phq9_9_risk');
+        if (risk_q && (risk_q.value === "4" || risk_q.value === "5" || risk_q.value === "几乎每天" || risk_q.value.includes("一半以上") || risk_q.value.includes("Almost every day"))) {
+            riskFlag = "CRITICAL: SUICIDE IDEATION DETECTED in Q9.";
+        }
     }
 
     const response = await model.invoke([
@@ -224,8 +248,13 @@ const analyzeClinical = async (state: AgentState) => {
 };
 
 const analyzeSexual = async (state: AgentState) => {
+    const hasSex = state.answers.some(a => a.questionId.startsWith('sex_'));
+    if (!hasSex) return { sexualAnalysis: "" };
+
     const model = createModel(state.config);
-    const context = state.answers.map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n');
+    const context = state.answers.filter(a => a.questionId.startsWith('sex_'))
+        .map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n');
+
     const response = await model.invoke([
         new SystemMessage(`You are a Psychoanalytic Expert specializing in Sexual Psychology. Analyze the user's responses regarding sexual repression, guilt, norms, and desire.
         Determine:
@@ -239,8 +268,13 @@ const analyzeSexual = async (state: AgentState) => {
 };
 
 const analyzeThinking = async (state: AgentState) => {
+    const hasThink = state.answers.some(a => a.questionId.startsWith('think_'));
+    if (!hasThink) return { thinkingAnalysis: "" };
+
     const model = createModel(state.config);
-    const context = state.answers.map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n');
+    const context = state.answers.filter(a => a.questionId.startsWith('think_'))
+        .map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n');
+
     const response = await model.invoke([
         new SystemMessage(`You are a Cognitive Scientist. Analyze the user's Independent Thinking capabilities.
         Determine:
@@ -312,7 +346,18 @@ export async function POST(req: NextRequest) {
         
         console.log(`[API POST] Received request. Answers count: ${answers?.length}, Lang: ${lang}`);
 
-        if (!answers) return NextResponse.json({ error: "No answers provided" }, { status: 400 });
+        if (!answers && !body.test) return NextResponse.json({ error: "No answers provided" }, { status: 400 });
+        
+        if (body.test) {
+            console.log(`[API Test] Testing connection for model: ${config?.model}`);
+            const model = createModel(config);
+            const response = await model.invoke([new HumanMessage("Hello")]);
+            return NextResponse.json({ 
+                status: "success", 
+                model: config?.model || "default",
+                response: response.content 
+            });
+        }
         
         const result = await compiledGraph.invoke({ 
             answers, 

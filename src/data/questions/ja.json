@@ -1,7 +1,7 @@
 {
   "schemes": {
     "lite": {
-      "title": "簡易スキャン (Lite)",
+      "title": "簡易スキャン",
       "description": "2分間の高速スキャンで、主要な人格特性と潜在的なリスクを特定します。",
       "sections": [
         "demographics",
@@ -11,7 +11,7 @@
       ]
     },
     "standard": {
-      "title": "標準スキャン (Standard)",
+      "title": "標準スキャン",
       "description": "人格、臨床リスク、および社会的傾向の包括的な分析。",
       "sections": [
         "demographics",
@@ -24,7 +24,7 @@
       ]
     },
     "full": {
-      "title": "深層分析 (Full)",
+      "title": "深層分析",
       "description": "原家族、職業的ペルソナ、心理防御メカニズムを含む完全な分析。",
       "sections": [
         "demographics",

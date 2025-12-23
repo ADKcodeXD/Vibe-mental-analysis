@@ -22,7 +22,12 @@
       "save": "保存配置",
       "save_close": "保存并关闭",
       "config_hint": "（可选）配置您自己的 LLM 服务。留空则使用内置系统 API。",
-      "custom_model_placeholder": "输入自定义模型名称..."
+      "custom_model_placeholder": "输入自定义模型名称...",
+      "test_btn": "测试 LLM 连接",
+      "testing": "测试中...",
+      "test_success": "连接成功",
+      "test_failed": "连接失败",
+      "test_response_code": "响应码"
     },
     "mode": {
       "title": "选择深度",
@@ -99,7 +104,14 @@
       "casual_friends": "表面之交",
       "toxicity": "无效/消耗型关系",
       "superpowers": "核心超能力",
-      "kryptonite": "致命弱点"
+      "kryptonite": "致命弱点",
+      "sexual_card": "性心理/压抑评估",
+      "scores": "核心指标",
+      "dimensions": "多维价值观",
+      "repression_index": "潜意识压抑指数",
+      "happiness_index": "主观幸福感",
+      "social_adaptation": "社会适应度",
+      "independent_thinking": "思维独立性"
     },
     "common": {
       "app_title": "真我镜像 - AI 心理人格评测",
@@ -119,6 +131,16 @@
       "verdict_truthful": "真实",
       "verdict_exaggerating": "有夸大倾向",
       "verdict_deceptive": "有欺瞒倾向"
+    },
+    "poles": {
+      "equality": "平等",
+      "markets": "市场",
+      "nation": "国家",
+      "globe": "全球",
+      "authority": "权威",
+      "liberty": "自由",
+      "tradition": "传统",
+      "progress": "进步"
     },
     "history": {
       "title": "评测历史",
@@ -151,7 +173,12 @@
       "save": "Save Configuration",
       "save_close": "Save & Close",
       "config_hint": "(Optional) Configure your own LLM provider. Leave blank to use the built-in system API.",
-      "custom_model_placeholder": "Enter custom model name..."
+      "custom_model_placeholder": "Enter custom model name...",
+      "test_btn": "Test LLM Connection",
+      "testing": "Testing...",
+      "test_success": "Connection Successful",
+      "test_failed": "Connection Failed",
+      "test_response_code": "Response Code"
     },
     "mode": {
       "title": "Select Depth",
@@ -228,7 +255,14 @@
       "casual_friends": "Casual Friends",
       "toxicity": "Toxicity",
       "superpowers": "Superpowers",
-      "kryptonite": "Kryptonite"
+      "kryptonite": "Kryptonite",
+      "sexual_card": "Sexual Psychology",
+      "scores": "Core Indices",
+      "dimensions": "Value Dimensions",
+      "repression_index": "Repression Index",
+      "happiness_index": "Happiness Index",
+      "social_adaptation": "Social Adaptation",
+      "independent_thinking": "Independent Thinking"
     },
     "common": {
       "app_title": "Self Mirror - AI Psychological Assessment",
@@ -248,6 +282,16 @@
       "verdict_truthful": "Truthful",
       "verdict_exaggerating": "Exaggerating",
       "verdict_deceptive": "Deceptive"
+    },
+    "poles": {
+      "equality": "Equality",
+      "markets": "Markets",
+      "nation": "Nation",
+      "globe": "Globe",
+      "authority": "Authority",
+      "liberty": "Liberty",
+      "tradition": "Tradition",
+      "progress": "Progress"
     },
     "history": {
       "title": "Assessment History",
@@ -281,7 +325,12 @@
       "save": "設定を保存",
       "save_close": "保存して閉じる",
       "config_hint": "(任意) 独自のLLMサービスを設定します。空欄の場合は内蔵システムAPIを使用します。",
-      "custom_model_placeholder": "カスタムモデル名を入力..."
+      "custom_model_placeholder": "カスタムモデル名を入力...",
+      "test_btn": "LLM 接続をテスト",
+      "testing": "テスト中...",
+      "test_success": "接続成功",
+      "test_failed": "接続失敗",
+      "test_response_code": "レスポンスコード"
     },
     "mode": {
       "title": "深度選択",
@@ -358,7 +407,14 @@
       "casual_friends": "カジュアルな友人",
       "toxicity": "有害な関係",
       "superpowers": "スーパーパワー",
-      "kryptonite": "弱点 (クリプトナイト)"
+      "kryptonite": "弱点 (クリプトナイト)",
+      "sexual_card": "性心理・抑圧評価",
+      "scores": "コア指標",
+      "dimensions": "多次元価値観",
+      "repression_index": "潜在意識抑圧指数",
+      "happiness_index": "主観的幸福感",
+      "social_adaptation": "社会適応度",
+      "independent_thinking": "思考の独立性"
     },
     "common": {
       "app_title": "真我ミラー - AI心理人格診断",
@@ -377,7 +433,17 @@
       "status_high": "高",
       "verdict_truthful": "誠実",
       "verdict_exaggerating": "誇張あり",
-      "verdict_deceptive": "欺瞞あり"
+      "verdict_deceptive": "欺瞒あり"
+    },
+    "poles": {
+      "equality": "平等",
+      "markets": "市場",
+      "nation": "国家",
+      "globe": "世界",
+      "authority": "権威",
+      "liberty": "自由",
+      "tradition": "伝統",
+      "progress": "革新"
     }
   }
 }

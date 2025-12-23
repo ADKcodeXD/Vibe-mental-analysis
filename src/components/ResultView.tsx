@@ -5,12 +5,28 @@ import clsx from 'clsx';
 import localesData from '../data/locales.json';
 
 // Import extracted components
-import { BackgroundDecor, Card, ScoreBar, DimensionBar } from './ui';
+import { BackgroundDecor, Card, ScoreBar, DimensionBar, RadarChart } from './ui';
 
 type Lang = 'zh' | 'en' | 'ja';
 
-export const ResultView = ({ data, lang, mode, onBack }: { data: any, lang: Lang, mode?: 'lite' | 'standard' | 'full' | null, onBack?: () => void }) => {
+export const ResultView = ({ data, lang, mode, modelName, onBack }: { data: any, lang: Lang, mode?: 'lite' | 'standard' | 'full' | null, modelName?: string, onBack?: () => void }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Prepare Radar Data
+  const uiLabels = (localesData as any)[lang]?.result || {};
+  const radarData = [
+    { label: uiLabels.repression_index, value: data.scores?.repression_index },
+    { label: uiLabels.happiness_index, value: data.scores?.happiness_index },
+    { label: uiLabels.social_adaptation, value: data.scores?.social_adaptation },
+    { label: uiLabels.independent_thinking, value: data.scores?.independent_thinking },
+  ].filter(d => {
+    if (mode !== 'full') {
+        if (d.label === uiLabels.independent_thinking) return false;
+        if (d.label === uiLabels.repression_index) return false;
+    }
+    return d.value !== undefined;
+  });
+
   const t = (section: string, key: string) => {
       return (localesData as any)[lang]?.[section]?.[key] || key;
   }
@@ -43,20 +59,21 @@ export const ResultView = ({ data, lang, mode, onBack }: { data: any, lang: Lang
           className="mb-8 md:mb-12 text-center"
         >
           <div className="flex flex-col items-center gap-4 mb-6">
-            {(mode !== 'lite') && (
-              <div className="flex flex-wrap justify-center gap-2">
-                <div className="px-4 py-1 rounded-full bg-purple-100/80 text-[10px] md:text-xs font-bold tracking-[0.2em] text-purple-500 uppercase border border-purple-200/50">
-                  {ui.title}
-                </div>
+            <div className="flex flex-wrap justify-center gap-2">
+              <div className="px-3 py-1 rounded-full bg-indigo-50 text-[10px] font-bold tracking-widest text-indigo-500 uppercase border border-indigo-100 flex items-center gap-1.5 shadow-sm">
+                <Brain size={10} /> {(localesData as any)[lang]?.mode?.[`${mode}_title`] || mode}
               </div>
-            )}
+              <div className="px-3 py-1 rounded-full bg-slate-100 text-[10px] font-bold tracking-widest text-slate-500 uppercase border border-slate-200 flex items-center gap-1.5 shadow-sm">
+                <Activity size={10} /> {modelName || 'System AI'}
+              </div>
+            </div>
             
-            <h1 className="text-4xl md:text-6xl lg:text-8xl font-thin tracking-tighter text-slate-900 font-serif leading-tight px-2">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-thin tracking-tighter text-slate-900 font-serif leading-tight px-2">
               {safeStr(identity.archetype)}
             </h1>
           </div>
           <div className="w-12 md:w-20 h-1 bg-gradient-to-r from-transparent via-purple-300 to-transparent mx-auto mb-6 opacity-40" />
-          <p className="text-lg md:text-2xl lg:text-3xl text-slate-500 font-light italic max-w-3xl mx-auto leading-relaxed font-serif px-4 opacity-90">
+          <p className="text-lg md:text-2xl text-slate-500 font-light italic max-w-3xl mx-auto leading-relaxed font-serif px-4 opacity-90">
             "{safeStr(identity.one_liner)}"
           </p>
 
@@ -93,6 +110,15 @@ export const ResultView = ({ data, lang, mode, onBack }: { data: any, lang: Lang
               <div className="flex justify-between items-center border-b border-purple-50 pb-2 mb-2">
                 <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">{common.alignment}</span>
                 <span className="text-sm md:text-base font-medium text-slate-600">{safeStr(identity.alignment)}</span>
+              </div>
+            </Card>
+            
+            <Card title={ui.alter_ego} icon={<Star className="text-amber-500" size={18} />}>
+              <div className="text-center py-2 flex flex-col h-full justify-center">
+                <h3 className="text-xl md:text-2xl font-serif text-slate-900 mb-3">{data.celebrity_match?.name || "Unknown"}</h3>
+                <p className="text-xs text-slate-500 leading-relaxed bg-amber-50/50 p-4 rounded-2xl border border-amber-100/50 italic font-serif">
+                  "{data.celebrity_match?.reason}"
+                </p>
               </div>
             </Card>
 
@@ -162,134 +188,162 @@ export const ResultView = ({ data, lang, mode, onBack }: { data: any, lang: Lang
               </div>
             </Card>
 
-            <Card title={ui.alter_ego} icon={<Star className="text-amber-500" size={18} />}>
-               <div className="text-center py-2">
-                 <h3 className="text-lg md:text-xl font-serif text-slate-900 mb-2">{data.celebrity_match?.name || "Unknown"}</h3>
-                 <p className="text-xs text-slate-500 leading-relaxed bg-amber-50/50 p-3 rounded-xl border border-amber-100/50 italic font-serif">
-                   "{data.celebrity_match?.reason}"
-                 </p>
-               </div>
-            </Card>
+            {/* TACTICAL ADVICE (Moved from Right) */}
+            <div className="bg-slate-900 p-6 md:p-8 rounded-[1.5rem] text-white shadow-xl relative overflow-hidden flex flex-col justify-between min-h-[160px]">
+              <div className="absolute top-[-50%] right-[-50%] w-[100%] h-[100%] bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+              
+              <div className="relative z-10">
+                <h3 className="text-[9px] font-bold opacity-40 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <Shield size={12} /> {ui.tactical}
+                </h3>
+                <p className="text-slate-200 text-xs md:text-sm leading-relaxed italic font-serif opacity-90">"{data.analysis?.advice}"</p>
+              </div>
+                <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-end opacity-30 text-[8px] tracking-widest relative z-10 font-mono">
+                  <span>MENTAL HELP // {modelName || 'AI AGENT'}</span>
+                  <span className="uppercase">{mode || 'standard'}-V1.7</span>
+                </div>
+            </div>
 
-            {/* SCORING & STATS (New) */}
-            {data.scores && (
-              <Card title={ui.scores || "Vital Stats"} icon={<Activity className="text-blue-500" size={18} />}>
-                 <ScoreBar label={ui.repression_index || "Repression Index"} value={data.scores.repression_index} color="bg-indigo-500" />
-                 <ScoreBar label={ui.happiness_index || "Happiness Index"} value={data.scores.happiness_index} color="bg-emerald-500" />
-                 <ScoreBar label={ui.social_adaptation || "Social Mask"} value={data.scores.social_adaptation} color="bg-amber-500" />
-                 <ScoreBar label={ui.independent_thinking || "Free Thought"} value={data.scores.independent_thinking} color="bg-cyan-500" />
+            {/* Removed Alter Ego, Scores, and Dimensions from here (moved to main area or restricted) */}
+          </div>
+
+          {/* MAIN COL: ANALYSIS (8 cols on desktop) */}
+          <div className="md:col-span-8 space-y-6">
+            {/* STRENGTHS & SHADOW (Side by Side) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card title={ui.strengths} icon={<Zap className="text-purple-500" size={18} />} className="h-full">
+                <p className="text-slate-700 leading-relaxed text-sm font-light font-serif">
+                  {data.analysis?.strengths}
+                </p>
               </Card>
-            )}
 
-            {/* DIMENSIONS (Political Compass) */}
-            {data.dimensions && (
-              <Card title={ui.dimensions || "Ideology Spectrum"} icon={<Share2 className="text-violet-500" size={18} />}>
-                 {data.dimensions.economic && <DimensionBar value={data.dimensions.economic.value} axisLabel={data.dimensions.economic.axis_label} leftLabel="Equality" rightLabel="Markets" />}
-                 {data.dimensions.diplomatic && <DimensionBar value={data.dimensions.diplomatic.value} axisLabel={data.dimensions.diplomatic.axis_label} leftLabel="Nation" rightLabel="Globe" />}
-                 {data.dimensions.civil && <DimensionBar value={data.dimensions.civil.value} axisLabel={data.dimensions.civil.axis_label} leftLabel="Authority" rightLabel="Liberty" />}
-                 {data.dimensions.societal && <DimensionBar value={data.dimensions.societal.value} axisLabel={data.dimensions.societal.axis_label} leftLabel="Tradition" rightLabel="Progress" />}
+              <Card title={ui.shadow} icon={<Shield className="text-indigo-500" size={18} />} className="h-full">
+                <p className="text-slate-700 leading-relaxed font-light text-sm">
+                  {data.analysis?.dark_side}
+                </p>
+              </Card>
+            </div>
+                                      {/* CLINICAL SUMMARY CARD */}
+            {(() => {
+              const hasDepression = data.clinical_findings?.depression?.status && data.clinical_findings.depression.status !== 'None';
+              const hasADHD = data.clinical_findings?.adhd?.status && data.clinical_findings.adhd.status !== 'None' && mode !== 'lite';
+              const hasAttachment = data.clinical_findings?.attachment?.type && mode !== 'lite';
+              const hasSexual = data.clinical_findings?.sexual_repression?.level && data.clinical_findings.sexual_repression.level !== 'None' && mode === 'full';
+              
+              if (!hasDepression && !hasADHD && !hasAttachment && !hasSexual) return null;
+
+              return (
+                <Card title={ui.clinical_summary} icon={<Activity className="text-rose-500" size={18} />}>
+                  <div className={clsx(
+                    "grid grid-cols-1 gap-4",
+                    mode === 'lite' ? "md:grid-cols-1" : "md:grid-cols-3"
+                  )}>
+                    {/* Depression Card */}
+                    {hasDepression && (
+                      <ClinicalCard
+                        label={ui.depression_card}
+                        status={data.clinical_findings.depression.status}
+                        description={data.clinical_findings.depression.description}
+                        isHigh={['High', 'Critical', 'Severe'].includes(data.clinical_findings.depression.status)}
+                        colorScheme="rose"
+                        icon={<AlertTriangle size={14} className={['High', 'Critical'].includes(data.clinical_findings.depression.status) ? "text-rose-500" : "text-slate-300"} />}
+                      />
+                    )}
+
+                    {/* ADHD Card */}
+                    {hasADHD && (
+                      <ClinicalCard
+                        label={ui.adhd_card}
+                        status={data.clinical_findings.adhd.status}
+                        description={data.clinical_findings.adhd.description}
+                        colorScheme="indigo"
+                        icon={<Zap size={14} className="text-indigo-400" />}
+                      />
+                    )}
+
+                    {/* Attachment Card */}
+                    {hasAttachment && (
+                      <ClinicalCard
+                        label={ui.attachment_card}
+                        status={data.clinical_findings.attachment.type}
+                        description={data.clinical_findings.attachment.description}
+                        colorScheme="purple"
+                        icon={<Heart size={14} className="text-purple-400" />}
+                      />
+                    )}
+
+                    {/* Sexual Repression Card */}
+                    {hasSexual && (
+                      <ClinicalCard
+                        label={ui.sexual_card || "Repression"}
+                        status={data.clinical_findings.sexual_repression.level}
+                        description={data.clinical_findings.sexual_repression.explanation}
+                        colorScheme="pink"
+                        icon={<Heart size={14} className="text-pink-400" />}
+                      />
+                    )}
+                  </div>
+                  
+                  {data.analysis?.clinical_note && (
+                    <div className="mt-6 text-xs text-slate-500 bg-white p-4 rounded-xl border border-slate-100 flex gap-3 items-start italic">
+                      <Brain className="shrink-0 mt-0.5 text-slate-300" size={14} />
+                      <div>{data.analysis.clinical_note}</div>
+                    </div>
+                  )}
+                </Card>
+              );
+            })()}
+
+            {/* CORE INDICES (Radar) */}
+            <div className="grid grid-cols-1 gap-6">
+              {data.scores && (
+                <Card title={ui.scores} icon={<Activity className="text-blue-500" size={18} />}>
+                   {radarData.length > 3 ? (
+                      <div className="py-2 scale-90 md:scale-100">
+                        <RadarChart data={radarData} size={240} />
+                        <div className="mt-4 space-y-1">
+                          {radarData.map(d => (
+                            <div key={d.label} className="flex justify-between text-[10px] font-medium text-slate-500">
+                              <span>{d.label}</span>
+                              <span className="font-bold text-slate-700">{d.value}/100</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                   ) : (
+                      <div className="py-4 space-y-4">
+                        {radarData.map((d, i) => (
+                          <ScoreBar 
+                            key={d.label} 
+                            label={d.label} 
+                            value={d.value} 
+                            color={i === 0 ? "bg-emerald-500" : i === 1 ? "bg-amber-500" : "bg-indigo-500"} 
+                          />
+                        ))}
+                      </div>
+                   )}
+                </Card>
+              )}
+            </div>
+
+            {/* DIMENSIONS (Political Compass) - Moved here for full width in main column */}
+            {data.dimensions && mode === 'full' && (
+              <Card title={ui.dimensions} icon={<Share2 className="text-violet-500" size={18} />}>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
+                   {data.dimensions.economic && <DimensionBar value={data.dimensions.economic.value} axisLabel={data.dimensions.economic.axis_label} leftLabel={(localesData as any)[lang]?.poles?.equality} rightLabel={(localesData as any)[lang]?.poles?.markets} />}
+                   {data.dimensions.diplomatic && <DimensionBar value={data.dimensions.diplomatic.value} axisLabel={data.dimensions.diplomatic.axis_label} leftLabel={(localesData as any)[lang]?.poles?.nation} rightLabel={(localesData as any)[lang]?.poles?.globe} />}
+                   {data.dimensions.civil && <DimensionBar value={data.dimensions.civil.value} axisLabel={data.dimensions.civil.axis_label} leftLabel={(localesData as any)[lang]?.poles?.authority} rightLabel={(localesData as any)[lang]?.poles?.liberty} />}
+                   {data.dimensions.societal && <DimensionBar value={data.dimensions.societal.value} axisLabel={data.dimensions.societal.axis_label} leftLabel={(localesData as any)[lang]?.poles?.tradition} rightLabel={(localesData as any)[lang]?.poles?.progress} />}
+                 </div>
                  
                  {identity.ideology && (
-                    <div className="mt-4 p-3 bg-violet-50 rounded-xl border border-violet-100 text-center">
+                    <div className="mt-4 p-3 bg-violet-50 rounded-xl border border-violet-100 text-center max-w-sm mx-auto">
                        <span className="text-[10px] font-bold text-violet-400 uppercase tracking-widest block mb-1">{common.ideology}</span>
                        <span className="text-sm font-bold text-violet-900">{identity.ideology}</span>
                     </div>
                  )}
               </Card>
             )}
-          </div>
-
-          {/* MAIN COL: ANALYSIS (8 cols on desktop) */}
-          <div className="md:col-span-8 space-y-6">
-            
-            {/* STRENGTHS */}
-            <Card title={ui.strengths} icon={<Zap className="text-purple-500" size={18} />}>
-               <p className="text-slate-700 leading-relaxed text-sm md:text-lg font-light font-serif">
-                 {data.analysis?.strengths}
-               </p>
-            </Card>
-
-            {/* CLINICAL SUMMARY CARD */}
-            <Card title={ui.clinical_summary} icon={<Activity className="text-rose-500" size={18} />}>
-              <div className={clsx(
-                "grid grid-cols-1 gap-4",
-                mode === 'lite' ? "md:grid-cols-1" : "md:grid-cols-3"
-              )}>
-                {/* Depression Card */}
-                <ClinicalCard
-                  label={ui.depression_card}
-                  status={data.clinical_findings?.depression?.status}
-                  description={data.clinical_findings?.depression?.description}
-                  isHigh={data.clinical_findings?.depression?.status === 'High' || data.clinical_findings?.depression?.status === common.status_high}
-                  colorScheme="rose"
-                  icon={<AlertTriangle size={14} className={data.clinical_findings?.depression?.status === 'High' ? "text-rose-500" : "text-slate-300"} />}
-                />
-
-                {/* ADHD Card - Hidden in Simplified (Lite) Mode */}
-                {data.clinical_findings?.adhd && mode !== 'lite' && (
-                  <ClinicalCard
-                    label={ui.adhd_card}
-                    status={data.clinical_findings?.adhd?.status}
-                    description={data.clinical_findings?.adhd?.description}
-                    colorScheme="indigo"
-                    icon={<Zap size={14} className="text-indigo-400" />}
-                  />
-                )}
-
-                {/* Attachment Card - Hidden in Simplified (Lite) Mode */}
-                {data.clinical_findings?.attachment && mode !== 'lite' && (
-                  <ClinicalCard
-                    label={ui.attachment_card}
-                    status={data.clinical_findings?.attachment?.type}
-                    description={data.clinical_findings?.attachment?.description}
-                    colorScheme="purple"
-                    icon={<Heart size={14} className="text-purple-400" />}
-                  />
-                )}
-
-                {/* Sexual Repression Card - Standard/Full Mode Only */}
-                {data.clinical_findings?.sexual_repression && mode !== 'lite' && (
-                  <ClinicalCard
-                    label={ui.sexual_card || "Repression"}
-                    status={data.clinical_findings?.sexual_repression?.level}
-                    description={data.clinical_findings?.sexual_repression?.explanation}
-                    colorScheme="pink"
-                    icon={<Heart size={14} className="text-pink-400" />}
-                  />
-                )}
-              </div>
-              
-              {data.analysis?.clinical_note && (
-                 <div className="mt-6 text-xs text-slate-500 bg-white p-4 rounded-xl border border-slate-100 flex gap-3 items-start italic">
-                   <Brain className="shrink-0 mt-0.5 text-slate-300" size={14} />
-                   <div>{data.analysis.clinical_note}</div>
-                 </div>
-              )}
-            </Card>
-
-            <Card title={ui.shadow} icon={<Shield className="text-indigo-500" size={18} />}>
-              <p className="text-slate-700 leading-relaxed font-light text-sm md:text-base">
-                {data.analysis?.dark_side}
-              </p>
-            </Card>
-
-            <div className="grid grid-cols-1 gap-6">
-
-               <div className="bg-slate-900 p-6 md:p-8 rounded-[1.5rem] text-white shadow-xl relative overflow-hidden flex flex-col justify-between min-h-[160px]">
-                  <div className="absolute top-[-50%] right-[-50%] w-[100%] h-[100%] bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
-                  
-                  <div className="relative z-10">
-                    <h3 className="text-[9px] font-bold opacity-40 uppercase tracking-widest mb-3 flex items-center gap-2">
-                        <Shield size={12} /> {ui.tactical}
-                    </h3>
-                    <p className="text-slate-200 text-xs md:text-sm leading-relaxed italic font-serif opacity-90">"{data.analysis?.advice}"</p>
-                  </div>
-                   <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-end opacity-30 text-[8px] tracking-widest relative z-10 font-mono">
-                      <span>MENTAL HELP // AI AGENT</span>
-                      <span>V1.5</span>
-                   </div>
-                </div>
-             </div>
 
               {/* NEW SECTIONS: Career & Social */}
               <div className={clsx(
@@ -349,7 +403,6 @@ export const ResultView = ({ data, lang, mode, onBack }: { data: any, lang: Lang
                   </Card>
                 )}
               </div>
-
           </div>
         </div>
         

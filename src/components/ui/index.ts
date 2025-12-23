@@ -4,3 +4,4 @@ export { Card, ModeCard } from './Card';
 export { Input, TextInput } from './Input';
 export { LangSwitcher } from './LangSwitcher';
 export { ScoreBar, DimensionBar } from './ScoreBar';
+export { RadarChart } from './RadarChart';

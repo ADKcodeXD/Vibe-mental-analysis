@@ -12,7 +12,7 @@ import localesData from '../data/locales.json';
 
 // Import extracted components
 import { Background, ModeCard, Input, TextInput, LangSwitcher } from './ui';
-import { LoadingView, HistoryView } from './views';
+import { LoadingView, HistoryView, SettingsView } from './views';
 
 const questionsDataMap: Record<Lang, any> = {
   zh: questionsZh,
@@ -163,9 +163,10 @@ export default function QuestionEngine() {
   }, []);
 
 
-  const saveConfig = () => {
-    localStorage.setItem('holo_config', JSON.stringify(config));
-    setShowSettings(false);
+  const saveConfig = (newConfig: Config) => {
+    setConfig(newConfig);
+    localStorage.setItem('holo_config', JSON.stringify(newConfig));
+    setView('welcome');
   };
 
   const setLanguage = (l: Lang) => {
@@ -214,7 +215,7 @@ export default function QuestionEngine() {
 
   const submit = async () => {
     setLoading(true);
-    setView('result');
+    // Remove premature setView('result') to avoid UI flicker/blank states
     try {
       const payload = {
         answers: Object.entries(answers).map(([id, value]) => ({ questionId: id, value })),
@@ -240,11 +241,11 @@ export default function QuestionEngine() {
       localStorage.removeItem('holo_session');
       setView('result');
     } catch (e: any) {
-      console.error(e);
-      const errorMsg = e.message || ui.engine.error_retry;
-      alert(`Error: ${errorMsg}`);
-      setShowSettings(true);
+      console.error("ANALysis FAILED:", e);
+      const errorMsg = e.message || (lang === 'zh' ? '分析失败，请检查配置和网络' : (lang === 'ja' ? '解析に失敗しました。設定とネットワークを確認してください' : 'Analysis failed. Please check config and network.'));
+      alert(errorMsg);
       setView('welcome');
+      setShowSettings(true);
     } finally {
       setLoading(false);
     }
@@ -298,7 +299,19 @@ export default function QuestionEngine() {
     );
   }
 
-  if (result) return <ResultView data={result} lang={lang} mode={mode} onBack={() => { setResult(null); setView(history.length > 0 ? 'history' : 'welcome'); }} />;
+  if (view === 'settings') {
+    return (
+      <SettingsView 
+        config={config} 
+        setConfig={setConfig} 
+        onSave={saveConfig} 
+        onBack={() => setView('welcome')} 
+        ui={ui} 
+      />
+    );
+  }
+
+  if (result) return <ResultView data={result} lang={lang} mode={mode} modelName={config.model} onBack={() => { setResult(null); setView(history.length > 0 ? 'history' : 'welcome'); }} />;
 
 
 
@@ -313,6 +326,25 @@ export default function QuestionEngine() {
           >
             <LoadingView ui={ui} />
           </motion.div>
+        )}
+
+        {!loading && (view === 'welcome' || view === 'mode_select' || view === 'questionnaire') && (
+          <div className="fixed top-6 right-6 z-[60] flex items-center gap-3">
+             {history.length > 0 && (
+               <button 
+                 onClick={() => setView('history')}
+                 className="flex items-center gap-2 px-4 py-2 bg-white/60 hover:bg-white/90 rounded-full font-bold text-[10px] text-indigo-500 transition-all border border-white/50 shadow-sm backdrop-blur-md uppercase tracking-widest"
+               >
+                 <Activity size={14} /> <span className="hidden sm:inline">{ui.result?.history_title || 'History'}</span>
+               </button>
+             )}
+             <button 
+               onClick={() => setView('settings')}
+               className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white hover:bg-slate-800 rounded-full font-bold text-[10px] transition-all border border-white/10 shadow-lg uppercase tracking-widest"
+             >
+               <Settings size={14} /> <span className="hidden sm:inline">{ui.welcome?.settings || 'Settings'}</span>
+             </button>
+          </div>
         )}
 
         {!loading && view === 'welcome' && (
@@ -364,12 +396,23 @@ export default function QuestionEngine() {
                       initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
                       className="flex justify-center mt-2 relative z-20"
                     >
-                      <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-4 py-2 rounded-full backdrop-blur-md">
-                        <AlertTriangle size={12} className="text-amber-600" />
-                        <span className="text-[10px] md:text-xs font-medium text-amber-700 uppercase tracking-wide">
-                          {ui.engine.no_key} • {ui.engine.system_default}
-                        </span>
-                      </div>
+                      <button 
+                        onClick={() => setView('settings')}
+                        className="flex items-center gap-3 bg-white/80 border border-amber-200 px-5 py-2.5 rounded-2xl shadow-xl shadow-amber-500/5 hover:-translate-y-0.5 transition-all group"
+                      >
+                        <div className="p-1.5 bg-amber-50 rounded-lg group-hover:bg-amber-100 transition-colors">
+                          <AlertTriangle size={14} className="text-amber-600" />
+                        </div>
+                        <div className="text-left">
+                           <div className="text-[10px] font-black text-amber-800 uppercase tracking-widest leading-none mb-0.5">
+                             {ui.engine.no_key}
+                           </div>
+                           <div className="text-[9px] text-amber-600 font-medium">
+                             {ui.engine.system_default} • <span className="underline decoration-amber-300">点击配置 / Click to Config</span>
+                           </div>
+                        </div>
+                        <ChevronRight size={14} className="text-amber-400 group-hover:text-amber-600 transition-colors ml-1" />
+                      </button>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -402,78 +445,10 @@ export default function QuestionEngine() {
                     </button>
                   )}
 
-                  <div className="flex flex-col gap-2">
-                    <button
-                      onClick={() => setShowSettings(!showSettings)}
-                      className="text-sm text-gray-400 hover:text-gray-900 transition-colors flex items-center justify-center gap-2 mx-auto"
-                    >
-                      <Settings size={14} /> {showSettings ? ui.settings.cancel : ui.welcome.settings}
-                    </button>
-
-                    {history.length > 0 && view === 'welcome' && (
-                      <button
-                        onClick={() => setView('history')}
-                        className="text-sm text-indigo-500 hover:text-indigo-700 transition-colors font-medium flex items-center justify-center gap-2 mx-auto"
-                      >
-                        <Activity size={14} /> {ui.result.history_title}
-                      </button>
-                    )}
-                  </div>
+                  {/* Settings and History moved to top right */}
                 </div>
 
-                <AnimatePresence>
-                  {showSettings && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="bg-white/60 backdrop-blur-xl border border-white p-6 rounded-2xl shadow-inner mt-4 text-left space-y-4 relative z-20">
-                        <p className="text-xs text-center text-gray-400 mb-4">
-                          {ui.settings.config_hint}
-                        </p>
-                        <Input label={ui.settings.apiKey} value={config.apiKey} onChange={(v: string) => setConfig({ ...config, apiKey: v })} placeholder="sk-..." type="password" />
-                        <Input label={ui.settings.baseUrl} value={config.baseUrl} onChange={(v: string) => setConfig({ ...config, baseUrl: v })} placeholder="https://api.openai.com/v1" />
-
-                        <div className="space-y-3">
-                          <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest">{ui.settings.model}</label>
-                          <div className="flex flex-wrap gap-2">
-                            {[
-                              'google/gemini-3-flash-preview',
-                              'openai/gpt-5.2-pro',
-                              'xiaomi/mimo-v2-flash:free',
-                              'deepseek/deepseek-v3.2',
-                              'google/gemini-3-pro-preview',
-                              'anthropic/claude-sonnet-4.5'
-                            ].map(m => (
-                              <button
-                                key={m}
-                                onClick={() => setConfig({ ...config, model: m })}
-                                className={clsx(
-                                  "text-[10px] px-3 py-1.5 rounded-lg border transition-all",
-                                  config.model === m ? "bg-gray-900 text-white border-gray-900" : "bg-gray-50 text-gray-500 border-gray-200 hover:border-gray-400"
-                                )}
-                              >
-                                {m.split('/')[1] || m}
-                              </button>
-                            ))}
-                          </div>
-                          <input
-                            value={config.model}
-                            onChange={(e) => setConfig({ ...config, model: e.target.value })}
-                            placeholder={ui.settings.custom_model_placeholder}
-                            className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-gray-900 focus:border-gray-900 focus:ring-0 outline-none transition-all text-sm"
-                          />
-                        </div>
-
-                        <div className="flex justify-center pt-2">
-                          <button onClick={() => { saveConfig(); setShowSettings(false); }} className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg font-bold">
-                            {ui.settings.save_close}
-                          </button>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                  {/* Settings Modal removed in favor of SettingsView */}
               </motion.div>
 
               <footer className="mt-16 text-center w-full px-6">
@@ -487,8 +462,8 @@ export default function QuestionEngine() {
 
         {!loading && view === 'mode_select' && (
           <motion.div key="mode_select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative z-10 w-full flex flex-col items-center justify-center min-h-screen p-6">
-            <div className="w-full max-w-5xl">
-              <header className="text-center mb-10">
+            <div className="w-full max-w-5xl md:pt-0 pt-10">
+              <header className="text-center mb-10 ">
                 <h1 className="text-5xl md:text-6xl font-serif text-slate-900 mb-2">{ui.mode.title}</h1>
                 <p className="text-slate-500 text-lg md:text-xl font-light">{ui.mode.subtitle}</p>
               </header>
