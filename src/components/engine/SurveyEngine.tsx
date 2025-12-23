@@ -49,6 +49,7 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
   const [history, setHistory] = useState<any[]>([]);
   const [hasSession, setHasSession] = useState(false);
   const saveTimeoutRef = useRef<NodeJS.Timeout>(null);
+  const isSubmittingRef = useRef(false);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -160,7 +161,10 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
     }, 1000);
 
     if (allQuestions[currentIndex].q.type === 'choice') {
-      setTimeout(() => nextQuestion(), 250);
+      const isLast = currentIndex === allQuestions.length - 1;
+      if (!isLast) {
+        setTimeout(() => nextQuestion(), 250);
+      }
     }
   };
 
@@ -181,6 +185,8 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
   }
 
   const submit = async () => {
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
     setLoading(true);
     try {
       const payload = {
@@ -215,6 +221,7 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
       setView('welcome');
     } finally {
       setLoading(false);
+      isSubmittingRef.current = false;
     }
   };
 
@@ -289,7 +296,7 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="absolute inset-0 z-50"
           >
-            <LoadingView ui={ui} />
+            <LoadingView ui={ui} mode={mode} />
           </motion.div>
         )}
 

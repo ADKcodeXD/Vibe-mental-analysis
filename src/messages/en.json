@@ -56,6 +56,9 @@
       "Finalizing Analysis"
     ],
     "processing_label": "AI Deep Processing",
+    "est_time": "Est. Analysis Time",
+    "wait_longer": "Deep search activated via neural core",
+    "submission_warning": "Please do not exit this screen to avoid losing results.",
     "jump_to": "Quick Jump...",
     "unread_confirm": "You have {count} unanswered questions. Are you sure you want to submit and generate the report?"
   },
@@ -81,6 +84,8 @@
     "depression_card": "Depression Assessment",
     "adhd_card": "Attention & Hyperactivity",
     "attachment_card": "Attachment Style",
+    "anxiety_card": "Anxiety Level",
+    "narcissism_card": "Narcissism & Persona",
     "clinical_summary": "Clinical Dimensions",
     "disclaimer_title": "Advice & Disclaimer",
     "disclaimer_content": "This report is for informational purposes only and does not constitute medical advice. The results are based on AI algorithm analysis and may contain biases. If you have mental health concerns or needs, please consult a professional medical institution for help.",

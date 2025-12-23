@@ -85,7 +85,7 @@ export default async function HomePage({
               
               <div className="w-24 h-[1px] bg-indigo-600/20 mx-auto mb-10" />
 
-              <p className="text-lg md:text-2xl text-slate-500 font-light max-w-2xl mx-auto leading-relaxed font-serif italic">
+              <p className="text-lg md:text-2xl text-slate-500 font-light max-w-2xl mx-auto leading-relaxed font-serif">
                 {t('hero_subtitle')}
               </p>
             </header>
@@ -109,7 +109,7 @@ export default async function HomePage({
                       <h3 className="text-3xl md:text-4xl font-serif font-bold text-slate-900 mb-3 tracking-tight group-hover:text-indigo-600 transition-colors">
                         {test.title[lang]}
                       </h3>
-                      <p className="text-slate-500 font-light text-base md:text-lg italic font-serif leading-relaxed max-w-md">
+                      <p className="text-slate-500 font-light text-base md:text-lg font-serif leading-relaxed max-w-md">
                         {test.description[lang]}
                       </p>
                     </div>

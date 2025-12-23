@@ -69,7 +69,7 @@ export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, dict
             </h1>
           </div>
           <div className="w-12 md:w-20 h-1 bg-gradient-to-r from-transparent via-purple-300 to-transparent mx-auto mb-6 opacity-40" />
-          <p className="text-lg md:text-2xl text-slate-500 font-light italic max-w-3xl mx-auto leading-relaxed font-serif px-4 opacity-90">
+          <p className="text-lg md:text-2xl text-slate-500 font-light max-w-3xl mx-auto leading-relaxed font-serif px-4 opacity-90">
             "{safeStr(identity.one_liner)}"
           </p>
 
@@ -87,7 +87,7 @@ export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, dict
               <div className="text-[10px] font-bold text-rose-600 uppercase tracking-widest mb-1">
                  {ui.disclaimer_title}
               </div>
-              <p className="text-[10px] md:text-xs text-rose-700/80 leading-relaxed font-serif italic">
+              <p className="text-[10px] md:text-xs text-rose-700/80 leading-relaxed font-serif">
                  {ui.disclaimer_content}
               </p>
            </div>
@@ -112,7 +112,7 @@ export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, dict
             <Card title={ui.alter_ego} icon={<Star className="text-amber-500" size={18} />}>
               <div className="text-center py-2 flex flex-col h-full justify-center">
                 <h3 className="text-xl md:text-2xl font-serif text-slate-900 mb-3">{data.celebrity_match?.name || "Unknown"}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed bg-amber-50/50 p-4 rounded-2xl border border-amber-100/50 italic font-serif">
+                <p className="text-xs text-slate-500 leading-relaxed bg-amber-50/50 p-4 rounded-2xl border border-amber-100/50 font-serif">
                   "{data.celebrity_match?.reason}"
                 </p>
               </div>
@@ -123,7 +123,7 @@ export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, dict
                <Card title={ui.clinical_label || "Clinical Vibe"} icon={<Activity className="text-pink-500" size={18} />}>
                   <div className="text-center">
                     <div className="text-lg md:text-xl font-bold text-pink-600 mb-1">{identity.clinical_label}</div>
-                    <p className="text-xs text-slate-500 italic">"{identity.clinical_explanation}"</p>
+                    <p className="text-xs text-slate-500">"{identity.clinical_explanation}"</p>
                   </div>
                </Card>
             )}
@@ -172,7 +172,7 @@ export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, dict
                 </div>
 
                 {data.integrity_analysis?.conflicts && data.integrity_analysis.conflicts.length > 0 && (
-                  <div className="bg-rose-50/50 p-3 rounded-xl text-[10px] text-rose-600 border border-rose-100 leading-relaxed italic">
+                  <div className="bg-rose-50/50 p-3 rounded-xl text-[10px] text-rose-600 border border-rose-100 leading-relaxed">
                     {data.integrity_analysis.conflicts.map((c: string, i: number) => <div key={i}>{c}</div>)}
                   </div>
                 )}
@@ -194,7 +194,7 @@ export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, dict
                 <h3 className="text-[9px] font-bold opacity-40 uppercase tracking-widest mb-3 flex items-center gap-2">
                     <Shield size={12} /> {ui.tactical}
                 </h3>
-                <p className="text-slate-200 text-xs md:text-sm leading-relaxed italic font-serif opacity-90">"{data.analysis?.advice}"</p>
+                <p className="text-slate-200 text-xs md:text-sm leading-relaxed font-serif opacity-90">"{data.analysis?.advice}"</p>
               </div>
                 <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-end opacity-30 text-[8px] tracking-widest relative z-10 font-mono">
                   <span>MENTAL HELP // {modelName || 'AI AGENT'}</span>
@@ -223,12 +223,15 @@ export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, dict
             </div>
                                       {/* CLINICAL SUMMARY CARD */}
             {(() => {
-              const hasDepression = data.clinical_findings?.depression?.status && data.clinical_findings.depression.status !== 'None';
-              const hasADHD = data.clinical_findings?.adhd?.status && data.clinical_findings.adhd.status !== 'None' && mode !== 'lite';
-              const hasAttachment = data.clinical_findings?.attachment?.type && mode !== 'lite';
-              const hasSexual = data.clinical_findings?.sexual_repression?.level && data.clinical_findings.sexual_repression.level !== 'None' && mode === 'full';
+              const cf = data.clinical_findings || {};
+              const hasDepression = cf.depression?.level && cf.depression.level !== 'None' && cf.depression.level !== '无';
+              const hasAnxiety = cf.anxiety?.level && cf.anxiety.level !== 'None' && cf.anxiety.level !== '无' && mode !== 'lite';
+              const hasADHD = cf.adhd?.level && cf.adhd.level !== 'None' && cf.adhd.level !== '无' && mode !== 'lite';
+              const hasNarcissism = cf.narcissism?.level && cf.narcissism.level !== 'None' && cf.narcissism.level !== '无' && mode === 'full';
+              const hasAttachment = cf.attachment?.type && mode !== 'lite';
+              const hasSexual = cf.sexual_repression?.level && cf.sexual_repression.level !== 'None' && cf.sexual_repression.level !== '无' && mode === 'full';
               
-              if (!hasDepression && !hasADHD && !hasAttachment && !hasSexual) return null;
+              if (!hasDepression && !hasAnxiety && !hasADHD && !hasNarcissism && !hasAttachment && !hasSexual) return null;
 
               return (
                 <Card title={ui.clinical_summary} icon={<Activity className="text-rose-500" size={18} />}>
@@ -240,11 +243,23 @@ export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, dict
                     {hasDepression && (
                       <ClinicalCard
                         label={ui.depression_card}
-                        status={data.clinical_findings.depression.status}
-                        description={data.clinical_findings.depression.description}
-                        isHigh={['High', 'Critical', 'Severe'].includes(data.clinical_findings.depression.status)}
+                        status={cf.depression.level}
+                        description={cf.depression.explanation}
+                        isHigh={['High', 'Critical', 'Severe', '高', '严重'].some(s => cf.depression.level.includes(s))}
                         colorScheme="rose"
-                        icon={<AlertTriangle size={14} className={['High', 'Critical'].includes(data.clinical_findings.depression.status) ? "text-rose-500" : "text-slate-300"} />}
+                        icon={<AlertTriangle size={14} className={['High', 'Critical', 'Severe', '高', '严重'].some(s => cf.depression.level.includes(s)) ? "text-rose-500" : "text-slate-300"} />}
+                      />
+                    )}
+
+                    {/* Anxiety Card (New) */}
+                    {hasAnxiety && (
+                      <ClinicalCard
+                        label={ui.anxiety_card || "Anxiety"}
+                        status={cf.anxiety.level}
+                        description={cf.anxiety.explanation}
+                        isHigh={['High', 'Critical', 'Severe', '高', '严重'].some(s => cf.anxiety.level.includes(s))}
+                        colorScheme="rose"
+                        icon={<Activity size={14} className={['High', 'Critical', 'Severe', '高', '严重'].some(s => cf.anxiety.level.includes(s)) ? "text-rose-500" : "text-slate-300"} />}
                       />
                     )}
 
@@ -252,10 +267,21 @@ export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, dict
                     {hasADHD && (
                       <ClinicalCard
                         label={ui.adhd_card}
-                        status={data.clinical_findings.adhd.status}
-                        description={data.clinical_findings.adhd.description}
+                        status={cf.adhd.level}
+                        description={cf.adhd.explanation}
                         colorScheme="indigo"
                         icon={<Zap size={14} className="text-indigo-400" />}
+                      />
+                    )}
+
+                    {/* Narcissism Card (New) */}
+                    {hasNarcissism && (
+                      <ClinicalCard
+                        label={ui.narcissism_card || "Narcissism"}
+                        status={cf.narcissism.level}
+                        description={cf.narcissism.explanation}
+                        colorScheme="purple"
+                        icon={<User size={14} className="text-purple-400" />}
                       />
                     )}
 
@@ -263,8 +289,8 @@ export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, dict
                     {hasAttachment && (
                       <ClinicalCard
                         label={ui.attachment_card}
-                        status={data.clinical_findings.attachment.type}
-                        description={data.clinical_findings.attachment.description}
+                        status={cf.attachment.type}
+                        description={cf.attachment.description}
                         colorScheme="purple"
                         icon={<Heart size={14} className="text-purple-400" />}
                       />
@@ -274,8 +300,8 @@ export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, dict
                     {hasSexual && (
                       <ClinicalCard
                         label={ui.sexual_card || "Repression"}
-                        status={data.clinical_findings.sexual_repression.level}
-                        description={data.clinical_findings.sexual_repression.explanation}
+                        status={cf.sexual_repression.level}
+                        description={cf.sexual_repression.explanation}
                         colorScheme="pink"
                         icon={<Heart size={14} className="text-pink-400" />}
                       />
@@ -283,7 +309,7 @@ export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, dict
                   </div>
                   
                   {data.analysis?.clinical_note && (
-                    <div className="mt-6 text-xs text-slate-500 bg-white p-4 rounded-xl border border-slate-100 flex gap-3 items-start italic">
+                    <div className="mt-6 text-xs text-slate-500 bg-white p-4 rounded-xl border border-slate-100 flex gap-3 items-start">
                       <Brain className="shrink-0 mt-0.5 text-slate-300" size={14} />
                       <div>{data.analysis.clinical_note}</div>
                     </div>
@@ -368,7 +394,7 @@ export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, dict
                           ))}
                         </div>
                       </div>
-                      <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 text-xs italic text-slate-600">
+                      <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 text-xs text-slate-600">
                         "{data.career_analysis.workplace_advice}"
                       </div>
                     </div>

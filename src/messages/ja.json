@@ -57,6 +57,9 @@
       "最終分析を完了中"
     ],
     "processing_label": "AI ディーププロセッシング",
+    "est_time": "予想分析時間",
+    "wait_longer": "ニューラルコアを介したディープ検索が有効です",
+    "submission_warning": "分析結果を失わないよう、この画面を閉じないでください。",
     "jump_to": "クイックジャンプ...",
     "unread_confirm": "未回答の質問が {count} 件あります。このまま送信してレポートを生成しますか？"
   },
@@ -82,6 +85,8 @@
     "depression_card": "抑うつ状態の評価",
     "adhd_card": "集中力と多動性",
     "attachment_card": "愛着スタイル分析",
+    "anxiety_card": "不安レベルの監視",
+    "narcissism_card": "自己愛およびペルソナ",
     "clinical_summary": "臨床次元レポート",
     "disclaimer_title": "助言と免責事項",
     "disclaimer_content": "本レポートは情報提供のみを目的としており、医療的な助言を構成するものではありません。結果はAIアルゴリズムの分析に基づいており、偏りが含まれる可能性があります。精神的な悩みや必要性がある場合は、必ず専門の医療機関にご相談ください。",

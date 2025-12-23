@@ -35,7 +35,7 @@ const getQuestionText = (id: string, lang: string = 'zh') => {
 // --- Zod Schemas ---
 const ScoreSchema = z.object({
     score: z.number().min(0).max(100).describe("0-100 score, where 100 is maximum intensity of the trait"),
-    level: z.enum(["Low", "Medium", "High", "Critical"]).describe("Qualitative level based on score"),
+    level: z.string().describe("Qualitative level based on score (e.g., 'Low', 'Medium', 'High' in the requested language)"),
     explanation: z.string().describe("Brief explanation of why this score was assigned")
 });
 
@@ -63,7 +63,7 @@ const FinalProfileSchema = z.object({
         narcissism: ScoreSchema,
         sexual_repression: ScoreSchema,
         attachment: z.object({
-            type: z.string().describe("The localized name of the attachment style (e.g. '安全型', '焦虑型', etc.)"),
+            type: z.string().describe("The localized name of the attachment style (e.g. '安全型', '焦虑型', '回避型', '恐惧型')"),
             description: z.string()
         })
     }),
@@ -317,7 +317,7 @@ const synthesizeProfile = async (state: AgentState) => {
     3.  **Dimensions**: Fill the Political Compass dimensions accurately (0-100).
     4.  **Clinical**: Map depression, anxiety, ADHD, etc. to scores and levels.
     5.  **Sexual Repression**: specifically analyze the sexual data for the sexual_repression field.
-    6.  **Language**: All text content (descriptions, advice, archetypes, AND labels like attachment type or identity tags) MUST be in ${state.lang}.
+    6.  **Language**: CRITICAL: Every single string field in the JSON output, including labels, levels, types, archetypes, and tags, MUST be in ${state.lang}. DO NOT output any English labels/enums like 'Medium' or 'Anxious' if the language is Chinese or Japanese.
     7.  **Celebrity Match**: Cultural context applies (Anime/History for Asian langs, etc).
     8.  **Integrity**: Populate the integrity_analysis section by analyzing [LIE DETECTION] and [USER INPUTS].
     9.  **Optional Sections**: Only provide social_analysis if the user answers provide meaningful social context. If not enough data, omit it.

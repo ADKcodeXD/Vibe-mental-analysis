@@ -76,7 +76,7 @@ export const QuestionnaireView: React.FC<QuestionnaireViewProps> = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="w-full max-w-2xl bg-white/80 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-white/50 flex flex-col overflow-hidden max-h-[70vh] md:max-h-[75vh]"
+            className="w-full max-w-2xl bg-white/80 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-white/50 flex flex-col overflow-hidden max-h-[65vh] md:max-h-[75vh]"
           >
             <div
               ref={cardRef}
@@ -142,7 +142,7 @@ export const QuestionnaireView: React.FC<QuestionnaireViewProps> = ({
           </motion.div>
 
           {/* Navigation Buttons */}
-          <div className="mt-8 flex items-center gap-4 relative z-20 pb-20 md:pb-12 w-full max-w-2xl px-2">
+          <div className="mt-8 flex items-center gap-4 relative z-20 pb-28 md:pb-12 w-full max-w-2xl px-2">
             <button
               onClick={onPrev} disabled={currentIndex === 0}
               className="p-3 md:p-4 rounded-full text-gray-400 hover:bg-white hover:text-gray-900 disabled:opacity-30 transition-all bg-white/40 shadow-sm shrink-0"
