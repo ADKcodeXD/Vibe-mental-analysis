@@ -33,6 +33,8 @@
 ### Deployment
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FADKcodeXD%2FVibe-mental-analysis)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/ADKcodeXD/Vibe-mental-analysis)
+[![Deploy to Cloudflare Pages](https://deploy.workers.cloudflare.com/button)](https://pages.cloudflare.com/deploy?url=https://github.com/ADKcodeXD/Vibe-mental-analysis)
 
 ---
 
@@ -65,6 +67,8 @@
 ### 一健部署
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FADKcodeXD%2FVibe-mental-analysis)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/ADKcodeXD/Vibe-mental-analysis)
+[![Deploy to Cloudflare Pages](https://deploy.workers.cloudflare.com/button)](https://pages.cloudflare.com/deploy?url=https://github.com/ADKcodeXD/Vibe-mental-analysis)
 
 ---
 
@@ -97,3 +101,5 @@
 ### デプロイ
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FADKcodeXD%2FVibe-mental-analysis)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/ADKcodeXD/Vibe-mental-analysis)
+[![Deploy to Cloudflare Pages](https://deploy.workers.cloudflare.com/button)](https://pages.cloudflare.com/deploy?url=https://github.com/ADKcodeXD/Vibe-mental-analysis)
