@@ -80,11 +80,21 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
     }
 
     // Check for existing session
-    const savedSession = localStorage.getItem(`holo_session_${testId}`);
-    if (savedSession) {
-      setHasSession(true);
-    }
+    const checkSession = () => {
+      const savedSession = localStorage.getItem(`holo_session_${testId}`);
+      setHasSession(!!savedSession);
+    };
+
+    checkSession();
   }, [testId]);
+
+  // Update hasSession when view changes to welcome
+  useEffect(() => {
+    if (view === 'welcome') {
+      const savedSession = localStorage.getItem(`holo_session_${testId}`);
+      setHasSession(!!savedSession);
+    }
+  }, [view, testId]);
 
   const saveToHistory = (data: any, currentMode: string | null, modelName: string) => {
     const newEntry = {
@@ -188,7 +198,17 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
     if (isSubmittingRef.current) return;
     isSubmittingRef.current = true;
     setLoading(true);
+
     try {
+      // Save session explicitly before submission to ensure recovery if crash
+      localStorage.setItem(`holo_session_${testId}`, JSON.stringify({
+        answers,
+        currentIndex,
+        mode,
+        selectedModules,
+        lang
+      }));
+
       const payload = {
         answers: Object.entries(answers).map(([id, value]) => ({ questionId: id, value })),
         config: (config.apiKey || config.baseUrl || config.model) ? {
@@ -205,17 +225,25 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
         body: JSON.stringify(payload)
       });
 
+      // Check for non-JSON or error responses
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await res.text();
+        console.error("Non-JSON Response size:", text.length, "Preview text:", text.substring(0, 100));
+        throw new Error("Server returned an invalid format (HTML/Plain Text). This usually means a server error or timeout.");
+      }
+
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      
+
       const historyEntry = saveToHistory(data, mode, config.model || 'System AI');
       localStorage.removeItem(`holo_session_${testId}`);
-      
+
       if (onComplete) {
         onComplete({ ...data, historyId: historyEntry.id, mode });
       }
     } catch (e: any) {
-      console.error("ANALysis FAILED:", e);
+      console.error("ANALYSIS FAILED:", e);
       const errorMsg = e.message || (lang === 'zh' ? '分析失败，请检查配置和网络' : (lang === 'ja' ? '解析に失敗しました。設定とネットワークを確認してください' : 'Analysis failed. Please check config and network.'));
       alert(errorMsg);
       setView('welcome');
@@ -265,8 +293,8 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
     return (
       <HistoryView
         history={history}
-        onSelect={(item: any) => { 
-            if (onComplete) onComplete({ ...item.data, historyId: item.id, fromHistory: true });
+        onSelect={(item: any) => {
+          if (onComplete) onComplete({ ...item.data, historyId: item.id, fromHistory: true });
         }}
         onDelete={deleteHistory}
         setView={setView as (v: string) => void}
@@ -302,27 +330,27 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
 
         {!loading && (view === 'welcome') && (
           <div key="lang-switcher" className="fixed top-6 left-6 z-[60]">
-             <LangSwitcher lang={lang} />
+            <LangSwitcher lang={lang} />
           </div>
         )}
 
         {!loading && (view === 'welcome' || view === 'mode_select' || view === 'questionnaire') && (
           <div key="top-nav" className="fixed top-6 right-6 z-[60] flex items-center gap-3">
-             {history.length > 0 && (
-               <button
-                 onClick={() => setView('history')}
-                 className="p-3 bg-white/60 hover:bg-white/90 rounded-full border border-white/50 shadow-sm backdrop-blur-md transition-all text-slate-500 hover:text-slate-900 group flex items-center gap-2"
-               >
-                 <Clock size={18} />
-                 <span className="text-[10px] font-bold uppercase tracking-widest overflow-hidden w-0 group-hover:w-16 transition-all duration-300 whitespace-nowrap">{ui.result.history_title}</span>
-               </button>
-             )}
-             <button
-               onClick={() => setView('settings')}
-               className="p-3 bg-white/60 hover:bg-white/90 rounded-full border border-white/50 shadow-sm backdrop-blur-md transition-all text-slate-400 hover:text-slate-900"
-             >
-               <Settings size={20} />
-             </button>
+            {history.length > 0 && (
+              <button
+                onClick={() => setView('history')}
+                className="p-3 bg-white/60 hover:bg-white/90 rounded-full border border-white/50 shadow-sm backdrop-blur-md transition-all text-slate-500 hover:text-slate-900 group flex items-center gap-2"
+              >
+                <Clock size={18} />
+                <span className="text-[10px] font-bold uppercase tracking-widest overflow-hidden w-0 group-hover:w-16 transition-all duration-300 whitespace-nowrap">{ui.result.history_title}</span>
+              </button>
+            )}
+            <button
+              onClick={() => setView('settings')}
+              className="p-3 bg-white/60 hover:bg-white/90 rounded-full border border-white/50 shadow-sm backdrop-blur-md transition-all text-slate-400 hover:text-slate-900"
+            >
+              <Settings size={20} />
+            </button>
           </div>
         )}
 

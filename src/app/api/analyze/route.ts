@@ -321,32 +321,55 @@ const synthesizeProfile = async (state: AgentState) => {
     7.  **Celebrity Match**: Cultural context applies (Anime/History for Asian langs, etc).
     8.  **Integrity**: Populate the integrity_analysis section by analyzing [LIE DETECTION] and [USER INPUTS].
     9.  **Optional Sections**: Only provide social_analysis if the user answers provide meaningful social context. If not enough data, omit it.
+    
+    OUTPUT FORMAT:
+    - Pure JSON only.
+    - NO markdown code blocks (e.g. \`\`\`json).
+    - NO introductory text.
+    
     `;
     
     const result = await structuredModel.invoke([
-        new SystemMessage(`You are the Chief Profiler. Output structured JSON matching the schema exactly. Speak in ${state.lang}.`),
+        new SystemMessage(`You are the Chief Profiler. Output structured JSON matching the schema exactly. Speak in ${state.lang}. NO Markdown.`),
         new HumanMessage(prompt)
     ]);
 
     return { finalProfile: result };
 };
 
+// Parallel Execution Node
+const analyzeAll = async (state: AgentState) => {
+    console.log("[Graph] Starting parallel analysis...");
+    const startTime = Date.now();
+    
+    const [cognitive, values, lie, clinical, sexual, thinking] = await Promise.all([
+        analyzeCognitive(state),
+        analyzeValues(state),
+        analyzeLie(state),
+        analyzeClinical(state),
+        analyzeSexual(state),
+        analyzeThinking(state)
+    ]);
+
+    console.log(`[Graph] Parallel analysis complete in ${Date.now() - startTime}ms`);
+    
+    // Merge all partial results
+    return {
+        ...cognitive,
+        ...values,
+        ...lie,
+        ...clinical,
+        ...sexual,
+        ...thinking
+    };
+};
+
 const graph = new StateGraph(GraphState)
-.addNode("cognitive", analyzeCognitive)
-.addNode("clinical", analyzeClinical)
-.addNode("values", analyzeValues)
-.addNode("lie", analyzeLie)
-.addNode("sexual", analyzeSexual)
-.addNode("thinking", analyzeThinking)
-.addNode("synthesis", synthesizeProfile)
-.setEntryPoint("cognitive")
-.addEdge("cognitive", "clinical")
-.addEdge("clinical", "values")
-.addEdge("values", "lie")
-.addEdge("lie", "sexual")
-.addEdge("sexual", "thinking")
-.addEdge("thinking", "synthesis")
-.addEdge("synthesis", END);
+    .addNode("analysis", analyzeAll)
+    .addNode("synthesis", synthesizeProfile)
+    .setEntryPoint("analysis")
+    .addEdge("analysis", "synthesis")
+    .addEdge("synthesis", END);
 
 const compiledGraph = graph.compile();
 
@@ -375,6 +398,13 @@ export async function POST(req: NextRequest) {
             config: config || {}, 
             lang: lang || 'zh' 
         });
+        
+        
+        if (!result.finalProfile) {
+            console.error("[API Error] Final profile is missing from result");
+            throw new Error("Analysis generation failed to produce a final profile.");
+        }
+
         return NextResponse.json(result.finalProfile);
         
     } catch (e: any) {
