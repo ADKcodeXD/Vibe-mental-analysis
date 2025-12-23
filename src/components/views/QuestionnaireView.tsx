@@ -119,13 +119,13 @@ export const QuestionnaireView: React.FC<QuestionnaireViewProps> = ({
                       <span>{t(currentQ.q.rightLabel || '')}</span>
                     </div>
                     <input
-                      type="range" min="1" max="5" step="1"
-                      value={answers[currentQ.q.id] || 3}
+                      type="range" min="1" max="7" step="1"
+                      value={answers[currentQ.q.id] || 4}
                       onChange={(e) => onAnswer(e.target.value)}
                       className="w-full h-3 bg-gray-200 rounded-full appearance-none cursor-pointer accent-gray-900 hover:accent-gray-800 transition-all"
                     />
                     <div className="flex justify-between mt-2 px-1">
-                      {[1, 2, 3, 4, 5].map(n => <div key={n} className="w-1 h-1 bg-gray-300 rounded-full" />)}
+                      {[1, 2, 3, 4, 5, 6, 7].map(n => <div key={n} className="w-1 h-1 bg-gray-300 rounded-full" />)}
                     </div>
                   </div>
                 )}

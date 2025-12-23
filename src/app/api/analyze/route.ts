@@ -181,7 +181,12 @@ const analyzeCognitive = async (state: AgentState) => {
     const model = createModel(state.config);
     const context = state.answers.map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n');
     const response = await model.invoke([
-        new SystemMessage(`You are an Expert Pattern Matcher. Analyze the user's answers. Determine their MBTI (E/I, S/N, T/F, J/P) and general cognitive patterns with brief evidence. Response in ${state.lang}.`),
+        new SystemMessage(`You are an Expert Pattern Matcher. Analyze the user's answers. Determine their MBTI (E/I, S/N, T/F, J/P) and general cognitive patterns with brief evidence. 
+        SCALE GUIDELINE: 'scale' questions range from 1 to 7. 
+        - 1: Lowest intensity (Fully Left Label)
+        - 4: Neutral / No preference
+        - 7: Highest intensity (Fully Right Label)
+        Response in ${state.lang}.`),
         new HumanMessage(context)
     ]);
     return { cognitiveAnalysis: response.content as string };
@@ -200,7 +205,9 @@ const analyzeValues = async (state: AgentState) => {
         .map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n');
     
     const response = await model.invoke([
-        new SystemMessage(`You are a Political Compass Analyst. Determine the user's 8Values leanings (Economic, Diplomatic, Civil, Societal). Use the provided questionnaire data. Response in ${state.lang}.`),
+        new SystemMessage(`You are a Political Compass Analyst. Determine the user's 8Values leanings (Economic, Diplomatic, Civil, Societal). 
+        SCALE GUIDELINE: 'scale' questions range from 1 (Strongly disagree/Left) to 7 (Strongly agree/Right). 4 is Neutral.
+        Use the provided questionnaire data. Response in ${state.lang}.`),
         new HumanMessage(context)
     ]);
     return { valuesAnalysis: response.content as string };
@@ -210,7 +217,9 @@ const analyzeLie = async (state: AgentState) => {
     const model = createModel(state.config);
     const context = state.answers.map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n');
     const response = await model.invoke([
-        new SystemMessage(`You are a Human Lie Detector. Analyze the user's answers for inconsistencies/contradictions. Output a probability of deception and list contradictions. Response in ${state.lang}.`),
+        new SystemMessage(`You are a Human Lie Detector. Analyze the user's answers for inconsistencies/contradictions. 
+        SCALE GUIDELINE: 'scale' questions range from 1 (Left) to 7 (Right). 4 is Neutral.
+        Output a probability of deception and list contradictions. Response in ${state.lang}.`),
         new HumanMessage(context)
     ]);
     return { lieAnalysis: response.content as string };
@@ -238,7 +247,7 @@ const analyzeClinical = async (state: AgentState) => {
     let riskFlag = "";
     if (hasRisk) {
         const risk_q = state.answers.find(a => a.questionId === 'phq9_9_risk');
-        if (risk_q && (risk_q.value === "4" || risk_q.value === "5" || risk_q.value === "几乎每天" || risk_q.value.includes("一半以上") || risk_q.value.includes("Almost every day"))) {
+        if (risk_q && (risk_q.value === "6" || risk_q.value === "7" || risk_q.value === "几乎每天" || risk_q.value.includes("一半以上") || risk_q.value.includes("Almost every day"))) {
             riskFlag = "CRITICAL: SUICIDE IDEATION DETECTED in Q9.";
         }
     }
@@ -246,8 +255,8 @@ const analyzeClinical = async (state: AgentState) => {
     const response = await model.invoke([
         new SystemMessage(`You are an Expert Clinical Psychiatrist. Analyze the behavioral data.
         RULES:
-        1. PHQ-9: Assess Depression.
-        2. BEHAVIOR: Detect Narcissism, Bipolar, ADHD, Anxiety.
+        1. PHQ-9: Assess Depression. Use 1-7 scale (1=Not at all, 7=Nearly every day; 4 is moderate). 
+        2. BEHAVIOR: Detect Narcissism, Bipolar, ADHD, Anxiety. 
         3. ATTACHMENT: Determine style.
         4. SAFETY: If '${riskFlag}' is present, MUST output warning.
         Response in ${state.lang}.`),
@@ -266,6 +275,7 @@ const analyzeSexual = async (state: AgentState) => {
 
     const response = await model.invoke([
         new SystemMessage(`You are a Psychoanalytic Expert specializing in Sexual Psychology. Analyze the user's responses regarding sexual repression, guilt, norms, and desire.
+        SCALE GUIDELINE (1-7): 1=None/Free, 4=Moderate/Neutral, 7=Extreme/Highly Repressed.
         Determine:
         1. Level of Sexual Repression (Low/Med/High).
         2. Impact of social norms/guilt.
@@ -286,6 +296,7 @@ const analyzeThinking = async (state: AgentState) => {
 
     const response = await model.invoke([
         new SystemMessage(`You are a Cognitive Scientist. Analyze the user's Independent Thinking capabilities.
+        SCALE GUIDELINE (1-7): 1=Fully Left Label, 4=Neutral, 7=Fully Right Label.
         Determine:
         1. Conformity level (Sheep vs Wolf).
         2. Critical thinking depth.
@@ -313,7 +324,9 @@ const synthesizeProfile = async (state: AgentState) => {
 
     REQUIREMENTS:
     1.  **Roast & Insight**: Be brutally honest yet scientifically accurate. High-level psychoanalysis.
-    2.  **Stats & Scores**: You MUST calculate the 0-100 scores based on the evidence.
+    2.  **Stats & Scores**: You MUST calculate the 0-100 scores based on the evidence. 
+        - Note: 'scale' questions range from 1 to 7 (1=Min/Left, 4=Neutral, 7=Max/Right).
+        - Map these levels to 0-100 logically (e.g., 7 is 100% intensity).
     3.  **Dimensions**: Fill the Political Compass dimensions accurately (0-100).
     4.  **Clinical**: Map depression, anxiety, ADHD, etc. to scores and levels.
     5.  **Sexual Repression**: specifically analyze the sexual data for the sexual_repression field.

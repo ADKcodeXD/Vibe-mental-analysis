@@ -338,70 +338,70 @@
           "id": "big5_e",
           "type": "scale",
           "text": "外向，热情",
-          "leftLabel": "不符合",
+          "leftLabel": "完全不符合",
           "rightLabel": "非常符合"
         },
         {
           "id": "big5_a_r",
           "type": "scale",
           "text": "挑剔，爱争论",
-          "leftLabel": "不符合",
+          "leftLabel": "完全不符合",
           "rightLabel": "非常符合"
         },
         {
           "id": "big5_c",
           "type": "scale",
           "text": "可靠，自律",
-          "leftLabel": "不符合",
+          "leftLabel": "完全不符合",
           "rightLabel": "非常符合"
         },
         {
           "id": "big5_n",
           "type": "scale",
           "text": "焦虑，容易心烦",
-          "leftLabel": "不符合",
+          "leftLabel": "完全不符合",
           "rightLabel": "非常符合"
         },
         {
           "id": "big5_o",
           "type": "scale",
           "text": "开放，体验丰富",
-          "leftLabel": "不符合",
+          "leftLabel": "完全不符合",
           "rightLabel": "非常符合"
         },
         {
           "id": "big5_e_r",
           "type": "scale",
           "text": "内向，安静",
-          "leftLabel": "不符合",
+          "leftLabel": "完全不符合",
           "rightLabel": "非常符合"
         },
         {
           "id": "big5_a",
           "type": "scale",
           "text": "同情心强，温暖",
-          "leftLabel": "不符合",
+          "leftLabel": "完全不符合",
           "rightLabel": "非常符合"
         },
         {
           "id": "big5_c_r",
           "type": "scale",
           "text": "无条理，粗心",
-          "leftLabel": "不符合",
+          "leftLabel": "完全不符合",
           "rightLabel": "非常符合"
         },
         {
           "id": "big5_n_r",
           "type": "scale",
           "text": "冷静，情绪稳定",
-          "leftLabel": "不符合",
+          "leftLabel": "完全不符合",
           "rightLabel": "非常符合"
         },
         {
           "id": "big5_o_r",
           "type": "scale",
           "text": "传统，缺乏创造力",
-          "leftLabel": "不符合",
+          "leftLabel": "完全不符合",
           "rightLabel": "非常符合"
         }
       ]
@@ -416,9 +416,10 @@
           "type": "choice",
           "text": "终于到了周末，朋友突然发消息说“今晚出来喝酒/聚会吗？”如果在完全没有任何安排的情况下，你的第一反应是？",
           "options": [
-            "如释重负：如果不去的话，我会更开心，只想一个人待着。",
+            "负担重重：如果不去的话，我反而会更开心。但不会立刻拒绝，或者用借口推辞",
             "兴奋期待：马上答应，喜欢热闹和社交。",
-            "犹豫不决：看心情，或者看是谁约。"
+            "犹豫不决：看心情，或者看是谁约。",
+            "直接拒绝：我宁愿待在家里，不想出就是不想"
           ]
         },
         {
@@ -448,8 +449,9 @@
           "text": "关于购物，你最近的状态？",
           "options": [
             "极简/无欲：没欲望。",
-            "报复性消费：情绪化购物。",
-            "理性规划：按需购买。"
+            "漫无目的：刷到喜欢的就购买，但是极度依赖互联网推荐",
+            "报复性消费：情绪化购物，无论想不想要，只享受购物的过程",
+            "理性规划：按需购买，有计划，有目标的购物。"
           ]
         },
         {
@@ -483,36 +485,36 @@
           "id": "att_parents",
           "type": "scale",
           "text": "你觉得你在父母面前可以完全展现真实的自我吗？",
-          "leftLabel": "完全不能",
-          "rightLabel": "毫无保留"
+          "leftLabel": "完全不可以",
+          "rightLabel": "完全可以"
         },
         {
           "id": "family_conflict",
           "type": "scale",
           "text": "在我的成长过程中，父母经常发生激烈的冲突或冷战，家庭氛围让我感到压抑。",
-          "leftLabel": "从未发生",
-          "rightLabel": "家常便饭"
+          "leftLabel": "完全不符合",
+          "rightLabel": "完全符合"
         },
         {
           "id": "family_neglect",
           "type": "scale",
           "text": "小时候当我难过或需要安慰时，父母通常会忽视我的感受，或者让我自己“坚强点”。",
-          "leftLabel": "总是支持",
-          "rightLabel": "经常忽视"
+          "leftLabel": "完全不符合",
+          "rightLabel": "完全符合"
         },
         {
           "id": "family_control",
           "type": "scale",
           "text": "父母对我的生活有极强的控制欲，我的重大决定往往必须顺从他们的意愿。",
-          "leftLabel": "非常民主",
-          "rightLabel": "完全控制"
+          "leftLabel": "完全不符合",
+          "rightLabel": "完全符合"
         },
         {
           "id": "family_validation",
           "type": "scale",
           "text": "我很少从父母那里得到由衷的赞赏，他们总是盯着我做得不够好的地方。",
-          "leftLabel": "经常赞赏",
-          "rightLabel": "从不满意"
+          "leftLabel": "完全不符合",
+          "rightLabel": "完全符合"
         },
         {
           "id": "family_scenario",
@@ -554,8 +556,8 @@
           "id": "car_ambition",
           "type": "scale",
           "text": "你认为“权力”是实现社会理想的工具，还是生存竞争的必然终点？",
-          "leftLabel": "理想工具",
-          "rightLabel": "生存必然"
+          "leftLabel": "绝对的工具",
+          "rightLabel": "社会的终点"
         },
         {
           "id": "car_leadership",
@@ -623,14 +625,14 @@
           "type": "scale",
           "text": "你是否常用自嘲、讽刺或冷幽默来逃避沉重的情绪？",
           "leftLabel": "很少用",
-          "rightLabel": "核心防御手段"
+          "rightLabel": "经常使用"
         },
         {
           "id": "def_procrastination",
           "type": "scale",
           "text": "你是否存在“完美主义导致的拖延”？",
-          "leftLabel": "极其果敢",
-          "rightLabel": "极其严重"
+          "leftLabel": "果断",
+          "rightLabel": "拖延严重"
         },
         {
           "id": "def_blame",
@@ -647,8 +649,8 @@
           "id": "def_physical",
           "type": "scale",
           "text": "心理压力大时，是否会出现明显的生理症状（如偏头痛、胃痛、胸闷）？",
-          "leftLabel": "身心高度分离",
-          "rightLabel": "身体即情绪报警器"
+          "leftLabel": "完全不符合",
+          "rightLabel": "完全符合"
         },
         {
           "id": "def_regression",
@@ -665,8 +667,8 @@
           "id": "def_idealization",
           "type": "scale",
           "text": "你是否容易在一段关系初期将对方“神化”，然后在发现缺点后迅速幻灭？",
-          "leftLabel": "极其理智",
-          "rightLabel": "常有黑白两极化"
+          "leftLabel": "完全不符合",
+          "rightLabel": "完全符合"
         }
       ]
     },
@@ -704,7 +706,8 @@
             "深深压抑：感到羞耻，努力克制这种念头。",
             "秘密探索：在无人知晓的角落（如网络/独处）满足。",
             "边缘试探：小心翼翼地透露，看对方反应。",
-            "自我接纳：认为这很正常，不刻意隐藏但也宣扬。"
+            "自我接纳：认为这很正常，不刻意隐藏但也不宣扬。",
+            "完全放开：认为这是符合权利的个人表达，任何人都应该尊重这种权利"
           ]
         }
       ]
@@ -813,36 +816,36 @@
           "id": "values_national_vs_global",
           "type": "scale",
           "text": "本国的利益永远高于国际义务，全球化往往是削弱国家主权的陷阱。",
-          "leftLabel": "全球视野",
-          "rightLabel": "国家优先"
+          "leftLabel": "完全不同意",
+          "rightLabel": "完全同意"
         },
         {
           "id": "values_meritocracy_vs_equity",
           "type": "scale",
           "text": "社会的成功应该完全取决于能力和努力，不应过度照顾弱势群体而降低标准。",
-          "leftLabel": "照顾弱势",
-          "rightLabel": "优胜劣汰"
+          "leftLabel": "完全不同意",
+          "rightLabel": "完全同意"
         },
         {
           "id": "val_civil_1",
           "type": "scale",
           "text": "“为了国家安全，牺牲一部分个人隐私是必要的。”",
-          "leftLabel": "坚决反对",
-          "rightLabel": "同意"
+          "leftLabel": "完全不同意",
+          "rightLabel": "完全同意"
         },
         {
           "id": "val_dipl_1",
           "type": "scale",
           "text": "“我为我的国家感到自豪，通过军事力量维护国家利益是正当的。”",
-          "leftLabel": "反对",
-          "rightLabel": "同意"
+          "leftLabel": "完全不同意",
+          "rightLabel": "完全同意"
         },
         {
           "id": "val_soc_1",
           "type": "scale",
           "text": "“传统和宗教虽然古老，但对维持社会道德至关重要。”",
-          "leftLabel": "反对",
-          "rightLabel": "同意"
+          "leftLabel": "完全不同意",
+          "rightLabel": "完全同意"
         },
         {
           "id": "val_econ_2",

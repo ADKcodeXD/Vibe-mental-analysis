@@ -418,9 +418,10 @@
           "type": "choice",
           "text": "It's finally the weekend. A friend texts: 'Drinks/party tonight?' If you have no plans, what is your immediate reaction?",
           "options": [
-            "Relieved: I'd be happier not going; I just want to be alone.",
+            "Heavy burden: I'd be happier not going, but I won't refuse immediately; I'll use an excuse.",
             "Excited: Accept immediately; I love crowds and socializing.",
-            "Hesitant: Depends on my mood or who is asking."
+            "Hesitant: Depends on my mood or who is asking.",
+            "Direct Refusal: I'd rather stay home; I just don't want to go."
           ]
         },
         {
@@ -449,9 +450,10 @@
           "type": "choice",
           "text": "Regarding shopping, your recent state is:",
           "options": [
-            "Minimalist: No desire to buy.",
-            "Retail Therapy: Emotional spending.",
-            "Rational: Buy only what is needed."
+            "Minimalist/No Desire: No interest in buying.",
+            "Aimless: Buy whatever I like, but highly dependent on internet recommendations.",
+            "Retail Therapy: Emotional spending; regardless of need, I just enjoy the process of shopping.",
+            "Rational Planning: Buy only what is needed with a clear goal and plan."
           ]
         },
         {
@@ -487,6 +489,34 @@
           "text": "Do you feel you can fully show your true self in front of your parents?",
           "leftLabel": "Not at all",
           "rightLabel": "Completely"
+        },
+        {
+          "id": "family_conflict",
+          "type": "scale",
+          "text": "During my upbringing, my parents often had fierce conflicts or cold wars, and the family atmosphere felt oppressive.",
+          "leftLabel": "Disagree strongly",
+          "rightLabel": "Agree strongly"
+        },
+        {
+          "id": "family_neglect",
+          "type": "scale",
+          "text": "When I was sad or needed comfort as a child, my parents usually ignored my feelings or told me to 'be stronger'.",
+          "leftLabel": "Disagree strongly",
+          "rightLabel": "Agree strongly"
+        },
+        {
+          "id": "family_control",
+          "type": "scale",
+          "text": "My parents had a strong desire to control my life, and my major decisions often had to follow their will.",
+          "leftLabel": "Disagree strongly",
+          "rightLabel": "Agree strongly"
+        },
+        {
+          "id": "family_validation",
+          "type": "scale",
+          "text": "I rarely received heartfelt praise from my parents; they always focused on where I wasn't doing well enough.",
+          "leftLabel": "Disagree strongly",
+          "rightLabel": "Agree strongly"
         },
         {
           "id": "att_conflict_style",
@@ -678,7 +708,8 @@
             "Deeply repress: Feel ashamed, try to suppress thoughts.",
             "Secret exploration: Satisfy them in hidden corners (online/alone).",
             "Testing boundaries: Carefully reveal to test reaction.",
-            "Self-acceptance: Consider it normal, don't hide but don't flaunt."
+            "Self-acceptance: Consider it normal, don't hide but don't flaunt.",
+            "Fully Open: Consider it a normal personal expression of rights that everyone should respect."
           ]
         }
       ]
@@ -763,11 +794,11 @@
           "rightLabel": "Agree"
         },
         {
-          "id": "val_civil_1",
+          "id": "values_freedom_vs_authority",
           "type": "scale",
-          "text": "'Sacrificing privacy for security is necessary.'",
-          "leftLabel": "Disagree",
-          "rightLabel": "Agree"
+          "text": "For the overall security and order of society, it is necessary to sacrifice some personal privacy and freedom.",
+          "leftLabel": "Disagree strongly",
+          "rightLabel": "Agree completely"
         },
         {
           "id": "val_dipl_1",
