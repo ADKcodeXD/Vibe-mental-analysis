@@ -2,39 +2,35 @@ import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Brain, Zap, Heart, User, Activity, AlertTriangle, Star, Share2, ArrowLeft } from 'lucide-react';
 import clsx from 'clsx';
-import localesData from '../data/locales.json';
+import { Locale } from '../../i18n-config';
 
 // Import extracted components
-import { BackgroundDecor, Card, ScoreBar, DimensionBar, RadarChart } from './ui';
+import { BackgroundDecor, Card, ScoreBar, DimensionBar, RadarChart } from '../ui';
 
-type Lang = 'zh' | 'en' | 'ja';
-
-export const ResultView = ({ data, lang, mode, modelName, onBack }: { data: any, lang: Lang, mode?: 'lite' | 'standard' | 'full' | null, modelName?: string, onBack?: () => void }) => {
+export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, dictionary: ui_pkg }: { data: any, lang: Locale, mode?: 'lite' | 'standard' | 'full' | null, modelName?: string, onBack?: () => void, dictionary: any }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // Prepare Radar Data
-  const uiLabels = (localesData as any)[lang]?.result || {};
+  const ui = ui_pkg?.result || {};
   const radarData = [
-    { label: uiLabels.repression_index, value: data.scores?.repression_index },
-    { label: uiLabels.happiness_index, value: data.scores?.happiness_index },
-    { label: uiLabels.social_adaptation, value: data.scores?.social_adaptation },
-    { label: uiLabels.independent_thinking, value: data.scores?.independent_thinking },
+    { label: ui.repression_index, value: data.scores?.repression_index },
+    { label: ui.happiness_index, value: data.scores?.happiness_index },
+    { label: ui.social_adaptation, value: data.scores?.social_adaptation },
+    { label: ui.independent_thinking, value: data.scores?.independent_thinking },
   ].filter(d => {
     if (mode !== 'full') {
-        if (d.label === uiLabels.independent_thinking) return false;
-        if (d.label === uiLabels.repression_index) return false;
+        if (d.label === ui.independent_thinking) return false;
+        if (d.label === ui.repression_index) return false;
     }
     return d.value !== undefined;
   });
 
   const t = (section: string, key: string) => {
-      return (localesData as any)[lang]?.[section]?.[key] || key;
+      return ui_pkg?.[section]?.[key] || key;
   }
   const safeStr = (v: any) => v || "Analyzing...";
   const stats = data.stats || {};
   const identity = data.identity_card || {};
-  const ui = (localesData as any)[lang]?.result || {};
-  const common = (localesData as any)[lang]?.common || { mbti: "MBTI", alignment: "Alignment", verdict: "Verdict", probability: "Probability of Deception", conflicts: "Conflicts", export: "Export Report" };
+  const common = ui_pkg?.common || { mbti: "MBTI", alignment: "Alignment", verdict: "Verdict", probability: "Probability of Deception", conflicts: "Conflicts", export: "Export Report" };
 
   return (
     <div className="min-h-screen bg-[#fdfaff] text-slate-800 font-sans selection:bg-purple-100 pb-20 relative overflow-x-hidden">
@@ -61,7 +57,7 @@ export const ResultView = ({ data, lang, mode, modelName, onBack }: { data: any,
           <div className="flex flex-col items-center gap-4 mb-6">
             <div className="flex flex-wrap justify-center gap-2">
               <div className="px-3 py-1 rounded-full bg-indigo-50 text-[10px] font-bold tracking-widest text-indigo-500 uppercase border border-indigo-100 flex items-center gap-1.5 shadow-sm">
-                <Brain size={10} /> {(localesData as any)[lang]?.mode?.[`${mode}_title`] || mode}
+                <Brain size={10} /> {ui_pkg?.mode?.[`${mode}_title`] || mode}
               </div>
               <div className="px-3 py-1 rounded-full bg-slate-100 text-[10px] font-bold tracking-widest text-slate-500 uppercase border border-slate-200 flex items-center gap-1.5 shadow-sm">
                 <Activity size={10} /> {modelName || 'System AI'}
@@ -156,34 +152,36 @@ export const ResultView = ({ data, lang, mode, modelName, onBack }: { data: any,
                </Card>
             )}
 
-            <Card title={ui.truth} icon={<Shield className={stats.credibility_score < 60 ? "text-rose-500" : "text-emerald-500"} size={18} />}>
+            <Card title={ui.truth} icon={<Shield className={(data.integrity_analysis?.consistency_score || 0) < 60 ? "text-rose-500" : "text-emerald-500"} size={18} />}>
               <div className="text-center py-2 md:py-4">
                 <div className={clsx(
                   "text-4xl md:text-5xl font-thin font-number mb-1 tracking-tighter",
-                  stats.credibility_score < 60 ? "text-rose-500" : "text-emerald-500"
+                  (data.integrity_analysis?.consistency_score || 0) < 60 ? "text-rose-500" : "text-emerald-500"
                 )}>
-                  {stats.credibility_score || 0}%
+                  {data.integrity_analysis?.consistency_score || 0}%
                 </div>
                 <div className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">{ui.credibility}</div>
               </div>
               
               <div className="mt-4 space-y-3">
                 <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 border-b border-purple-50 pb-2">
-                   <span>{common.contradiction_label}</span>
-                   <span className={stats.conflicts?.length > 0 ? 'text-rose-500' : 'text-emerald-500'}>
-                     {stats.conflicts?.length || 0}
+                   <span>{common.contradiction_label || ui.contradiction_label || "Conflicts"}</span>
+                   <span className={(data.integrity_analysis?.conflicts?.length || 0) > 0 ? 'text-rose-500' : 'text-emerald-500'}>
+                     {data.integrity_analysis?.conflicts?.length || 0}
                    </span>
                 </div>
 
-                {stats.conflicts && stats.conflicts.length > 0 && (
+                {data.integrity_analysis?.conflicts && data.integrity_analysis.conflicts.length > 0 && (
                   <div className="bg-rose-50/50 p-3 rounded-xl text-[10px] text-rose-600 border border-rose-100 leading-relaxed italic">
-                    {stats.conflicts.map((c: string, i: number) => <div key={i}>{c}</div>)}
+                    {data.integrity_analysis.conflicts.map((c: string, i: number) => <div key={i}>{c}</div>)}
                   </div>
                 )}
 
                 <div className="text-[10px] font-bold text-slate-400 pt-1 flex justify-between px-1">
                   <span>{common.verdict}</span>
-                  <span className={(stats.lie_verdict === 'Deceptive' || stats.lie_verdict === common.verdict_deceptive) ? 'text-rose-500' : 'text-emerald-500'}>{stats.lie_verdict}</span>
+                  <span className={(data.integrity_analysis?.verdict?.toLowerCase().includes('deceptive') || data.integrity_analysis?.verdict?.toLowerCase().includes('矛盾')) ? 'text-rose-500' : 'text-emerald-500'}>
+                    {data.integrity_analysis?.verdict || "Analyzing..."}
+                  </span>
                 </div>
               </div>
             </Card>
@@ -329,12 +327,12 @@ export const ResultView = ({ data, lang, mode, modelName, onBack }: { data: any,
             {/* DIMENSIONS (Political Compass) - Moved here for full width in main column */}
             {data.dimensions && mode === 'full' && (
               <Card title={ui.dimensions} icon={<Share2 className="text-violet-500" size={18} />}>
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
-                   {data.dimensions.economic && <DimensionBar value={data.dimensions.economic.value} axisLabel={data.dimensions.economic.axis_label} leftLabel={(localesData as any)[lang]?.poles?.equality} rightLabel={(localesData as any)[lang]?.poles?.markets} />}
-                   {data.dimensions.diplomatic && <DimensionBar value={data.dimensions.diplomatic.value} axisLabel={data.dimensions.diplomatic.axis_label} leftLabel={(localesData as any)[lang]?.poles?.nation} rightLabel={(localesData as any)[lang]?.poles?.globe} />}
-                   {data.dimensions.civil && <DimensionBar value={data.dimensions.civil.value} axisLabel={data.dimensions.civil.axis_label} leftLabel={(localesData as any)[lang]?.poles?.authority} rightLabel={(localesData as any)[lang]?.poles?.liberty} />}
-                   {data.dimensions.societal && <DimensionBar value={data.dimensions.societal.value} axisLabel={data.dimensions.societal.axis_label} leftLabel={(localesData as any)[lang]?.poles?.tradition} rightLabel={(localesData as any)[lang]?.poles?.progress} />}
-                 </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
+                    {data.dimensions.economic && <DimensionBar value={data.dimensions.economic.value} axisLabel={data.dimensions.economic.axis_label} leftLabel={ui_pkg?.poles?.equality} rightLabel={ui_pkg?.poles?.markets} />}
+                    {data.dimensions.diplomatic && <DimensionBar value={data.dimensions.diplomatic.value} axisLabel={data.dimensions.diplomatic.axis_label} leftLabel={ui_pkg?.poles?.nation} rightLabel={ui_pkg?.poles?.globe} />}
+                    {data.dimensions.civil && <DimensionBar value={data.dimensions.civil.value} axisLabel={data.dimensions.civil.axis_label} leftLabel={ui_pkg?.poles?.authority} rightLabel={ui_pkg?.poles?.liberty} />}
+                    {data.dimensions.societal && <DimensionBar value={data.dimensions.societal.value} axisLabel={data.dimensions.societal.axis_label} leftLabel={ui_pkg?.poles?.tradition} rightLabel={ui_pkg?.poles?.progress} />}
+                  </div>
                  
                  {identity.ideology && (
                     <div className="mt-4 p-3 bg-violet-50 rounded-xl border border-violet-100 text-center max-w-sm mx-auto">
@@ -377,29 +375,31 @@ export const ResultView = ({ data, lang, mode, modelName, onBack }: { data: any,
                   </Card>
                 )}
 
-                 {/* SOCIAL - Hidden in Simplified (Lite) Mode */}
-                {data.social_analysis && mode !== 'lite' && (
+                  {/* SOCIAL - Hidden in Simplified (Lite) Mode or if no overview provided */}
+                {data.social_analysis && data.social_analysis.overview && data.social_analysis.overview.length > 5 && mode !== 'lite' && (
                   <Card title={ui.social || "SOCIAL CIRCLE"} icon={<Heart className="text-rose-400" size={18} />}>
                      <p className="text-sm font-serif text-slate-700 leading-relaxed mb-4">
                        {data.social_analysis.overview}
                      </p>
                      
-                     <div className="space-y-3">
-                       <div className="flex justify-between items-center text-xs">
-                          <span className="text-indigo-900 font-bold">{ui.deep_connections || "Deep Connections"}</span>
-                          <span className="text-slate-500 max-w-[60%] text-right">{data.social_analysis.circle_breakdown?.deep_connections}</span>
+                     {data.social_analysis.circle_breakdown && (
+                       <div className="space-y-3">
+                         <div className="flex justify-between items-center text-xs">
+                            <span className="text-indigo-900 font-bold">{ui.deep_connections || "Deep Connections"}</span>
+                            <span className="text-slate-500 max-w-[60%] text-right">{data.social_analysis.circle_breakdown?.deep_connections}</span>
+                         </div>
+                         <div className="h-px bg-slate-100 w-full" />
+                         <div className="flex justify-between items-center text-xs">
+                            <span className="text-slate-600 font-bold">{ui.casual_friends || "Casual Friends"}</span>
+                            <span className="text-slate-500 max-w-[60%] text-right">{data.social_analysis.circle_breakdown?.casual_friends}</span>
+                         </div>
+                         <div className="h-px bg-slate-100 w-full" />
+                         <div className="flex justify-between items-center text-xs">
+                            <span className="text-rose-600 font-bold">{ui.toxicity || "Toxicity"}</span>
+                            <span className="text-slate-500 max-w-[60%] text-right">{data.social_analysis.circle_breakdown?.useless_connections}</span>
+                         </div>
                        </div>
-                       <div className="h-px bg-slate-100 w-full" />
-                       <div className="flex justify-between items-center text-xs">
-                          <span className="text-slate-600 font-bold">{ui.casual_friends || "Casual Friends"}</span>
-                          <span className="text-slate-500 max-w-[60%] text-right">{data.social_analysis.circle_breakdown?.casual_friends}</span>
-                       </div>
-                       <div className="h-px bg-slate-100 w-full" />
-                       <div className="flex justify-between items-center text-xs">
-                          <span className="text-rose-600 font-bold">{ui.toxicity || "Toxicity"}</span>
-                          <span className="text-slate-500 max-w-[60%] text-right">{data.social_analysis.circle_breakdown?.useless_connections}</span>
-                       </div>
-                     </div>
+                     )}
                   </Card>
                 )}
               </div>

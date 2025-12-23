@@ -5,9 +5,9 @@ import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 import { z } from 'zod';
 
 // Load language data
-import questionsZh from "@/data/questions/zh.json";
-import questionsEn from "@/data/questions/en.json";
-import questionsJa from "@/data/questions/ja.json";
+import questionsZh from "@/data/assessments/identity-mirror/zh.json";
+import questionsEn from "@/data/assessments/identity-mirror/en.json";
+import questionsJa from "@/data/assessments/identity-mirror/ja.json";
 
 const questionsDataMap: Record<string, any> = {
     zh: questionsZh,
@@ -63,7 +63,7 @@ const FinalProfileSchema = z.object({
         narcissism: ScoreSchema,
         sexual_repression: ScoreSchema,
         attachment: z.object({
-            type: z.enum(["Secure", "Anxious-Preoccupied", "Dismissive-Avoidant", "Fearful-Avoidant"]),
+            type: z.string().describe("The localized name of the attachment style (e.g. '安全型', '焦虑型', etc.)"),
             description: z.string()
         })
     }),
@@ -88,8 +88,12 @@ const FinalProfileSchema = z.object({
     }),
     social_analysis: z.object({
         overview: z.string(),
-        advice: z.string()
-    }),
+        circle_breakdown: z.object({
+            deep_connections: z.string(),
+            casual_friends: z.string(),
+            useless_connections: z.string()
+        }).optional()
+    }).optional().describe("Only provide if there is sufficient data about social patterns"),
     highlights: z.object({
         talents: z.array(z.string()),
         liabilities: z.array(z.string())
@@ -104,6 +108,11 @@ const FinalProfileSchema = z.object({
         ideology_note: z.string(),
         clinical_note: z.string(),
         advice: z.string()
+    }),
+    integrity_analysis: z.object({
+        consistency_score: z.number().describe("0-100 score of how consistent the answers were across different sections"),
+        verdict: z.string().describe("Brief qualitative verdict, e.g. 'Highly Authentic', 'Slightly Contradictory', 'Highly Deceptive'"),
+        conflicts: z.array(z.string()).describe("List of 2-3 specific contradictions found, if any")
     })
 });
 
@@ -308,8 +317,10 @@ const synthesizeProfile = async (state: AgentState) => {
     3.  **Dimensions**: Fill the Political Compass dimensions accurately (0-100).
     4.  **Clinical**: Map depression, anxiety, ADHD, etc. to scores and levels.
     5.  **Sexual Repression**: specifically analyze the sexual data for the sexual_repression field.
-    6.  **Language**: All text content (descriptions, advice, archetypes) MUST be in ${state.lang}.
+    6.  **Language**: All text content (descriptions, advice, archetypes, AND labels like attachment type or identity tags) MUST be in ${state.lang}.
     7.  **Celebrity Match**: Cultural context applies (Anime/History for Asian langs, etc).
+    8.  **Integrity**: Populate the integrity_analysis section by analyzing [LIE DETECTION] and [USER INPUTS].
+    9.  **Optional Sections**: Only provide social_analysis if the user answers provide meaningful social context. If not enough data, omit it.
     `;
     
     const result = await structuredModel.invoke([

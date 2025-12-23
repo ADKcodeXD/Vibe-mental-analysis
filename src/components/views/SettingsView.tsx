@@ -62,7 +62,7 @@ export const SettingsView = ({ config, setConfig, onSave, onBack, ui }: Settings
   };
 
   return (
-    <div className="min-h-screen bg-[#fdfaff] p-6 flex flex-col items-center">
+    <div className="min-h-screen p-6 flex flex-col items-center">
       <div className="w-full max-w-2xl">
         <header className="flex items-center justify-between mb-10 pt-4">
           <button 

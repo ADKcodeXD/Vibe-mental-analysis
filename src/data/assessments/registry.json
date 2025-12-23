@@ -1,0 +1,19 @@
+{
+  "assessments": [
+    {
+      "id": "identity-mirror",
+      "title": {
+        "zh": "真我镜像 - AI 心理人格评测",
+        "en": "Identity Mirror - AI Personality Assessment",
+        "ja": "真我の鏡 - AI心理人格評価"
+      },
+      "description": {
+        "zh": "基于深度情景的选择，揭示你潜意识中的真实人格。",
+        "en": "Deep situational choices reveal your true subconscious personality.",
+        "ja": "深い情景ベースの選択により、あなたの潜在意識にある真の人格を明らかにします。"
+      },
+      "icon": "Brain",
+      "path": "/survey/identity-mirror"
+    }
+  ]
+}

@@ -61,7 +61,7 @@ export const HistoryView = ({ history, onSelect, onDelete, setView, ui }: Histor
                 </div>
                 <div className="flex gap-2">
                   <button 
-                    onClick={() => onSelect(item.data)}
+                    onClick={() => onSelect(item)}
                     className="bg-indigo-50 text-indigo-600 px-4 py-2 rounded-full text-sm font-medium hover:bg-indigo-100 transition-colors"
                   >
                     {ui.result.view_report}

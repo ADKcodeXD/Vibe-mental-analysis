@@ -18,7 +18,13 @@ interface LoadingViewProps {
  * Loading view shown during analysis processing
  */
 export const LoadingView = ({ ui }: LoadingViewProps) => {
-  const steps = ui.engine.loading_steps || [
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const steps = ui?.engine?.loading_steps || [
     "Initializing Neural Core",
     "Parsing Behavioral Patterns",
     "Detecting Subconscious Signals",
@@ -26,7 +32,7 @@ export const LoadingView = ({ ui }: LoadingViewProps) => {
     "Finalizing Analysis"
   ];
   
-  const thinkingPool = useMemo(() => ui.engine.thinking_logs || [
+  const thinkingPool = useMemo(() => ui?.engine?.thinking_logs || [
     "Correlating behavioral nodes...",
     "Synchronizing semantic vectors...",
     "Filtering noise from subconscious stream...",
@@ -37,21 +43,23 @@ export const LoadingView = ({ ui }: LoadingViewProps) => {
     "Processing latent personality traits...",
     "Building holographic projection...",
     "Finalizing neural synthesis..."
-  ], [ui.engine.thinking_logs]);
+  ], [ui?.engine?.thinking_logs]);
 
   const [index, setIndex] = useState(0);
   const [logs, setLogs] = useState<string[]>([]);
 
   // Infinite looping for the main step text
   useEffect(() => {
+    if (!mounted) return;
     const interval = setInterval(() => {
       setIndex(prev => (prev + 1) % steps.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, [steps.length]);
+  }, [mounted, steps.length]);
 
   // Rolling AI Thinking Logs
   useEffect(() => {
+    if (!mounted) return;
     const interval = setInterval(() => {
       const nextLog = thinkingPool[Math.floor(Math.random() * thinkingPool.length)];
       setLogs(prev => {
@@ -59,9 +67,17 @@ export const LoadingView = ({ ui }: LoadingViewProps) => {
         if (newLogs.length > 2) return newLogs.slice(newLogs.length - 2);
         return newLogs;
       });
-    }, 1500);
+    }, 2000);
     return () => clearInterval(interval);
-  }, [thinkingPool]);
+  }, [mounted, thinkingPool]);
+
+  if (!mounted) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center bg-slate-50">
+        <Brain className="text-slate-300 animate-pulse" size={56} />
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen flex flex-col items-center justify-center relative overflow-hidden z-20 bg-slate-50">
@@ -81,7 +97,7 @@ export const LoadingView = ({ ui }: LoadingViewProps) => {
                 delay: i * 2,
                 ease: "easeOut" 
               }}
-              className="absolute w-[500px] h-[500px] rounded-full border border-indigo-400/30 shadow-[0_0_100px_rgba(99,102,241,0.1)]"
+              className="absolute w-[500px] h-[500px] rounded-full border-2 border-indigo-400/10"
             />
           ))}
        </div>
@@ -105,8 +121,8 @@ export const LoadingView = ({ ui }: LoadingViewProps) => {
             <div className="absolute inset-0 flex items-center justify-center">
               <motion.div
                 animate={{ 
-                  scale: [1, 1.1, 1],
-                  opacity: [0.6, 0.9, 0.6]
+                   scale: [1, 1.1, 1],
+                   opacity: [0.6, 0.9, 0.6]
                 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               >
@@ -120,10 +136,10 @@ export const LoadingView = ({ ui }: LoadingViewProps) => {
               <AnimatePresence mode='wait'>
                  <motion.h2 
                     key={index}
-                    initial={{ opacity: 0, scale: 0.95, filter: 'blur(8px)' }}
-                    animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                    exit={{ opacity: 0, scale: 1.05, filter: 'blur(8px)' }}
-                    transition={{ duration: 0.8 }}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -15 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
                     className="text-3xl md:text-4xl font-thin text-slate-900 tracking-tight font-serif"
                  >
                    {steps[index]}
@@ -135,7 +151,7 @@ export const LoadingView = ({ ui }: LoadingViewProps) => {
                 animate={{ opacity: 1 }}
                 className="text-[10px] text-slate-400 mt-6 uppercase tracking-[0.4em] font-bold"
               >
-                 {ui.engine.processing_label}
+                 {ui?.engine?.processing_label || "Processing..."}
               </motion.p>
           </div>
        </div>

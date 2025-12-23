@@ -58,7 +58,8 @@
         "正在完成最终分析"
       ],
       "processing_label": "AI 深度处理中",
-      "jump_to": "快速跳转..."
+      "jump_to": "快速跳转...",
+      "unread_confirm": "检测到您还有 {count} 道题目未完成，是否确认直接提交并生成报告？"
     },
     "expansion": {
       "independent_thinking": "独立思考",
@@ -209,7 +210,8 @@
         "Finalizing Analysis"
       ],
       "processing_label": "AI Deep Processing",
-      "jump_to": "Quick Jump..."
+      "jump_to": "Quick Jump...",
+      "unread_confirm": "You have {count} unanswered questions. Are you sure you want to submit and generate the report?"
     },
     "expansion": {
       "independent_thinking": "Independent Thinking",
@@ -361,7 +363,8 @@
         "最終分析を完了中"
       ],
       "processing_label": "AI ディーププロセッシング",
-      "jump_to": "クイックジャンプ..."
+      "jump_to": "クイックジャンプ...",
+      "unread_confirm": "未回答の質問が {count} 件あります。このまま送信してレポートを生成しますか？"
     },
     "expansion": {
       "independent_thinking": "独立思考",

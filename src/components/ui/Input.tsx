@@ -51,6 +51,7 @@ export const TextInput = ({ initialValue, onChange, placeholder }: TextInputProp
 
   return (
     <textarea
+      id="question-text-area"
       value={value}
       onChange={handleChange}
       placeholder={placeholder}
