@@ -219,7 +219,7 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
         lang
       };
 
-      const fetchWithRetry = async (retries = 2): Promise<Response> => {
+      const fetchWithRetry = async (retries = 3): Promise<Response> => {
         try {
           const response = await fetch('/api/analyze', {
             method: 'POST',
@@ -228,17 +228,17 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
           });
           
           const contentType = response.headers.get("content-type");
-          if (response.status === 504 || (contentType && !contentType.includes("application/json"))) {
+          if (response.status === 504) {
             if (retries > 0) {
               console.warn(`Attempt failed, retrying... (${retries} left)`);
-              await new Promise(resolve => setTimeout(resolve, 1000));
+              await new Promise(resolve => setTimeout(resolve, 500));
               return fetchWithRetry(retries - 1);
             }
           }
           return response;
         } catch (e) {
           if (retries > 0) {
-             await new Promise(resolve => setTimeout(resolve, 1000));
+             await new Promise(resolve => setTimeout(resolve, 500));
              return fetchWithRetry(retries - 1);
           }
           throw e;
@@ -247,7 +247,7 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
 
       // Start API call and a minimum timer (6 seconds) simultaneously
       const [res] = await Promise.all([
-        fetchWithRetry(2),
+        fetchWithRetry(3),
         new Promise(resolve => setTimeout(resolve, 6000))
       ]);
 

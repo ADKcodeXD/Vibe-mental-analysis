@@ -15,9 +15,6 @@ const questionsDataMap: Record<string, any> = {
     ja: questionsJa
 };
 
-export const maxDuration = 60;
-export const dynamic = 'force-dynamic';
-
 // Helper to lookup question text
 const getQuestionText = (id: string, lang: string = 'zh') => {
     const data = questionsDataMap[lang] || questionsDataMap['zh'];
@@ -159,7 +156,7 @@ const createModel = (config?: { apiKey?: string; baseUrl?: string; model?: strin
         modelKwargs: {
             top_p: 0.1
         },
-        maxRetries: 3
+        maxRetries: 1
     });
 };
 
