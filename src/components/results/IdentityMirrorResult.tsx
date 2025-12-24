@@ -7,7 +7,7 @@ import { Locale } from '../../i18n-config';
 // Import extracted components
 import { BackgroundDecor, Card, ScoreBar, DimensionBar, RadarChart } from '../ui';
 
-export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, dictionary: ui_pkg }: { data: any, lang: Locale, mode?: 'lite' | 'standard' | 'full' | null, modelName?: string, onBack?: () => void, dictionary: any }) => {
+export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, onRetest, dictionary: ui_pkg }: { data: any, lang: Locale, mode?: 'lite' | 'standard' | 'full' | null, modelName?: string, onBack?: () => void, onRetest?: () => void, dictionary: any }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const ui = ui_pkg?.result || {};
@@ -494,7 +494,7 @@ export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, dict
       {/* Floating Action Bar */}
       <div className="fixed bottom-6 left-0 w-full flex justify-center gap-3 md:gap-4 z-50 px-4">
         <button
-          onClick={() => window.location.reload()}
+          onClick={() => onRetest ? onRetest() : window.location.reload()}
           className="px-5 md:px-6 py-2.5 bg-white/70 backdrop-blur-xl border border-white/50 text-slate-600 rounded-full hover:bg-white hover:text-slate-900 transition-all shadow-lg flex items-center gap-2 text-xs"
         >
           {ui.retake}

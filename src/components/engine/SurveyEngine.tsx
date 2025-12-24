@@ -242,14 +242,16 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
       if (onComplete) {
         onComplete({ ...data, historyId: historyEntry.id, mode });
       }
+      isSubmittingRef.current = false; // Add this
     } catch (e: any) {
+      isSubmittingRef.current = false; // Add this
       console.error("ANALYSIS FAILED:", e);
       const errorMsg = e.message || (lang === 'zh' ? '分析失败，请检查配置和网络' : (lang === 'ja' ? '解析に失敗しました。設定とネットワークを確認してください' : 'Analysis failed. Please check config and network.'));
       alert(errorMsg);
+      setLoading(false);
       setView('welcome');
     } finally {
-      setLoading(false);
-      isSubmittingRef.current = false;
+      // isSubmittingRef.current = false is already handled above to differentiate success vs error
     }
   };
 

@@ -85,6 +85,7 @@ export default function ResultPage() {
         modelName={modelName || ''}
         dictionary={dictionary} 
         onBack={() => router.push(`/${lang}`)}
+        onRetest={() => router.push(`/${lang}/survey/${testId}`)}
       />
     );
   }
