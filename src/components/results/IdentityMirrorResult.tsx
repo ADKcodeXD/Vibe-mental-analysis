@@ -1,6 +1,6 @@
 import React, { useRef, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Brain, Zap, Heart, User, Activity, AlertTriangle, Star, Share2, ArrowLeft } from 'lucide-react';
+import { Shield, Brain, Zap, Heart, User, Activity, AlertTriangle, Star, Share2, ArrowLeft, Github } from 'lucide-react';
 import clsx from 'clsx';
 import { Locale } from '../../i18n-config';
 
@@ -485,8 +485,22 @@ export const IdentityMirrorResult = ({ data, lang, mode, modelName, onBack, onRe
         </div>
 
         {/* FOOTER */}
-        <div className="mt-12 text-center text-slate-300 text-[9px] font-mono uppercase tracking-[0.3em]">
-          Holographic Profile System
+        <div className="mt-12 flex flex-col items-center gap-3">
+          <div className="text-center text-slate-300 text-[9px] font-mono uppercase tracking-[0.3em]">
+            Holographic Profile System
+          </div>
+          <div className="flex items-center gap-4 text-slate-300">
+            <a 
+              href="https://github.com/ADKcodeXD/Vibe-mental-analysis" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 hover:text-indigo-400 transition-colors"
+            >
+              <Github size={12} />
+              <span className="text-[9px] font-mono uppercase tracking-widest">GitHub</span>
+            </a>
+            <span className="text-[9px] font-mono uppercase tracking-widest opacity-60">Copyright @ADK</span>
+          </div>
         </div>
 
       </div>

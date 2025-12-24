@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, AlertTriangle, ChevronRight } from 'lucide-react';
+import { Brain, AlertTriangle, ChevronRight, Github } from 'lucide-react';
 import { LangSwitcher } from '../ui';
 
 interface WelcomeViewProps {
@@ -123,9 +123,21 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({
           </div>
         </motion.div>
 
-        <footer className="mt-16 text-center w-full px-6">
+        <footer className="mt-16 text-center w-full px-6 space-y-4 pb-8">
           <div className="text-[10px] md:text-xs text-gray-400 flex flex-col items-center gap-2 bg-white/30 p-4 rounded-xl backdrop-blur-sm">
             <p className="max-w-md mx-auto leading-relaxed">{ui.welcome.disclaimer}</p>
+          </div>
+          <div className="flex flex-col items-center gap-2 text-slate-400">
+            <a 
+              href="https://github.com/ADKcodeXD/Vibe-mental-analysis" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 hover:text-indigo-500 transition-colors"
+            >
+              <Github size={14} />
+              <span className="text-[10px] font-medium tracking-wider">GitHub</span>
+            </a>
+            <p className="text-[10px] font-medium opacity-50 tracking-widest uppercase">Copyright @ADK</p>
           </div>
         </footer>
       </div>
