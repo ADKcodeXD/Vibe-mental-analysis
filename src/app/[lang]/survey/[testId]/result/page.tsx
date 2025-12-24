@@ -45,6 +45,8 @@ export default function ResultPage() {
           console.error("Failed to load result data", e);
         }
       }
+      // Small buffer for smoother transition
+      await new Promise(resolve => setTimeout(resolve, 800));
       setLoading(false);
     }
     loadData();

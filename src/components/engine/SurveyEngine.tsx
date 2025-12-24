@@ -219,18 +219,49 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
         lang
       };
 
-      const res = await fetch('/api/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      const fetchWithRetry = async (retries = 2): Promise<Response> => {
+        try {
+          const response = await fetch('/api/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          
+          const contentType = response.headers.get("content-type");
+          if (response.status === 504 || (contentType && !contentType.includes("application/json"))) {
+            if (retries > 0) {
+              console.warn(`Attempt failed, retrying... (${retries} left)`);
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              return fetchWithRetry(retries - 1);
+            }
+          }
+          return response;
+        } catch (e) {
+          if (retries > 0) {
+             await new Promise(resolve => setTimeout(resolve, 1000));
+             return fetchWithRetry(retries - 1);
+          }
+          throw e;
+        }
+      };
+
+      // Start API call and a minimum timer (6 seconds) simultaneously
+      const [res] = await Promise.all([
+        fetchWithRetry(2),
+        new Promise(resolve => setTimeout(resolve, 6000))
+      ]);
 
       // Check for non-JSON or error responses
       const contentType = res.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
         const text = await res.text();
         console.error("Non-JSON Response size:", text.length, "Preview text:", text.substring(0, 100));
-        throw new Error("Server returned an invalid format (HTML/Plain Text). This usually means a server error or timeout.");
+        
+        let customError = lang === 'zh' 
+          ? "服务器响应超时。程序已尝试自动重试，但仍未成功。请尝试：1. 缩短回答长度；2. 稍后再试。" 
+          : "Server timeout after multiple retries. Try shortening your answers or trying again later.";
+          
+        throw new Error(customError);
       }
 
       const data = await res.json();
@@ -242,11 +273,11 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
       if (onComplete) {
         onComplete({ ...data, historyId: historyEntry.id, mode });
       }
-      isSubmittingRef.current = false; // Add this
+      isSubmittingRef.current = false;
     } catch (e: any) {
-      isSubmittingRef.current = false; // Add this
+      isSubmittingRef.current = false;
       console.error("ANALYSIS FAILED:", e);
-      const errorMsg = e.message || (lang === 'zh' ? '分析失败，请检查配置和网络' : (lang === 'ja' ? '解析に失敗しました。設定とネットワークを確認してください' : 'Analysis failed. Please check config and network.'));
+      const errorMsg = e.message; 
       alert(errorMsg);
       setLoading(false);
       setView('welcome');
@@ -319,7 +350,7 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
 
   return (
     <Background>
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {loading && (
           <motion.div
             key="loading"

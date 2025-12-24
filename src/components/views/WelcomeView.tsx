@@ -20,8 +20,6 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({
   ui,
   config,
   hasSession,
-  lang,
-  setLanguage,
   onResume,
   onStart,
   onOpenSettings
@@ -33,7 +31,7 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({
           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
           className="text-center space-y-6 max-w-lg w-full"
         >
-          <div className="flex justify-center mb-4 text-purple-600">
+          <div className="flex justify-center mb-4 text-purple-400">
             <motion.div
               animate={{
                 scale: [1, 1.05, 1],
@@ -46,7 +44,7 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({
           </div>
 
           <div className="space-y-3">
-            <h1 className="text-5xl md:text-7xl font-thin tracking-tighter text-slate-900 leading-tight font-serif">
+            <h1 className="text-4xl md:text-5xl font-thin tracking-tighter text-slate-900 leading-tight font-serif">
               {ui.welcome.title}
             </h1>
             <p className="text-lg md:text-xl text-slate-400 font-light tracking-[0.2em] uppercase font-sans">
@@ -60,7 +58,7 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({
             </p>
 
             <div className="flex items-center justify-center gap-2">
-              <span className="text-[10px] md:text-xs font-semibold text-indigo-400/80 uppercase tracking-[0.15em]">
+              <span className="text-[8px] md:text-xs font-semibold text-indigo-400/80 uppercase tracking-[0.15em]">
                 {ui.welcome.privacy_hint}
               </span>
             </div>
@@ -123,7 +121,7 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({
           </div>
         </motion.div>
 
-        <footer className="mt-16 text-center w-full px-6 space-y-4 pb-8">
+        <footer className="mt-2 md:mt-16 text-center w-full px-6 space-y-4 pb-8">
           <div className="text-[10px] md:text-xs text-gray-400 flex flex-col items-center gap-2 bg-white/30 p-4 rounded-xl backdrop-blur-sm">
             <p className="max-w-md mx-auto leading-relaxed">{ui.welcome.disclaimer}</p>
           </div>
