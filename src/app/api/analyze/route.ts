@@ -302,41 +302,174 @@ const graph = new StateGraph(GraphState)
 const compiledGraph = graph.compile();
 
 export async function POST(req: NextRequest) {
+    const encoder = new TextEncoder();
+    
     try {
         const body = await req.json();
-        const { answers, config, lang } = body;
+        const { answers, config, lang = 'zh' } = body;
         
-        console.log(`[API POST] Received request. Answers count: ${answers?.length}, Lang: ${lang}`);
-
         if (!answers && !body.test) return NextResponse.json({ error: "No answers provided" }, { status: 400 });
-        
+
         if (body.test) {
-            console.log(`[API Test] Testing connection for model: ${config?.model}`);
             const model = createModel(config);
             const response = await model.invoke([new HumanMessage("Hello")]);
-            return NextResponse.json({ 
-                status: "success", 
-                model: config?.model || "default",
-                response: response.content 
-            });
-        }
-        
-        const result = await compiledGraph.invoke({ 
-            answers, 
-            config: config || {}, 
-            lang: lang || 'zh' 
-        });
-        
-        
-        if (!result.finalProfile) {
-            console.error("[API Error] Final profile is missing from result");
-            throw new Error("Analysis generation failed to produce a final profile.");
+            return NextResponse.json({ status: "success", response: response.content });
         }
 
-        return NextResponse.json(result.finalProfile);
-        
+        const stream = new ReadableStream({
+            async start(controller) {
+                const send = (type: string, data: any) => {
+                    controller.enqueue(encoder.encode(JSON.stringify({ type, data }) + '\n'));
+                };
+
+                try {
+                    const model = createModel(config);
+                    
+                    // 1. Prepare Context
+                    const categories = {
+                        mbti: answers.some((a: any) => a.questionId.startsWith('mbti_')),
+                        values: answers.some((a: any) => a.questionId.startsWith('val_') || a.questionId.startsWith('soc_')),
+                        clinical: answers.some((a: any) => ['phq9', 'gad7', 'mdq', 'att_', 'beh_'].some(p => a.questionId.startsWith(p))),
+                        sexual: answers.some((a: any) => a.questionId.startsWith('sex_')),
+                        thinking: answers.some((a: any) => a.questionId.startsWith('think_'))
+                    };
+
+                    const context = answers.map((a: any) => {
+                        const q = getQuestionMetadata(a.questionId, lang);
+                        let line = `Q: ${q?.text || a.questionId}`;
+                        if (q?.type === 'scale') {
+                            line += `\nScale: [1: ${q.leftLabel}] to [7: ${q.rightLabel}]\nUser Selection: ${a.value}`;
+                        } else if (q?.type === 'choice' && q.options) {
+                            const optionsList = q.options.map((o: any) => typeof o === 'object' ? (o[lang] || o['zh']) : o).join(', ');
+                            line += `\nAvailable Options: [${optionsList}]\nUser Selection: ${a.value}`;
+                        } else {
+                            line += `\nA: ${a.value}`;
+                        }
+                        return line;
+                    }).join('\n\n');
+
+                    let specificInstructions = "";
+                    if (categories.mbti) specificInstructions += `\n- COGNITIVE: Analyze MBTI (E/I, S/N, T/F, J/P).`;
+                    if (categories.values) specificInstructions += `\n- VALUES: Analyze Economic, Diplomatic, Civil, Societal leanings.`;
+                    if (categories.clinical) {
+                        const risk_q = answers.find((a: any) => a.questionId === 'phq9_9_risk');
+                        const isRisk = risk_q && (risk_q.value === "6" || risk_q.value === "7" || risk_q.value.includes("几乎每天"));
+                        specificInstructions += `\n- CLINICAL: Depression, Behavior (Narcissism, ADHD, Anxiety), Attachment style. ${isRisk ? 'CRITICAL: Suicide ideation detected.' : ''}`;
+                    }
+                    if (categories.sexual) specificInstructions += `\n- SEXUAL: Analyze repression and desire.`;
+                    if (categories.thinking) specificInstructions += `\n- INDEPENDENT THINKING: Analyze conformity and critical thinking depth.`;
+
+                    const systemPrompt = `You are a Master Psychologist. Analyze these dimensions:${specificInstructions}\nIntegrity: Analyze inconsistencies.\nBe granular and brutally honest. Language: ${lang}.`;
+
+                    // 2. Stream Deep Analysis
+                    send('status', 'Analyzing patterns...');
+                    let comprehensiveAnalysis = "";
+                    const analysisStream = await model.stream([
+                        new SystemMessage(systemPrompt),
+                        new HumanMessage(context)
+                    ]);
+
+                    for await (const chunk of analysisStream) {
+                        const content = chunk.content as string;
+                        comprehensiveAnalysis += content;
+                        send('chunk', content);
+                    }
+
+const JSON_TEMPLATE = `{
+"identity_card": { "archetype": "", "one_liner": "", "mbti": "", "alignment": "", "ideology": "", "personality_tags": [], "clinical_label": "", "clinical_explanation": "" },
+"clinical_findings": { 
+  "depression": { "score": 0, "level": "", "explanation": "" },
+  "anxiety": { "score": 0, "level": "", "explanation": "" },
+  "adhd": { "score": 0, "level": "", "explanation": "" },
+  "narcissism": { "score": 0, "level": "", "explanation": "" },
+  "sexual_repression": { "score": 0, "level": "", "explanation": "" },
+  "attachment": { "type": "", "description": "" } 
+},
+"scores": { "repression_index": 0, "happiness_index": 0, "social_adaptation": 0, "independent_thinking": 0, "consistency_score": 0 },
+"dimensions": { 
+  "economic": { "label": "", "value": 50, "axis_label": "Equality vs Markets" },
+  "diplomatic": { "label": "", "value": 50, "axis_label": "Nation vs Globe" },
+  "civil": { "label": "", "value": 50, "axis_label": "Authority vs Liberty" },
+  "societal": { "label": "", "value": 50, "axis_label": "Tradition vs Progress" }
+},
+"career_analysis": { "strengths": [], "weaknesses": [], "suitable_careers": [], "workplace_advice": "" },
+"social_analysis": { "overview": "", "circle_breakdown": { "deep_connections": "", "casual_friends": "", "useless_connections": "" } },
+"highlights": { "talents": [], "liabilities": [] },
+"celebrity_match": { "name": "", "reason": "" },
+"analysis": { "strengths": "", "dark_side": "", "ideology_note": "", "clinical_note": "", "advice": "" },
+"integrity_analysis": { "consistency_score": 0, "verdict": "", "conflicts": [] }
+}`;
+
+                    // 3. Synthesize structured report
+                    send('status', 'Synthesizing final report...');
+                    
+                    const synthesisPromptBody = `
+                    GENERATE HOLOGRAPHIC PERSONALITY REPORT JSON.
+                    [ANALYSIS DATA] ${comprehensiveAnalysis}
+                    [RAW INPUTS] ${answers.map((a: any) => {
+                        const q = getQuestionMetadata(a.questionId, lang);
+                        return `Q: ${q?.text || a.questionId}\nA: ${a.value}`;
+                    }).join('\n')}
+                    
+                    STRICT REQUIREMENTS: 
+                    1. Use EXACTLY this JSON structure: ${JSON_TEMPLATE}
+                    2. Language: ${lang}. 
+                    3. Brutally honest, granular, and slightly clinical yet poetic.
+                    4. NO placeholders like "Analyzing...", fill EVERY field with real data.
+                    5. Output ONLY raw JSON. NO markdown.
+                    `;
+                    
+                    const metaModel = createModel(config, 0.2); 
+                    const synthesisStream = await metaModel.stream([
+                        new SystemMessage(`You are the Chief Profiler. Output structured JSON. Speak in ${lang}. NO Markdown blocks, just raw JSON.`),
+                        new HumanMessage(synthesisPromptBody)
+                    ]);
+
+                    let fullJsonText = "";
+                    for await (const chunk of synthesisStream) {
+                        const content = chunk.content as string;
+                        fullJsonText += content;
+                        send('chunk', content);
+                    }
+
+                    // Extract and parse JSON
+                    let cleaned = fullJsonText.trim();
+                    if (cleaned.includes('```')) {
+                        const match = cleaned.match(/```(?:json)?([\s\S]*?)```/);
+                        if (match) cleaned = match[1].trim();
+                    }
+                    
+                    try {
+                        const finalProfile = JSON.parse(cleaned);
+                        // Basic validation - ensure identity_card exists
+                        if (!finalProfile.identity_card) throw new Error("Incomplete JSON");
+                        send('final', finalProfile);
+                    } catch (parseError) {
+                        console.error("JSON Parse Error, trying fallback structured output...", parseError);
+                        const fallbackModel = createModel(config, 0.2).withStructuredOutput(FinalProfileSchema);
+                        const fallbackResult = await fallbackModel.invoke([
+                            new SystemMessage(`Output structured JSON. Speak in ${lang}.`),
+                            new HumanMessage(synthesisPromptBody)
+                        ]);
+                        send('final', fallbackResult);
+                    }
+                    controller.close();
+                } catch (err: any) {
+                    send('error', err.message);
+                    controller.error(err);
+                }
+            }
+        });
+
+        return new Response(stream, {
+            headers: {
+                'Content-Type': 'text/event-stream',
+                'Cache-Control': 'no-cache',
+                'Connection': 'keep-alive'
+            }
+        });
+
     } catch (e: any) {
-        console.error("[API Error]", e);
         return NextResponse.json({ error: e.message }, { status: 500 });
     }
 }

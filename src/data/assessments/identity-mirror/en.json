@@ -150,6 +150,17 @@
           "text": "Over the last 2 weeks, how often have you felt that 'life is out of control'?",
           "leftLabel": "Never",
           "rightLabel": "Almost Every Day"
+        },
+        {
+          "id": "beh_short_video",
+          "type": "choice",
+          "text": "When you open a short video app (e.g., TikTok/Instagram Reels), what is your typical state?",
+          "options": [
+            "Purposely looking for content, leave after watching",
+            "Scrolling aimlessly, hours pass without knowing",
+            "Watching but with a constant sense of guilt",
+            "Rarely use or don't use such apps"
+          ]
         }
       ]
     },
@@ -203,7 +214,7 @@
         {
           "id": "phq9_7",
           "type": "scale",
-          "text": "Trouble concentrating on things, such as reading the newspaper or watching television",
+          "text": "Trouble concentrating on things, almost daily addicted to short videos.",
           "leftLabel": "Not at all",
           "rightLabel": "Nearly every day"
         },
@@ -217,7 +228,7 @@
         {
           "id": "phq9_9_risk",
           "type": "scale",
-          "text": "Thoughts that you would be better off dead or of hurting yourself in some way",
+          "text": "Thoughts of suicide or self-harm, feeling that life is meaningless, like a 'walking dead'.",
           "leftLabel": "Not at all",
           "rightLabel": "Nearly every day"
         }
@@ -238,14 +249,14 @@
         {
           "id": "gad7_2",
           "type": "scale",
-          "text": "Not being able to stop or control worrying",
+          "text": "Not being able to stop or control worrying, often worrying about your health or various things that haven't happened.",
           "leftLabel": "Not at all",
           "rightLabel": "Nearly every day"
         },
         {
           "id": "gad7_3",
           "type": "scale",
-          "text": "Worrying too much about different things",
+          "text": "Always afraid of forgetting keys when going out, or forgetting to turn off appliances. Repeating checks after leaving.",
           "leftLabel": "Not at all",
           "rightLabel": "Nearly every day"
         },
@@ -273,7 +284,7 @@
         {
           "id": "gad7_7",
           "type": "scale",
-          "text": "Feeling afraid, as if something awful might happen",
+          "text": "Frequently startled by ordinary things, heart jumping for no reason.",
           "leftLabel": "Not at all",
           "rightLabel": "Nearly every day"
         }
@@ -475,6 +486,17 @@
             "Improvise: Do it my way.",
             "Wait: Cannot proceed without clear instructions."
           ]
+        },
+        {
+          "id": "beh_internet_troll",
+          "type": "choice",
+          "text": "Encountering an illogical 'troll' attacking you on social media, what is your first reaction?",
+          "options": [
+            "Heated debate: Must use logic (or sarcasm) to leave them speechless",
+            "Direct ignore: Report and block, don't waste a second of emotion",
+            "Internal fluctuation: Didn't reply, but repeatedly think about their words and feel angry",
+            "Entertainment: Think it's funny, even want to share with friends to watch together"
+          ]
         }
       ]
     },
@@ -512,9 +534,51 @@
           "rightLabel": "Agree strongly"
         },
         {
+          "id": "family_repressing",
+          "type": "scale",
+          "text": "I have siblings and often feel neglected, believing my parents favor my brothers/sisters.",
+          "leftLabel": "Disagree strongly",
+          "rightLabel": "Agree strongly"
+        },
+        {
+          "id": "family_entertainment",
+          "type": "scale",
+          "text": "I was often taught to be mindful of family finances (limited budget); I subconsciously reduce my spending to avoid bothering my parents.",
+          "leftLabel": "Disagree strongly",
+          "rightLabel": "Agree strongly"
+        },
+        {
+          "id": "family_submissive",
+          "type": "scale",
+          "text": "When being scolded by my parents, I don't dare to resist at all, and I'm afraid to speak my mind.",
+          "leftLabel": "Disagree strongly",
+          "rightLabel": "Agree strongly"
+        },
+        {
           "id": "family_validation",
           "type": "scale",
           "text": "I rarely received heartfelt praise from my parents; they always focused on where I wasn't doing well enough.",
+          "leftLabel": "Disagree strongly",
+          "rightLabel": "Agree strongly"
+        },
+        {
+          "id": "family_isolated",
+          "type": "scale",
+          "text": "My parents rarely share their lives with me, and I'm not willing to share mine with them.",
+          "leftLabel": "Disagree strongly",
+          "rightLabel": "Agree strongly"
+        },
+        {
+          "id": "family_independent",
+          "type": "scale",
+          "text": "I learned to survive independently from a young age (cooking, going to school alone).",
+          "leftLabel": "Disagree strongly",
+          "rightLabel": "Agree strongly"
+        },
+        {
+          "id": "family_friend",
+          "type": "scale",
+          "text": "I rarely invited friends/classmates home, or rarely went to their homes.",
           "leftLabel": "Disagree strongly",
           "rightLabel": "Agree strongly"
         },
@@ -607,7 +671,7 @@
         {
           "id": "def_criticism",
           "type": "choice",
-          "text": "Reaction to public criticism:",
+          "text": "Reaction to public criticism from teachers or parents:",
           "options": [
             "Analyze logic cold-heartedly",
             "Feel targeted/victimized",
@@ -680,6 +744,13 @@
       "description": "Exploring conflicts between desire, norms, and the self.",
       "questions": [
         {
+          "id": "sex_frequency",
+          "type": "scale",
+          "text": "Recent frequency of sexual activity",
+          "leftLabel": "None at all",
+          "rightLabel": "Almost daily"
+        },
+        {
           "id": "sex_desire_expression",
           "type": "scale",
           "text": "Do you feel your sexual desires are often repressed and difficult to express freely?",
@@ -697,8 +768,26 @@
           "id": "sex_social_norms",
           "type": "scale",
           "text": "Do you feel constrained by social norms and expectations regarding sexual behavior?",
-          "leftLabel": "Fully Agree",
-          "rightLabel": "Feel Constrained"
+          "leftLabel": "Fully Free",
+          "rightLabel": "Very Constrained"
+        },
+        {
+          "id": "sex_towards_sex",
+          "type": "scale",
+          "text": "Do you agree with hook-up culture? Do you think sex and love are decoupled?",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree"
+        },
+        {
+          "id": "sex_towards_marriage",
+          "type": "choice",
+          "text": "What do you think is the purpose of marriage?",
+          "options": [
+            "For survival and reproduction",
+            "For love and companionship",
+            "For financial security and safety",
+            "For spiritual sustenance and soul comforting"
+          ]
         },
         {
           "id": "sex_scenario",
@@ -750,6 +839,39 @@
             "Public questioning: Raise objections in appropriate setting.",
             "Verify further: Seek more evidence before deciding."
           ]
+        },
+        {
+          "id": "think_gov",
+          "type": "choice",
+          "text": "When a government agency announces that something you do daily is prohibited, do you tend to obey or follow your own judgment?",
+          "options": [
+            "Obey government: It's their decision, should be followed.",
+            "Disobey: It's my personal freedom, government has no right to interfere.",
+            "Play it by ear: If there's no penalty or consequence, continue doing it."
+          ]
+        },
+        {
+          "id": "think_relationships",
+          "type": "choice",
+          "text": "Walking on the street, you see a man holding a woman's arm preventing her from leaving at a night market, with no obvious violence. The woman asks for help saying she's being domestic abused. You:",
+          "options": [
+            "Direct intervention: Woman is at disadvantage, man must be in the wrong, stop him first.",
+            "Inquire facts: Ask what happened, observe behavior, then judge.",
+            "Call authorities: Call police directly, let them settle it.",
+            "Walk away: Hard to judge family matters, better not to get involved."
+          ]
+        },
+        {
+          "id": "think_spot",
+          "type": "choice",
+          "text": "Authoritative media recently reported high crime rate in a certain area, but your friend invites you there for vacation. You:",
+          "options": [
+            "Direct refusal: Bad choice, not worth the risk.",
+            "Go anyway: Friend isn't afraid, I'm not either.",
+            "Collect info: Ask where exactly, collect online info before judging.",
+            "Dissuade friend: Think it's dangerous, dissuade them and share info.",
+            "Trust experience: Ask people who've been there; if they say it's fine, just go."
+          ]
         }
       ]
     },
@@ -783,9 +905,27 @@
     },
     {
       "id": "values_ideology",
-      "title": "XII. Ideology",
-      "description": "Worldview and values.",
+      "title": "XII. Values",
+      "description": "Political, economic, and social viewpoints.",
       "questions": [
+        {
+          "id": "val_ai_future",
+          "type": "choice",
+          "text": "Regarding AI potentially replacing most basic human occupations?",
+          "options": [
+            "Unstoppable progress, humans should seek new paradigms of AI collaboration",
+            "Will cause unprecedented class gap, government must tax AI to rescue the unemployed",
+            "Threat to human dignity, AI should be strictly banned in creative/emotional fields",
+            "As long as it doesn't replace my job, I don't care much"
+          ]
+        },
+        {
+          "id": "val_ubi",
+          "type": "scale",
+          "text": "Do you support 'Universal Basic Income (UBI)'? Government providing cash regardless of employment.",
+          "leftLabel": "Strongly Oppose",
+          "rightLabel": "Strongly Support"
+        },
         {
           "id": "val_econ_1",
           "type": "scale",
@@ -797,108 +937,150 @@
           "id": "values_freedom_vs_authority",
           "type": "scale",
           "text": "For the overall security and order of society, it is necessary to sacrifice some personal privacy and freedom.",
-          "leftLabel": "Disagree strongly",
-          "rightLabel": "Agree completely"
-        },
-        {
-          "id": "val_dipl_1",
-          "type": "scale",
-          "text": "'Military force to protect national interests is justified.'",
           "leftLabel": "Disagree",
           "rightLabel": "Agree"
         },
         {
-          "id": "val_soc_1",
+          "id": "values_tradition_vs_progress",
           "type": "scale",
-          "text": "'Tradition is crucial for morality.'",
+          "text": "Traditional values are the anchor of society and should not be easily abandoned for so-called 'progress'.",
           "leftLabel": "Disagree",
           "rightLabel": "Agree"
         },
         {
-          "id": "val_econ_2",
+          "id": "values_market_vs_welfare",
+          "type": "scale",
+          "text": "Free market competition leads to the strong getting stronger; the government should use strong intervention for wealth redistribution.",
+          "leftLabel": "Disagree",
+          "rightLabel": "Agree"
+        },
+        {
+          "id": "values_national_vs_global",
+          "type": "scale",
+          "text": "A nation's interests always come before international obligations; globalization is often a trap to weaken national sovereignty.",
+          "leftLabel": "Disagree",
+          "rightLabel": "Agree"
+        },
+        {
+          "id": "val_mononationalism",
+          "type": "scale",
+          "text": "A country should maintain a single ethnic composition; excessive diversity destroys social contracts and culture.",
+          "leftLabel": "Diversity",
+          "rightLabel": "Homogeneity"
+        },
+        {
+          "id": "val_statism_family",
+          "type": "scale",
+          "text": "'Country before family'; personal/family interests must unconditionally yield to collective/national will.",
+          "leftLabel": "Disagree",
+          "rightLabel": "Agree"
+        },
+        {
+          "id": "val_war_territory",
+          "type": "scale",
+          "text": "Starting a war to reclaim historical territory (like Russia's stance in Ukraine war) is justified.",
+          "leftLabel": "Unjustified",
+          "rightLabel": "Justified"
+        },
+        {
+          "id": "val_homeless_resource",
+          "type": "scale",
+          "text": "Homeless people in metropolises who refuse to work are essentially wasting social productivity by consuming resources.",
+          "leftLabel": "Disagree",
+          "rightLabel": "Agree"
+        },
+        {
+          "id": "val_religion_progress",
+          "type": "scale",
+          "text": "Dogmatic religious beliefs and doctrines essentially hinder the progress of science/technology and rational thinking.",
+          "leftLabel": "Disagree",
+          "rightLabel": "Agree"
+        },
+        {
+          "id": "val_soviet_nostalgia",
           "type": "choice",
-          "text": "Wealth distribution:",
+          "text": "If you could return to the 1980s Soviet Union to experience its order and greatness, but lose current internet and free speech?",
           "options": [
-            "Meritocracy/Survival of fittest",
-            "High taxes for equality"
+            "Go without hesitation, longing for collective glory",
+            "Never consider it, freedom and material life are more important",
+            "Consider it if there's complete social security and fairness",
+            "Historical regression, not worth discussing"
           ]
         },
         {
-          "id": "val_civil_2",
-          "type": "choice",
-          "text": "Handling crime:",
-          "options": [
-            "Punishment/Deterrence",
-            "Rehabilitation"
-          ]
+          "id": "val_urbanization",
+          "type": "scale",
+          "text": "Large-scale urbanization destroys rural culture but is the only path to modernization and poverty elimination.",
+          "leftLabel": "Rural",
+          "rightLabel": "Urban"
         }
       ]
     },
     {
       "id": "subjective_lite",
-      "title": "Lite Scenario Analysis",
+      "title": "Deep Simulation (Lite)",
       "questions": [
         {
-          "id": "dilemma_1",
+          "id": "dilemma_modern_1",
           "type": "text",
-          "text": "[Scenario] You are managing a critical project. A loyal team member who has supported you for years makes a major error that could be covered up, but doing so risks the company's future. Admitting it means they will likely be fired. What do you do, and why?"
+          "text": "Scenario: You found a severe privacy bug in a major platform. Disclosure protects everyone but costs the platform billions; notifying them privately gets you a life-long 'hush money' but the bug won't be fixed. What would you do and why?"
         }
       ]
     },
     {
       "id": "subjective_standard",
-      "title": "Scenario Analysis",
+      "title": "Personality Depth Probe",
       "questions": [
         {
-          "id": "dilemma_1",
+          "id": "dilemma_modern_ai",
           "type": "text",
-          "text": "[Scenario] You are managing a critical project. A loyal team member who has supported you for years makes a major error that could be covered up, but doing so risks the company's future. Admitting it means they will likely be fired. What do you do, and why?"
+          "text": "As an autonomous vehicle engineer, in extreme danger, the system must choose between 'protecting driver' and 'protecting five children crossing illegally'. Which weight do you set higher in the code? Why?"
         },
         {
-          "id": "dilemma_2",
+          "id": "dilemma_chat_troll",
           "type": "text",
-          "text": "[Scenario] You discover a wallet with a significant amount of cash in a public place with no cameras. You are currently facing severe financial difficulty. Returning it is the 'right' thing, but keeping it would solve your immediate problems. Describe your internal thought process."
+          "text": "You post a thought on social media, someone maliciously comments: 'Just this? What's with the pretense?' Write your most honest reply (or state why you'd ignore):"
         },
         {
-          "id": "dilemma_3",
+          "id": "dilemma_modern_simulation",
           "type": "text",
-          "text": "[Scenario] You have the power to save 5 strangers by diverting a runaway train, but doing so will sacrifice 1 person who is a brilliant scientist on the verge of curing a major disease. Do you intervene? Why or why not?"
+          "text": "If you discover life is a simulation and reality is starvation. Choose 'wake up' to face real pain, or 'continue' in virtual glory? Your final choice is?"
         }
       ]
     },
     {
       "id": "subjective_full",
-      "title": "Deep Scenario Analysis",
+      "title": "Full Spectrum Mirror Simulation",
       "questions": [
         {
-          "id": "dilemma_1",
+          "id": "dilemma_modern_1",
           "type": "text",
-          "text": "[Scenario] You are managing a critical project. A loyal team member who has supported you for years makes a major error that could be covered up, but doing so risks the company's future. Admitting it means they will likely be fired. What do you do, and why?"
+          "text": "You found a severe privacy bug in a major platform. Disclosure protects everyone but costs the platform billions; notifying them privately gets you a life-long 'hush money' but the bug won't be fixed. What would you do and why?"
         },
         {
-          "id": "dilemma_2",
+          "id": "dilemma_modern_ai",
           "type": "text",
-          "text": "[Scenario] You discover a wallet with a significant amount of cash in a public place with no cameras. You are currently facing severe financial difficulty. Returning it is the 'right' thing, but keeping it would solve your immediate problems. Describe your internal thought process."
+          "text": "You are an autonomous vehicle engineer. In extreme danger, the system must choose between 'protecting driver' and 'protecting five children crossing illegally'. Which weight do you set higher? Why?"
         },
         {
-          "id": "dilemma_3",
+          "id": "dilemma_modern_simulation",
           "type": "text",
-          "text": "[Scenario] You have the power to save 5 strangers by diverting a runaway train, but doing so will sacrifice 1 person who is a brilliant scientist on the verge of curing a major disease. Do you intervene? Why or why not?"
+          "text": "If you discover life is a simulation and reality is starvation. Choose 'wake up' to face real pain, or 'continue' in virtual glory? Your final choice is?"
         },
         {
-          "id": "dilemma_4",
+          "id": "dilemma_chat_troll",
           "type": "text",
-          "text": "[Scenario] You are in a comfortable but stagnant relationship. You care deeply for your partner, but you feel your personal growth is being stifled. Leaving would devastate them; staying means sacrificing your potential. What is your choice?"
+          "text": "You post a thought on social media, someone maliciously comments: 'Just this? Does this even count as thinking? What's with the pretense?' Write your most honest reply (or specify if you'd just block):"
         },
         {
-          "id": "dilemma_5",
+          "id": "dilemma_chat_rejection",
           "type": "text",
-          "text": "[Scenario] Someone deeply wronged you in the past and ruined your reputation. Years later, they are in a desperate situation and ask for your help. You are the only one who can help them. Do you help them? Explain your feelings."
+          "text": "An old classmate you haven't talked to for years messages: 'You there? Borrow me $300 for an emergency, will pay back next payday.' You don't want to borrow. Write your real-time reply:"
         },
         {
-          "id": "dilemma_6",
+          "id": "dilemma_modern_legacy",
           "type": "text",
-          "text": "[Scenario] You are offered a pill that guarantees you eternal happiness and comfort, but you will live in a simulated reality, unaware of the real world. Or you can remain in the real world, which is full of suffering and uncertainty. Which do you choose?"
+          "text": "Your life will be uploaded as a piece of eternal code for descendants to talk to. Which part of your personality do you most want to keep, and which to erase? Why?"
         }
       ]
     }

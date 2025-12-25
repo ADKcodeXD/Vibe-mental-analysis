@@ -54,6 +54,8 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [streamingStatus, setStreamingStatus] = useState("");
+  const [streamingLog, setStreamingLog] = useState("");
 
   const [selectedModules, setSelectedModules] = useState<string[]>([]);
 
@@ -219,70 +221,64 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
         lang
       };
 
-      const fetchWithRetry = async (retries = 3): Promise<Response> => {
-        try {
-          const response = await fetch('/api/analyze', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-          
-          const contentType = response.headers.get("content-type");
-          if (response.status === 504) {
-            if (retries > 0) {
-              console.warn(`Attempt failed, retrying... (${retries} left)`);
-              await new Promise(resolve => setTimeout(resolve, 500));
-              return fetchWithRetry(retries - 1);
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error("No reader found on response");
+
+      const decoder = new TextDecoder();
+      let accumulatedData = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        accumulatedData += chunk;
+
+        const lines = accumulatedData.split('\n');
+        accumulatedData = lines.pop() || "";
+
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          try {
+            const event = JSON.parse(line);
+            if (event.type === 'status') {
+              setStreamingStatus(event.data);
+            } else if (event.type === 'chunk') {
+              setStreamingLog(prev => (prev + event.data).slice(-1000));
+            } else if (event.type === 'final') {
+              const data = event.data;
+              const historyEntry = saveToHistory(data, mode, config.model || 'System AI');
+              localStorage.removeItem(`holo_session_${testId}`);
+              if (onComplete) onComplete({ ...data, historyId: historyEntry.id, mode });
+              isSubmittingRef.current = false;
+              return; // Success exit
+            } else if (event.type === 'error') {
+              throw new Error(event.data);
             }
+          } catch (e) {
+            console.warn("Field to parse event line:", line, e);
           }
-          return response;
-        } catch (e) {
-          if (retries > 0) {
-             await new Promise(resolve => setTimeout(resolve, 500));
-             return fetchWithRetry(retries - 1);
-          }
-          throw e;
         }
-      };
-
-      // Start API call and a minimum timer (6 seconds) simultaneously
-      const [res] = await Promise.all([
-        fetchWithRetry(3),
-        new Promise(resolve => setTimeout(resolve, 6000))
-      ]);
-
-      // Check for non-JSON or error responses
-      const contentType = res.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        const text = await res.text();
-        console.error("Non-JSON Response size:", text.length, "Preview text:", text.substring(0, 100));
-        
-        let customError = lang === 'zh' 
-          ? "服务器响应超时。程序已尝试自动重试，但仍未成功。请尝试：1. 缩短回答长度；2. 稍后再试。" 
-          : "Server timeout after multiple retries. Try shortening your answers or trying again later.";
-          
-        throw new Error(customError);
       }
-
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-
-      const historyEntry = saveToHistory(data, mode, config.model || 'System AI');
-      localStorage.removeItem(`holo_session_${testId}`);
-
-      if (onComplete) {
-        onComplete({ ...data, historyId: historyEntry.id, mode });
-      }
-      isSubmittingRef.current = false;
     } catch (e: any) {
       isSubmittingRef.current = false;
       console.error("ANALYSIS FAILED:", e);
-      const errorMsg = e.message; 
-      alert(errorMsg);
+      alert(e.message);
       setLoading(false);
+      setStreamingLog("");
+      setStreamingStatus("");
       setView('welcome');
-    } finally {
-      // isSubmittingRef.current = false is already handled above to differentiate success vs error
     }
   };
 
@@ -357,7 +353,13 @@ export default function SurveyEngine({ lang, dictionary: ui, questions, testId, 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="absolute inset-0 z-50"
           >
-            <LoadingView ui={ui} mode={mode} />
+            <LoadingView 
+              ui={ui} 
+              mode={mode} 
+              lang={lang}
+              streamingStatus={streamingStatus}
+              streamingLog={streamingLog}
+            />
           </motion.div>
         )}
 
