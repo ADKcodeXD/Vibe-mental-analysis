@@ -3,6 +3,10 @@ import { StateGraph, END } from '@langchain/langgraph';
 import { ChatOpenAI } from '@langchain/openai';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 import { z } from 'zod';
+import { Annotation } from '@langchain/langgraph';
+
+export const maxDuration = 300; // 5 minutes for long-running reasoning
+export const dynamic = 'force-dynamic';
 
 // Load language data
 import questionsZh from "@/data/assessments/identity-mirror/zh.json";
@@ -15,24 +19,36 @@ const questionsDataMap: Record<string, any> = {
     ja: questionsJa
 };
 
-// Helper to lookup question text
-const getQuestionText = (id: string, lang: string = 'zh') => {
+// Helper to lookup question text and metadata
+const getQuestionMetadata = (id: string, lang: string = 'zh') => {
     const data = questionsDataMap[lang] || questionsDataMap['zh'];
     for (const section of data.sections) {
         const q = section.questions.find((q: any) => q.id === id);
-        if (q) return q.text;
+        if (q) return q;
     }
     // Fallback search across all languages if not found in requested
     for (const l of Object.keys(questionsDataMap)) {
         for (const section of questionsDataMap[l].sections) {
             const q = section.questions.find((q: any) => q.id === id);
-            if (q) return q.text;
+            if (q) return q;
         }
     }
-    return id;
+    return null;
+};
+
+const getQuestionText = (id: string, lang: string = 'zh') => {
+    const q = getQuestionMetadata(id, lang);
+    if (!q) return id;
+    
+    let text = q.text;
+    if (q.type === 'scale' && q.leftLabel && q.rightLabel) {
+        text += ` (Scale: ${q.leftLabel} vs ${q.rightLabel})`;
+    }
+    return text;
 };
 
 // --- Zod Schemas ---
+// ... (ScoreSchema, DimensionSchema, FinalProfileSchema remain the same)
 const ScoreSchema = z.object({
     score: z.number().min(0).max(100).describe("0-100 score, where 100 is maximum intensity of the trait"),
     level: z.string().describe("Qualitative level based on score (e.g., 'Low', 'Medium', 'High' in the requested language)"),
@@ -121,12 +137,7 @@ type Answer = { questionId: string; value: string };
 type AgentState = {
   answers: Answer[];
   config: { apiKey?: string; baseUrl?: string; model?: string };
-  cognitiveAnalysis: string;
-  clinicalAnalysis: string;
-  valuesAnalysis: string;
-  lieAnalysis: string;
-  sexualAnalysis: string;
-  thinkingAnalysis: string;
+  comprehensiveAnalysis: string;
   finalProfile: any;
   lang: string;
 };
@@ -134,7 +145,6 @@ type AgentState = {
 const createModel = (config?: { apiKey?: string; baseUrl?: string; model?: string }, temperature: number = 0.1) => {
     const clean = (val: string | undefined) => val?.trim().replace(/^["']|["']$/g, '').trim();
 
-    // Robustly handle empty strings or undefined from client
     const apiKey = (config?.apiKey && config.apiKey.trim() !== '') ? clean(config.apiKey) : clean(process.env.OPENAI_API_KEY);
     const baseUrl = (config?.baseUrl && config.baseUrl.trim() !== '') ? clean(config.baseUrl) : clean(process.env.OPENAI_BASE_URL);
     const modelName = (config?.model && config.model.trim() !== '') ? clean(config.model) : (clean(process.env.LLM_MODEL) || 'google/gemini-2.0-flash-001');
@@ -144,8 +154,8 @@ const createModel = (config?: { apiKey?: string; baseUrl?: string; model?: strin
         openAIApiKey: apiKey,
         modelName: modelName,
         configuration: {
-            baseURL: baseUrl || undefined, // Standard OpenAI client field
-            // @ts-ignore - Handle lowercase variant just in case
+            baseURL: baseUrl || undefined,
+            // @ts-ignore
             baseUrl: baseUrl || undefined, 
             defaultHeaders: {
                 "HTTP-Referer": "https://vibe-mental-analysis.pages.dev",
@@ -156,190 +166,122 @@ const createModel = (config?: { apiKey?: string; baseUrl?: string; model?: strin
         modelKwargs: {
             top_p: 0.1
         },
-        maxRetries: 1
+        maxRetries: 1,
+        timeout: 300000 // 5 minutes
     });
 };
 
 // --- Graph Definition ---
-import { Annotation } from '@langchain/langgraph';
 
 const GraphState = Annotation.Root({
   answers: Annotation<Answer[]>({ reducer: (x, y) => y, default: () => [] }),
   config: Annotation<any>({ reducer: (x, y) => y, default: () => ({}) }),
-  cognitiveAnalysis: Annotation<string>({ reducer: (x, y) => y, default: () => "" }),
-  clinicalAnalysis: Annotation<string>({ reducer: (x, y) => y, default: () => "" }),
-  valuesAnalysis: Annotation<string>({ reducer: (x, y) => y, default: () => "" }),
-  lieAnalysis: Annotation<string>({ reducer: (x, y) => y, default: () => "" }),
-  sexualAnalysis: Annotation<string>({ reducer: (x, y) => y, default: () => "" }),
-  thinkingAnalysis: Annotation<string>({ reducer: (x, y) => y, default: () => "" }),
+  comprehensiveAnalysis: Annotation<string>({ reducer: (x, y) => y, default: () => "" }),
   finalProfile: Annotation<any>({ reducer: (x, y) => y, default: () => ({}) }),
   lang: Annotation<string>({ reducer: (x, y) => y, default: () => "zh" })
 });
 
 // NODES
-const analyzeCognitive = async (state: AgentState) => {
+const runDeepAnalysis = async (state: AgentState) => {
     const model = createModel(state.config);
-    const context = state.answers.map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n');
-    const response = await model.invoke([
-        new SystemMessage(`You are an Expert Pattern Matcher. Analyze the user's answers. Determine their MBTI (E/I, S/N, T/F, J/P) and general cognitive patterns with brief evidence. 
-        SCALE GUIDELINE: 'scale' questions range from 1 to 7. 
-        - 1: Lowest intensity (Fully Left Label)
-        - 4: Neutral / No preference
-        - 7: Highest intensity (Fully Right Label)
-        Response in ${state.lang}.`),
-        new HumanMessage(context)
-    ]);
-    return { cognitiveAnalysis: response.content as string };
-};
+    
+    // Check available categories
+    const categories = {
+        mbti: state.answers.some(a => a.questionId.startsWith('mbti_')),
+        values: state.answers.some(a => a.questionId.startsWith('val_') || a.questionId.startsWith('soc_')),
+        clinical: state.answers.some(a => ['phq9', 'gad7', 'mdq', 'att_', 'beh_'].some(p => a.questionId.startsWith(p))),
+        sexual: state.answers.some(a => a.questionId.startsWith('sex_')),
+        thinking: state.answers.some(a => a.questionId.startsWith('think_'))
+    };
 
-const analyzeValues = async (state: AgentState) => {
-    // Check for relevant questions
-    const hasValues = state.answers.some(a => a.questionId.startsWith('val_') || a.questionId.startsWith('soc_'));
-    if (!hasValues) {
-        // Return empty if no values/society questions found
-        return { valuesAnalysis: "" };
+    // Format context
+    const context = state.answers.map(a => {
+        const q = getQuestionMetadata(a.questionId, state.lang);
+        let text = q ? q.text : a.questionId;
+        let line = `Q: ${text}`;
+        
+        if (q?.type === 'scale') {
+            line += `\nScale: [1: ${q.leftLabel}] to [7: ${q.rightLabel}]`;
+            line += `\nUser Selection: ${a.value}`;
+        } else if (q?.type === 'choice' && q.options) {
+            const optionsList = q.options.map((o: any) => typeof o === 'object' ? (o[state.lang] || o['zh']) : o).join(', ');
+            line += `\nAvailable Options: [${optionsList}]`;
+            line += `\nUser Selection: ${a.value}`;
+        } else {
+            line += `\nA: ${a.value}`;
+        }
+        return line;
+    }).join('\n\n');
+
+    // Build conditional instructions
+    let specificInstructions = "";
+    if (categories.mbti) {
+        specificInstructions += `\n- COGNITIVE: Analyze MBTI (E/I, S/N, T/F, J/P). 1-7 scale: 1=Fully Left, 4=Neutral, 7=Fully Right.`;
     }
-
-    const model = createModel(state.config);
-    const context = state.answers.filter(a => a.questionId.startsWith('val_') || a.questionId.startsWith('soc_'))
-        .map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n');
-    
-    const response = await model.invoke([
-        new SystemMessage(`You are a Political Compass Analyst. Determine the user's 8Values leanings (Economic, Diplomatic, Civil, Societal). 
-        SCALE GUIDELINE: 'scale' questions range from 1 (Strongly disagree/Left) to 7 (Strongly agree/Right). 4 is Neutral.
-        Use the provided questionnaire data. Response in ${state.lang}.`),
-        new HumanMessage(context)
-    ]);
-    return { valuesAnalysis: response.content as string };
-};
-
-const analyzeLie = async (state: AgentState) => {
-    const model = createModel(state.config);
-    const context = state.answers.map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n');
-    const response = await model.invoke([
-        new SystemMessage(`You are a Human Lie Detector. Analyze the user's answers for inconsistencies/contradictions. 
-        SCALE GUIDELINE: 'scale' questions range from 1 (Left) to 7 (Right). 4 is Neutral.
-        Output a probability of deception and list contradictions. Response in ${state.lang}.`),
-        new HumanMessage(context)
-    ]);
-    return { lieAnalysis: response.content as string };
-};
-
-const analyzeClinical = async (state: AgentState) => {
-    // Check for relevant questions (PHQ9, GAD7, MDQ, Attachment)
-    const hasClinical_PHQ = state.answers.some(a => a.questionId.startsWith('phq9'));
-    const hasClinical_GAD = state.answers.some(a => a.questionId.startsWith('gad7'));
-    const hasClinical_MDQ = state.answers.some(a => a.questionId.startsWith('mdq'));
-    const hasAtt = state.answers.some(a => a.questionId.startsWith('att_'));
-    const hasRisk = state.answers.some(a => a.questionId === 'phq9_9_risk');
-    
-    // If absolutely no clinical data, skip
-    if (!hasClinical_PHQ && !hasClinical_GAD && !hasClinical_MDQ && !hasAtt) {
-         return { clinicalAnalysis: "" };
+    if (categories.values) {
+        specificInstructions += `\n- VALUES: Analyze Economic, Diplomatic, Civil, Societal leanings. 1=Strongly Disagree/Left, 7=Strongly Agree/Right.`;
     }
-
-    const model = createModel(state.config); 
-    // Filter context to relevant sections + behavior for validation
-    const relevantIds = ['phq9', 'gad7', 'mdq', 'att_', 'beh_'];
-    const context = state.answers.filter(a => relevantIds.some(p => a.questionId.startsWith(p)))
-        .map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n');
-    
-    let riskFlag = "";
-    if (hasRisk) {
+    if (categories.clinical) {
+        let riskFlag = "";
         const risk_q = state.answers.find(a => a.questionId === 'phq9_9_risk');
-        if (risk_q && (risk_q.value === "6" || risk_q.value === "7" || risk_q.value === "几乎每天" || risk_q.value.includes("一半以上") || risk_q.value.includes("Almost every day"))) {
+        if (risk_q && (risk_q.value === "6" || risk_q.value === "7" || risk_q.value.includes("几乎每天") || risk_q.value.includes("一半以上") || risk_q.value.includes("Almost every day"))) {
             riskFlag = "CRITICAL: SUICIDE IDEATION DETECTED in Q9.";
         }
+        
+        specificInstructions += `\n- CLINICAL: 
+          1. PHQ-9: Assess depression (1=Not at all, 7=Nearly every day). 
+          2. BEHAVIOR: Detect Narcissism, ADHD, Anxiety. 
+          3. ATTACHMENT: Determine style.
+          4. SAFETY: ${riskFlag ? riskFlag + " MUST include a warning." : "Standard safety monitoring."}`;
+    }
+    if (categories.sexual) {
+        specificInstructions += `\n- SEXUAL: Analyze repression, guilt, and desire. 1=None/Free, 7=Extreme/Repressed.`;
+    }
+    if (categories.thinking) {
+        specificInstructions += `\n- INDEPENDENT THINKING: Analyze conformity and critical thinking depth. 1=Wolf/Independent, 7=Sheep/Conformist.`;
     }
 
-    const response = await model.invoke([
-        new SystemMessage(`You are an Expert Clinical Psychiatrist. Analyze the behavioral data.
-        RULES:
-        1. PHQ-9: Assess Depression. Use 1-7 scale (1=Not at all, 7=Nearly every day; 4 is moderate). 
-        2. BEHAVIOR: Detect Narcissism, Bipolar, ADHD, Anxiety. 
-        3. ATTACHMENT: Determine style.
-        4. SAFETY: If '${riskFlag}' is present, MUST output warning.
-        Response in ${state.lang}.`),
-        new HumanMessage(context)
-    ]);
-    return { clinicalAnalysis: response.content as string }; 
-};
+    const systemPrompt = `You are a Master Psychologist and Profiler. 
+Analyze the user's questionnaire answers comprehensively. 
+IMPORTANT: Only analyze categories mentioned below where data is available. If a category is not mentioned, DO NOT hallucinate.
 
-const analyzeSexual = async (state: AgentState) => {
-    const hasSex = state.answers.some(a => a.questionId.startsWith('sex_'));
-    if (!hasSex) return { sexualAnalysis: "" };
+DIMENSIONS TO ANALYZE:${specificInstructions}
 
-    const model = createModel(state.config);
-    const context = state.answers.filter(a => a.questionId.startsWith('sex_'))
-        .map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n');
+INTEGRITY: Analyze inconsistencies or deceptive patterns across all provided answers.
+
+Be granular, observant, and brutally honest. Provide a deep synthesis of their psyche.
+Language: ${state.lang}.`;
 
     const response = await model.invoke([
-        new SystemMessage(`You are a Psychoanalytic Expert specializing in Sexual Psychology. Analyze the user's responses regarding sexual repression, guilt, norms, and desire.
-        SCALE GUIDELINE (1-7): 1=None/Free, 4=Moderate/Neutral, 7=Extreme/Highly Repressed.
-        Determine:
-        1. Level of Sexual Repression (Low/Med/High).
-        2. Impact of social norms/guilt.
-        3. Connection to overall anxiety.
-        Response in ${state.lang}.`),
+        new SystemMessage(systemPrompt),
         new HumanMessage(context)
     ]);
-    return { sexualAnalysis: response.content as string };
-};
-
-const analyzeThinking = async (state: AgentState) => {
-    const hasThink = state.answers.some(a => a.questionId.startsWith('think_'));
-    if (!hasThink) return { thinkingAnalysis: "" };
-
-    const model = createModel(state.config);
-    const context = state.answers.filter(a => a.questionId.startsWith('think_'))
-        .map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n');
-
-    const response = await model.invoke([
-        new SystemMessage(`You are a Cognitive Scientist. Analyze the user's Independent Thinking capabilities.
-        SCALE GUIDELINE (1-7): 1=Fully Left Label, 4=Neutral, 7=Fully Right Label.
-        Determine:
-        1. Conformity level (Sheep vs Wolf).
-        2. Critical thinking depth.
-        3. Source of validation (Internal vs External).
-        Response in ${state.lang}.`),
-        new HumanMessage(context)
-    ]);
-    return { thinkingAnalysis: response.content as string };
+    
+    return { comprehensiveAnalysis: response.content as string };
 };
 
 const synthesizeProfile = async (state: AgentState) => {
-    const model = createModel(state.config, 0.2); // Slightly higher temp for creative synthesis
+    const model = createModel(state.config, 0.2); 
     const structuredModel = model.withStructuredOutput(FinalProfileSchema);
     
     const prompt = `
-    GENERATE HOLOGRAPHIC PERSONALITY REPORT.
+    GENERATE HOLOGRAPHIC PERSONALITY REPORT JSON.
     
-    [COGNITIVE] ${state.cognitiveAnalysis}
-    [CLINICAL] ${state.clinicalAnalysis}
-    [VALUES] ${state.valuesAnalysis}
-    [LIE DETECTION] ${state.lieAnalysis}
-    [SEXUAL PSYCHOLOGY] ${state.sexualAnalysis}
-    [CRITICAL THINKING] ${state.thinkingAnalysis}
-    [USER INPUTS] ${state.answers.map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n')}
+    [ANALYSIS DATA]
+    ${state.comprehensiveAnalysis}
+    
+    [RAW INPUTS]
+    ${state.answers.map(a => `Q: ${getQuestionText(a.questionId, state.lang)}\nA: ${a.value}`).join('\n')}
 
     REQUIREMENTS:
     1.  **Roast & Insight**: Be brutally honest yet scientifically accurate. High-level psychoanalysis.
-    2.  **Stats & Scores**: You MUST calculate the 0-100 scores based on the evidence. 
-        - Note: 'scale' questions range from 1 to 7 (1=Min/Left, 4=Neutral, 7=Max/Right).
-        - Map these levels to 0-100 logically (e.g., 7 is 100% intensity).
-    3.  **Dimensions**: Fill the Political Compass dimensions accurately (0-100).
-    4.  **Clinical**: Map depression, anxiety, ADHD, etc. to scores and levels.
-    5.  **Sexual Repression**: specifically analyze the sexual data for the sexual_repression field.
-    6.  **Language**: CRITICAL: Every single string field in the JSON output, including labels, levels, types, archetypes, and tags, MUST be in ${state.lang}. DO NOT output any English labels/enums like 'Medium' or 'Anxious' if the language is Chinese or Japanese.
-    7.  **Celebrity Match**: Cultural context applies (Anime/History for Asian langs, etc).
-    8.  **Integrity**: Populate the integrity_analysis section by analyzing [LIE DETECTION] and [USER INPUTS].
-    9.  **Optional Sections**: Only provide social_analysis if the user answers provide meaningful social context. If not enough data, omit it.
-    
-    OUTPUT FORMAT:
-    - Pure JSON only.
-    - NO markdown code blocks (e.g. \`\`\`json).
-    - NO introductory text.
-    
+    2.  **Stats & Scores**: Calculate 0-100 scores logically based on the 1-7 scales and scenario choices.
+    3.  **Dimensions**: Fill Political Compass dimensions (0-100).
+    4.  **Clinical**: Map depression, anxiety, ADHD, narcissism, and sexual_repression to scores and levels.
+    5.  **Attachment**: Identify and localize the attachment style.
+    6.  **Language**: CRITICAL: ALL string fields in the JSON (labels, levels, archetypes, etc.) MUST be in ${state.lang}.
+    7.  **Integrity**: Analyze consistency and provide a verdict.
+    8.  **Output**: Pure JSON only. No markdown formatting.
     `;
     
     const result = await structuredModel.invoke([
@@ -350,35 +292,8 @@ const synthesizeProfile = async (state: AgentState) => {
     return { finalProfile: result };
 };
 
-// Parallel Execution Node
-const analyzeAll = async (state: AgentState) => {
-    console.log("[Graph] Starting parallel analysis...");
-    const startTime = Date.now();
-    
-    const [cognitive, values, lie, clinical, sexual, thinking] = await Promise.all([
-        analyzeCognitive(state),
-        analyzeValues(state),
-        analyzeLie(state),
-        analyzeClinical(state),
-        analyzeSexual(state),
-        analyzeThinking(state)
-    ]);
-
-    console.log(`[Graph] Parallel analysis complete in ${Date.now() - startTime}ms`);
-    
-    // Merge all partial results
-    return {
-        ...cognitive,
-        ...values,
-        ...lie,
-        ...clinical,
-        ...sexual,
-        ...thinking
-    };
-};
-
 const graph = new StateGraph(GraphState)
-    .addNode("analysis", analyzeAll)
+    .addNode("analysis", runDeepAnalysis)
     .addNode("synthesis", synthesizeProfile)
     .setEntryPoint("analysis")
     .addEdge("analysis", "synthesis")
